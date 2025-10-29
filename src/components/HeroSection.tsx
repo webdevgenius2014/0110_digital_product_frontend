@@ -11,46 +11,36 @@ export default function HeroSection() {
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
-
     setIsHovering(true);
-    const rect = containerRef.current.getBoundingClientRect();
 
-    // Cursor position relative to container
+    const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
-    // Define movement limit range
-    const limit = 100; // max ±100px movement
-
-    // Center of the container
+    const limit = 100;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-
-    // Calculate how far to move (clamped)
     const moveX = Math.max(-limit, Math.min((x - centerX) / 2, limit));
     const moveY = Math.max(-limit, Math.min((y - centerY) / 2, limit));
-
-    // Apply movement
     setPosition({ x: moveX, y: moveY });
   };
 
   const handleMouseLeave = () => {
     setIsHovering(false);
-    setPosition({ x: 0, y: 0 }); // Reset
+    setPosition({ x: 0, y: 0 });
   };
 
   return (
-    <section className="max-w-[1423px] heroSec w-full pt-20 pb-8 px-4 xl:px-[60px] flex items-center mx-auto justify-between sm:py-10">
+    <section className="max-w-[1383px] heroSec w-full pt-20 pb-8 px-4 lg:px-[30px] xl:px-[60px] flex items-center mx-auto justify-between sm:py-10">
       <div className="text-[#FAFAFA]">
-        <h1 className="text-[36px] cusm-heads md:text-[56px] leading-11 font-dm-Medium md:leading-[60px] mb-6">
-          Simple, efficient digital <br /> solutions for sport brands.
+        <h1 className="text-[36px] cusm-heads md:text-[56px] leading-11 font-dm-Medium md:leading-[60px] mb-6 max-w-[500px] lg:max-w-[700px]">
+          Simple, efficient digital  solutions for sport brands.
         </h1>
         <p className="text-base custmP leading-6 font-dm-Regular font-medium max-w-[395px] md:mb-6">
           We design and build digital products for sport. From race platforms to watch faces, our work helps athletes
           perform with clarity and focus.
         </p>
 
-        <div className="rounded-md hidden sm:inline-block hide-tab w-full overflow-hidden mb-6">
+        <div className="rounded-md hidden sm:inline-block hide-tab w-full overflow-hidden mb-6 xl:mb-10">
           <button
             className="gradient-border-btn group relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] backdrop-blur-[2px] bg-white/5 hover:bg-white/10"
             onClick={() => setShowPopup(true)}
@@ -58,8 +48,7 @@ export default function HeroSection() {
             <div
               className="absolute inset-0 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] blur-[2px]"
               style={{
-                background: `linear-gradient(
-                  90deg,
+                background: `linear-gradient(90deg,
                   rgba(141, 38, 41, 0.2) 0%,
                   rgba(249, 224, 114, 0.2) 3.65%,
                   rgba(255, 255, 255, 0.2) 8.48%,
@@ -88,43 +77,142 @@ export default function HeroSection() {
                 mixBlendMode: "screen",
               }}
             />
-            <span className="relative z-10 font-dm-Medium tracking-wide">
+            <span className="relative z-10 font-dm-Regular tracking-wide">
               Request the deck
             </span>
           </button>
         </div>
-
       </div>
 
       <div
         ref={containerRef}
-        className="relative hidden sm:block hide-tab"
+        className="relative hidden sm:block deskMn hide-tab"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <img src="./Logo.svg" alt="0110 Logo" className="w-[400px] object-contain opacity-[0.6]" />
+        <img src="./Logo.svg" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" />
 
         <div
-          className={`absolute w-[400px] h-[190px] overflow-hidden rounded-[95px] bg-[#212121]/10 backdrop-blur-[2px] border border-white/20 shadow-md transition-all duration-300 ease-out`}
+          className={`absolute w-[400px] left-[-15px] h-[190px] overflow-hidden rounded-[95px]
+            bg-[#212121]/10 border border-white/20 shadow-md
+            transition-all duration-300 ease-out`}
           style={{
             opacity: 1,
             transform: isHovering
               ? `translate(${position.x}px, ${position.y}px)`
-              : "translateY(60px)",
-            bottom: "0",
+              : "translateY(70px)",
+            bottom: 0,
+            boxShadow: `
+              0 0 2px 1px rgba(255,255,255,0.05) inset,
+              0 0 10px 4px rgba(255,255,255,0.08) inset,
+              0px 4px 16px rgba(17,17,26,0.05),
+              0px 8px 24px rgba(17,17,26,0.05),
+              0px 16px 56px rgba(17,17,26,0.05)
+            `,
+            backdropFilter: "url(#filter) brightness(1.1) saturate(0)",
+            WebkitBackdropFilter: "url(#filter) brightness(1.1) saturate(0)",
+            mixBlendMode: "screen",
           }}
-
         >
-          {/* <div className="absolute flex items-center justify-center h-[108px] w-full px-4 py-2 bottom-0 rounded-b-[77px] text-white cursor-pointer z-1 transition-all duration-300 ease-in-out"
-            style={{
-              background:
-                "linear-gradient(90deg, #8D2629 0%, #F9E072 3.65%, #FFFFFF 8.48%, #772EAB 12.69%, #4D3591 16.63%, #BFE8F1 20.71%, #FFFFFF 25.04%, #F8FE9B 31.53%, #FFE05D 35.1%, #E9681C 38.92%, #A32825 43.25%, #243A42 47.2%, #2F0E03 50.89%, #3A415B 54.96%, #44492E 58.91%, #635041 62.61%, #170C08 66.55%, #EDF3F3 89.35%, #D9FDFF 92.28%, #B2ECFF 95.2%, #8B48DD 97.5%, #582483 100%)",
-                opacity:"0.5"
-            }}
-          /> */}
-          <img src="./Glass-shape.png" alt=""  className="absolute bottom-0"/>
-          </div>
+          <img src="./Glass-shape.png" alt="" className="absolute bottom-0" />
+        </div>
       </div>
+
+      {/* <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
+        <defs>
+          <filter id="filter" colorInterpolationFilters="sRGB">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.012 0.02"
+              numOctaves="2"
+              seed="2"
+              stitchTiles="stitch"
+              result="map"
+            />
+
+            <feDisplacementMap in="SourceGraphic" in2="map" scale="30" xChannelSelector="R" yChannelSelector="G" result="dispRed" />
+            <feColorMatrix in="dispRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
+
+            <feDisplacementMap in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G" result="dispGreen" />
+            <feColorMatrix in="dispGreen" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
+
+            <feDisplacementMap in="SourceGraphic" in2="map" scale="25" xChannelSelector="R" yChannelSelector="G" result="dispBlue" />
+            <feColorMatrix in="dispBlue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
+
+            <feBlend in="red" in2="green" mode="screen" result="rg" />
+            <feBlend in="rg" in2="blue" mode="screen" result="output" />
+            <feGaussianBlur in="output" stdDeviation="0.7" />
+          </filter>
+        </defs>
+      </svg> */}
+
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
+        <defs>
+          <filter id="filter" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015 0.03" numOctaves="2" seed="3" stitchTiles="stitch" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            <feGaussianBlur in="displaced" stdDeviation="0.6" result="blurred" />
+
+            <feFlood x="0" y="0" width="20%" height="20%" floodColor="white" result="topLeft" />
+            <feFlood x="80%" y="0" width="20%" height="20%" floodColor="white" result="topRight" />
+            <feFlood x="0" y="80%" width="20%" height="20%" floodColor="white" result="bottomLeft" />
+            <feFlood x="80%" y="80%" width="20%" height="20%" floodColor="white" result="bottomRight" />
+
+            <feMerge result="edges">
+              <feMergeNode in="topLeft" />
+              <feMergeNode in="topRight" />
+              <feMergeNode in="bottomLeft" />
+              <feMergeNode in="bottomRight" />
+            </feMerge>
+
+            <feComposite in="blurred" in2="edges" operator="in" result="cornerEffect" />
+            <feBlend in="SourceGraphic" in2="cornerEffect" mode="lighten" />
+          </filter>
+        </defs>
+      </svg>
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
+        <defs>
+          <filter id="filter" colorInterpolationFilters="sRGB">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.012 0.02"
+              numOctaves="2"
+              seed="2"
+              stitchTiles="stitch"
+              result="map"
+            />
+
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="map"
+              scale="25"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="displaced"
+            />
+
+            <feGaussianBlur in="displaced" stdDeviation="0.5" result="blurred" />
+
+            <feImage
+              preserveAspectRatio="none"
+              xlinkHref="data:image/svg+xml;utf8,
+          <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
+            <radialGradient id='g' cx='50%' cy='50%' r='75%'>
+              <stop offset='60%' stop-color='black'/>
+              <stop offset='100%' stop-color='white'/>
+            </radialGradient>
+            <rect width='100%' height='100%' fill='url(#g)'/>
+          </svg>"
+              result="maskImage"
+            />
+
+            <feComposite in="blurred" in2="maskImage" operator="out" result="edgesOnly" />
+            <feBlend in="SourceGraphic" in2="edgesOnly" mode="normal" />
+          </filter>
+        </defs>
+      </svg>
 
       <CollaboratePopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
     </section>

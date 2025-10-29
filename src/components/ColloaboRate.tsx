@@ -46,17 +46,23 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                </p>
 
                <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
-                  <input
-                     type="email"
-                     defaultValue="your@email.com"
-                     className="w-full border-b-2 text-base leading-6 font-dm-Medium text-[#616161] border-[#9AA0A6] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
-                  />
+                  <div className="relative w-full">
+                     <input
+                        type="email"
+                        defaultValue="your@email.com"
+                        className="w-full text-base leading-6 font-dm-Medium text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
+                     />
+                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
+                  </div>
 
-                  <textarea
-                     defaultValue="Optional message"
-                     className="w-full border-b-2 text-base leading-6 font-dm-Medium resize-none text-[#616161] border-[#9AA0A6] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
-                     style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-                  />
+                  <div className="relative w-full mt-4">
+                     <textarea
+                        defaultValue="Optional message"
+                        className="w-full text-base leading-6 font-dm-Medium resize-none text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center flex items-center justify-center"
+                     />
+                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
+                  </div>
+
 
                   <div className="p-px rounded-sm text-base leading-6 bg-gradient-to-b from-[#737373] to-[#0E0E0E]">
                      <button

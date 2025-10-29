@@ -30,7 +30,7 @@ function App() {
       <Header />
       <HeroSection />
       <WhatWeDo />
-      <div className="max-w-[1423px] lg:justify-start justify-between foot w-full mx-auto px-4 lg:pb-5 pb-4 xl:px-[60px] flex text-[#BFBFBF] items-center text-[12px] lg:gap-4 gap-2">
+      <div className="max-w-[1383px] lg:justify-start justify-between foot w-full mx-auto px-4 lg:pb-5 pb-4 lg:px-[30px] xl:px-[60px] flex text-[#BFBFBF] items-center text-[12px] lg:gap-4 gap-2">
         <div className="flex items-center space-x-1 sm:mb-0">
           <span>© 2025 · 0110 · London, UK</span>
         </div>
@@ -43,7 +43,7 @@ function App() {
         </a>
       </div>
 
-      <div className='show-tab navHead sm:hidden w-full gradient-border-nav mx-auto px-4 xl:px-[60px]'>
+      <div className='show-tab navHead sm:hidden w-full gradient-border-nav mx-auto px-4 lg:px-[30px] xl:px-[60px]'>
         <div
           className="absolute h-[99%] w-[99%] opacity-[0.5]"
           style={{
@@ -52,13 +52,13 @@ function App() {
           }}
         >
         </div>
-        <div className='flex justify-between items-center w-full'>
+        <div className='flex justify-between items-center w-full relative z-1'>
           <div className="header-bar h-14 py-3">
             <a href="/">
               <img src="./Logo.svg" className="w-[90px] h-8" /></a>
           </div>
           <div className="rounded-md overflow-hidden w-full max-w-[162px]">
-            <button className="bg-[#FAFAFA] h-8 text-[#0E0E0E] font-dm-regular rounded-sm w-full text-base leading-6" onClick={() => setShowPopup(true)}>Request the deck</button>
+            <button className="bg-[#FAFAFA] h-8 text-[#0E0E0E] font-dm-Medium rounded-sm w-full text-base leading-6" onClick={() => setShowPopup(true)}>Request the deck</button>
           </div>
         </div>
       </div>
