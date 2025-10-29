@@ -15,33 +15,6 @@ const categories = [
   "Mapping tools",
 ]
 
-const projectsDes = [
-  {
-    title: "Pace IQ",
-    desc: ["Smart pacing and", "analytics for ultra events"],
-  },
-  {
-    title: "Transpyrenea",
-    desc: ["Ultra-race site + live", "tracking"],
-  },
-  {
-    title: "Water Finder",
-    desc: ["Offline water geo tagging", "for runners"],
-  },
-  {
-    title: "Checkpoint",
-    desc: ["Volunteer and checkpoint", "coordination for races"],
-  },
-  {
-    title: "Athlete Payments",
-    desc: ["Payments flow for", "organisers"],
-  },
-  {
-    title: "Garmin Race Face",
-    desc: ["Connect IQ watch face"],
-  },
-]
-
 const WhatWeDo = () => {
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null)
   const [visible, setVisible] = useState(false)
@@ -49,7 +22,7 @@ const WhatWeDo = () => {
   const isFirstEnter = useRef(true)
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const OVERFLOW = 30
+  const OVERFLOW = 10
   const DIV_WIDTH = 204
   const DIV_HEIGHT = 112
 
@@ -105,8 +78,8 @@ const WhatWeDo = () => {
 
 
   return (
-    <section className="max-w-[1423px] WhatWeDo w-full mx-auto px-4 xl:px-[60px] text-white py-10 overflow-hidden">
-      <h2 className="text-[24px] leading-7 tracking-[-0.25px] text-[#BFBFBF] font-dm-regular font-semibold mb-6">
+    <section className="max-w-[1383px] WhatWeDo w-full mx-auto px-4 lg:px-[30px] xl:px-[60px] text-white py-10 overflow-hidden">
+      <h2 className="text-[24px] leading-7 tracking-[-0.25px] text-[#BFBFBF] font-dm-regular mb-6">
         What we do
       </h2>
 
@@ -125,22 +98,75 @@ const WhatWeDo = () => {
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          {projectsDes.map((item, idx) => (
-            <div key={idx} className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
-              <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1] [background:linear-gradient(90deg,#4B2E91_0%,#8FD8F1_35%,#FFFFFF_50%,#FFF3A6_70%,#FFE66A_100%)]" />
-              <div className="relative z-10">
-                <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">{item.title}</h3>
-                <p className="text-[#BFBFBF] text-[12px] leading-4">
-                  {item.desc.map((line, i) => (
-                    <React.Fragment key={i}>
-                      {line}
-                      {i < item.desc.length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </p>
-              </div>
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#8D2629_0%,#F9E072_25.96%,#FFFFFF_54.81%,#772EAB_80.77%,#4D3591_100%)]" />
+            <div className="relative z-10">
+              <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Pace IQ</h3>
+              <p className="text-[#BFBFBF] text-[12px] leading-4">
+                Smart pacing and
+                <br />
+                analytics for ultra events
+              </p>
             </div>
-          ))}
+          </div>
+
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#4D3591_0%,#FFFFFF_54.81%,#F9E072_100%)]" />
+            <div className="relative z-10">
+              <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Transpyrenea</h3>
+              <p className="text-[#BFBFBF] text-[12px] leading-4">
+                Ultra-race site + live
+                <br />
+                tracking
+              </p>
+            </div>
+          </div>
+
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#FFE05D_0%,#E9681C_29.81%,#A32825_53.85%,#243A42_81.25%,#2F0E03_100%)]" />
+            <div className="relative z-10">
+              <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Water Finder</h3>
+              <p className="text-[#BFBFBF] text-[12px] leading-4">
+                Offline water geo tagging
+                <br />
+                for runners
+              </p>
+            </div>
+          </div>
+
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#3A415B_0%,#44492E_25%,#635041_50.48%,#170C08_70.67%,#EDF3F3_100%)]" />
+            <div className="relative z-10">
+              <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Checkpoint</h3>
+              <p className="text-[#BFBFBF] text-[12px] leading-4">
+                Volunteer and checkpoint
+                <br />
+                coordination for races
+              </p>
+            </div>
+          </div>
+
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-9 bg-[linear-gradient(90deg,#EDF3F3_0%,#EDF3F3_25%,#EDF3F3_50.48%,#EDF3F3_70.67%,#EDF3F3_100%)]" />
+            <div className="relative z-10">
+              <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Athlete Payments</h3>
+              <p className="text-[#BFBFBF] text-[12px] leading-4">
+                Payments flow for
+                <br />
+                organisers
+              </p>
+            </div>
+          </div>
+
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#B2ECFF_0%,#8B48DD_52.4%,#582483_100%)]" />
+            <div className="relative z-10">
+              <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Garmin Race Face</h3>
+              <p className="text-[#BFBFBF] text-[12px] leading-4">
+                Connect IQ watch face
+              </p>
+            </div>
+          </div>
 
           <div
             ref={dragDivRef}
@@ -157,16 +183,54 @@ const WhatWeDo = () => {
               border: "1px solid #6363634d",
               boxShadow:
                 "inset 0 0 30px #0000004f, 0 0 60px rgba(255,255,255,0.15), inset 0 0 80px #0000004f",
+              backdropFilter: "url(#filterWhatwedo)",
+              WebkitBackdropFilter: "url(#filterWhatwedo)",
               mixBlendMode: "screen",
               filter:
-                "contrast(1.2) brightness(1.3) saturate(120%) drop-shadow(0 0 6px #0000004f)",
+                "drop-shadow(0 0 6px #0000004f)",
               animation: "distort 3s ease-in-out infinite",
             }}
           />
+
+          <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" className="absolute">
+            <defs>
+              <filter id="filterWhatwedo" color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="3" result="noise" />
+                <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  
+                                                            0 1 0 0 0  
+                                                            0 0 1 0 0  
+                                                            0 0 0 1 0" result="original" />
+                {/* <!-- Red channel shift --> */}
+                <feOffset in="original" dx="2" dy="0" result="redShift" />
+                <feColorMatrix in="redShift" type="matrix" values="1 0 0 0 0  
+                                                        0 0 0 0 0  
+                                                        0 0 0 0 0  
+                                                        0 0 0 1 0" result="red" />
+                {/* <!-- Green channel shift --> */}
+                <feOffset in="original" dx="-2" dy="0" result="greenShift" />
+                <feColorMatrix in="greenShift" type="matrix" values="0 0 0 0 0  
+                                                          0 1 0 0 0  
+                                                          0 0 0 0 0  
+                                                          0 0 0 1 0" result="green" />
+                {/* <!-- Blue channel stays centered --> */}
+                <feColorMatrix in="original" type="matrix" values="0 0 0 0 0  
+                                                        0 0 0 0 0  
+                                                        0 0 1 0 0  
+                                                        0 0 0 1 0" result="blue" />
+
+                <feBlend in="red" in2="green" mode="screen" result="rg" />
+                <feBlend in="rg" in2="blue" mode="screen" result="glitched" />
+                <feMerge>
+                  <feMergeNode in="glitched" />
+                </feMerge>
+              </filter>
+            </defs>
+          </svg>
+
         </div>
       </div>
 
-      <div className="relative sm:hidden overflow-visible mt-10">
+      <div className="relative sm:hidden hide-tab overflow-visible mt-10">
         <div className="grid grid-cols-2 group tabView gap-4">
           <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full col-span-full max-w-[75%] ml-auto!">
             <div className="absolute h-[99%] w-[99%] opacity-[0.07]" style={{
@@ -174,7 +238,7 @@ const WhatWeDo = () => {
             }}
             >
             </div>
-            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1] [background:linear-gradient(90deg,#4B2E91_0%,#8FD8F1_35%,#FFFFFF_50%,#FFF3A6_70%,#FFE66A_100%)]" />
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Pace IQ</h3>
               <p className="text-[#BFBFBF] text-[12px] leading-4" dangerouslySetInnerHTML={{ __html: "Smart pacing and analytics for ultra <br /> events" }} />
@@ -191,7 +255,7 @@ const WhatWeDo = () => {
             >
             </div>
 
-            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1] [background:linear-gradient(90deg,#4B2E91_0%,#8FD8F1_35%,#FFFFFF_50%,#FFF3A6_70%,#FFE66A_100%)]" />
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Transpyrenea</h3>
               <p className="text-[#BFBFBF] text-[12px] leading-4" dangerouslySetInnerHTML={{ __html: "Ultra-race site + live <br /> tracking" }} />
@@ -208,7 +272,7 @@ const WhatWeDo = () => {
             >
             </div>
 
-            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1] [background:linear-gradient(90deg,#4B2E91_0%,#8FD8F1_35%,#FFFFFF_50%,#FFF3A6_70%,#FFE66A_100%)]" />
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Water Finder</h3>
               <p className="text-[#BFBFBF] text-[12px] leading-4" dangerouslySetInnerHTML={{ __html: "Offline water geo <br /> tagging for runners" }} />
@@ -225,7 +289,7 @@ const WhatWeDo = () => {
             >
             </div>
 
-            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1] [background:linear-gradient(90deg,#4B2E91_0%,#8FD8F1_35%,#FFFFFF_50%,#FFF3A6_70%,#FFE66A_100%)]" />
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Checkpoint</h3>
               <p className="text-[#BFBFBF] text-[12px] leading-4" dangerouslySetInnerHTML={{ __html: "Volunteer and checkpoint <br /> coordination for races" }} />
@@ -242,7 +306,7 @@ const WhatWeDo = () => {
             >
             </div>
 
-            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1] [background:linear-gradient(90deg,#4B2E91_0%,#8FD8F1_35%,#FFFFFF_50%,#FFF3A6_70%,#FFE66A_100%)]" />
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Athlete  <br /> Payments</h3>
               <p className="text-[#BFBFBF] text-[12px] leading-4" dangerouslySetInnerHTML={{ __html: "Payments flow for <br /> organisers" }} />
@@ -258,7 +322,7 @@ const WhatWeDo = () => {
               }}
             >
             </div>
-            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1] [background:linear-gradient(90deg,#4B2E91_0%,#8FD8F1_35%,#FFFFFF_50%,#FFF3A6_70%,#FFE66A_100%)]" />
+            <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Garmin  <br /> Race Face</h3>
               <p className="text-[#BFBFBF] text-[12px] leading-4" dangerouslySetInnerHTML={{ __html: "Connect IQ watch <br /> face" }} />
