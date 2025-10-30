@@ -203,7 +203,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
           <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" className="absolute">
             <defs>
-              <filter id="filterWhatwedo" color-interpolation-filters="sRGB">
+              <filter id="filterWhatwedo" colorInterpolationFilters="sRGB">
                 <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="3" result="noise" />
                 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  
                                                             0 1 0 0 0  

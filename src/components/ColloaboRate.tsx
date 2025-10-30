@@ -28,33 +28,32 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
   }
 
   async function handleSend() {
-    if (loading) return;
+    // if (loading) return;
 
-    setLoading(true);
+    // setLoading(true);
 
-    const payload = {
-      name: "Test user",
-      email: email,
-      message: message,
-    };
+    // const payload = {
+    //   name: "Test user",
+    //   email: email,
+    //   message: message,
+    // };
 
-    try {
-      const response = await axios.post("http://69.62.85.124:3054/api/email/contact", payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    // try {
+    //   const response = await axios.post("http://69.62.85.124:3054/api/email/contact", payload, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
 
-      console.log("API Response:", response.data);
+    //   console.log("API Response:", response.data);
 
-      // Show success message if API call succeeded
-      setShowSuccess(true);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      alert("Something went wrong. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
+    //   setShowSuccess(true);
+    // } catch (error) {
+    //   console.error("Error sending message:", error);
+    //   alert("Something went wrong. Please try again later.");
+    // } finally {
+    //   setLoading(false);
+    // }
   }
 
   if (!isOpen) return null;
