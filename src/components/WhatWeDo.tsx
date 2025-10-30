@@ -1,6 +1,10 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import React, { useState, useRef } from "react";
+
+interface WhatWeDoProps {
+  setTriggerGlow: (value: boolean) => void; // NEW
+}
 
 const categories = [
   "Sport digital solutions",
@@ -15,7 +19,8 @@ const categories = [
   "Mapping tools",
 ]
 
-const WhatWeDo = () => {
+const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
+
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null)
   const [visible, setVisible] = useState(false)
   const dragDivRef = useRef<HTMLDivElement>(null)
@@ -76,6 +81,10 @@ const WhatWeDo = () => {
     }, 3000)
   }
 
+  const handleCardClick = () => {
+    setTriggerGlow(true);
+    setTimeout(() => setTriggerGlow(false), 1500);
+  };
 
   return (
     <section className="max-w-[1383px] WhatWeDo w-full mx-auto px-4 lg:px-[30px] xl:px-[60px] text-white py-10 overflow-hidden">
@@ -98,7 +107,7 @@ const WhatWeDo = () => {
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#8D2629_0%,#F9E072_25.96%,#FFFFFF_54.81%,#772EAB_80.77%,#4D3591_100%)]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Pace IQ</h3>
@@ -110,7 +119,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden " onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#4D3591_0%,#FFFFFF_54.81%,#F9E072_100%)]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Transpyrenea</h3>
@@ -122,7 +131,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#FFE05D_0%,#E9681C_29.81%,#A32825_53.85%,#243A42_81.25%,#2F0E03_100%)]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Water Finder</h3>
@@ -134,7 +143,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#3A415B_0%,#44492E_25%,#635041_50.48%,#170C08_70.67%,#EDF3F3_100%)]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Checkpoint</h3>
@@ -146,7 +155,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-9 bg-[linear-gradient(90deg,#EDF3F3_0%,#EDF3F3_25%,#EDF3F3_50.48%,#EDF3F3_70.67%,#EDF3F3_100%)]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Athlete Payments</h3>
@@ -158,7 +167,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#B2ECFF_0%,#8B48DD_52.4%,#582483_100%)]" />
             <div className="relative z-10">
               <h3 className="text-base font-medium leading-6 tracking-[-0.2px] mb-2">Garmin Race Face</h3>
@@ -170,7 +179,7 @@ const WhatWeDo = () => {
 
           <div
             ref={dragDivRef}
-            className={`absolute rounded-md w-[204px] backdrop-blur-[1px] h-28 z-5 pointer-events-none overflow-hidden transition-all duration-500 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            className={`absolute DragW rounded-md w-[204px] backdrop-blur-[1px] h-28 z-5 pointer-events-none overflow-hidden transition-all duration-500 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
               }`}
             style={{
               transform: position
@@ -229,7 +238,7 @@ const WhatWeDo = () => {
 
       <div className="relative sm:hidden hide-tab overflow-visible mt-10">
         <div className="grid grid-cols-2 group tabView gap-4">
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full col-span-full max-w-[75%] ml-auto!">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full col-span-full max-w-[75%] ml-auto!" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] opacity-[0.07]" style={{
               background: 'linear-gradient(180deg, #8D2629 0%, #F9E072 25.96%, #FFFFFF 54.81%, #772EAB 80.77%, #4D3591 100%)'
             }}
@@ -242,7 +251,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full" onClick={handleCardClick}>
             <div
               className="absolute h-[99%] w-[99%] opacity-[0.07]"
               style={{
@@ -259,7 +268,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full" onClick={handleCardClick}>
             <div
               className="absolute h-[99%] w-[99%] opacity-[0.07]"
               style={{
@@ -276,7 +285,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full col-span-full max-w-[75%] mr-auto!">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full col-span-full max-w-[75%] mr-auto!" onClick={handleCardClick}>
             <div
               className="absolute h-[99%] w-[99%] opacity-[0.07]"
               style={{
@@ -293,7 +302,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full" onClick={handleCardClick}>
             <div
               className="absolute h-[99%] w-[99%] opacity-[0.07]"
               style={{
@@ -310,7 +319,7 @@ const WhatWeDo = () => {
             </div>
           </div>
 
-          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full">
+          <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden w-full" onClick={handleCardClick}>
             <div
               className="absolute h-[99%] w-[99%] opacity-[0.07]"
               style={{

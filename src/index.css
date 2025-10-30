@@ -201,12 +201,30 @@
   transition: all .3s ease-in-out;
 }
 
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-flow {
+  animation: gradient-flow 3s ease infinite;
+  background-size: 400% 100%;
+}
+
+
 .gradient-border-nav::before {
   content: "";
   position: absolute;
   inset: 0;
   padding: 1px;
-  background: linear-gradient(180deg, #737373 0%, #0E0E0E 100%);
+  background: linear-gradient(180deg, #7373732b 0%, #0E0E0E 100%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -216,6 +234,10 @@
 }
 
 @media screen and (min-width:601px) and (max-width:1023px) {
+
+  .DragW{
+    width: 263px !important;
+  }
 
   .hide-tab {
     display: none !important;

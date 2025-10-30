@@ -3,7 +3,11 @@
 import React, { useState, useRef } from "react";
 import CollaboratePopup from "./ColloaboRate";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  triggerGlow: boolean;
+}
+
+export default function HeroSection({ triggerGlow }: HeroSectionProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,20 +48,23 @@ export default function HeroSection() {
           <button
             className="gradient-border-btn group relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] backdrop-blur-[2px] bg-white/5 hover:bg-white/10"
             onClick={() => setShowPopup(true)}
+            data-active={triggerGlow || undefined}
           >
             <div
-              className="absolute inset-0 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] blur-[2px]"
+              className={`
+        absolute inset-0 opacity-0 scale-95 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] blur-[2px]
+        ${triggerGlow ? 'opacity-100 scale-100' : 'group-hover:opacity-100 group-hover:scale-100'}
+      `}
               style={{
                 background: `linear-gradient(90deg, rgba(141, 38, 41, 0.2) 0%, rgba(249, 224, 114, 0.2) 3.65%, rgba(255, 255, 255, 0.2) 8.48%, rgba(119, 46, 171, 0.2) 12.69%, rgba(77, 53, 145, 0.2) 16.63%, rgba(191, 232, 241, 0.2) 20.71%, rgba(255, 255, 255, 0.2) 25.04%, rgba(248, 254, 155, 0.2) 31.53%, rgba(255, 224, 93, 0.2) 35.1%, rgba(233, 104, 28, 0.2) 38.92%, rgba(163, 40, 37, 0.2) 43.25%, rgba(36, 58, 66, 0.2) 47.2%, rgba(47, 14, 3, 0.2) 50.89%, rgba(58, 65, 91, 0.2) 54.96%, rgba(68, 73, 46, 0.2) 58.91%, rgba(99, 80, 65, 0.2) 62.61%, rgba(23, 12, 8, 0.2) 66.55%, rgba(237, 243, 243, 0.2) 89.35%, rgba(217, 253, 255, 0.2) 92.28%, rgba(178, 236, 255, 0.2) 95.2%, rgba(139, 72, 221, 0.2) 97.5%, rgba(88, 36, 131, 0.2) 100%)`,
                 boxShadow: `
-              0 0 2px 1px rgba(255,255,255,0.05) inset,
-              0 0 10px 4px rgba(255,255,255,0.08) inset,
-              0px 4px 16px rgba(17,17,26,0.05),
-              0px 8px 24px rgba(17,17,26,0.05),
-              0px 16px 56px rgba(17,17,26,0.05)
-            `,
-                filter:
-                  "saturate(120%) brightness(1.3) contrast(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.2))",
+          0 0 2px 1px rgba(255,255,255,0.05) inset,
+          0 0 10px 4px rgba(255,255,255,0.08) inset,
+          0px 4px 16px rgba(17,17,26,0.05),
+          0px 8px 24px rgba(17,17,26,0.05),
+          0px 16px 56px rgba(17,17,26,0.05)
+        `,
+                filter: "saturate(120%) brightness(1.3) contrast(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.2))",
                 mixBlendMode: "screen",
               }}
             />
@@ -75,6 +82,8 @@ export default function HeroSection() {
         onMouseLeave={handleMouseLeave}
       >
         <img src="./Logo.svg" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" />
+        {/* <img src="./efeect.png" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" /> */}
+        
 
         <div
           className={`absolute w-[400px] left-[-15px] h-[190px] overflow-hidden rounded-[95px]
@@ -98,7 +107,7 @@ export default function HeroSection() {
             mixBlendMode: "screen",
           }}
         >
-          <img src="./Glass-shape.png" alt="" className="absolute bottom-0" />
+          <img src="./Glass-shape.png" alt="" className="absolute bottom-0 pointer-events-none select-none" />
         </div>
       </div>
 
