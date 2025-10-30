@@ -33,7 +33,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
          onClick={onClose}
       >
          <div
-            className="bg-white rounded-sm text-center px-10 py-10 w-[95%] md:w-full space-y-10 max-w-[480px] shadow-lg relative"
+            className="bg-white rounded-sm text-center lg:px-10 lg:py-10 px-6 pt-6 pb-8 w-[95%] md:w-full space-y-10 max-w-[480px] shadow-lg relative"
             onClick={(e) => e.stopPropagation()}
          >
             <h2 className="md:text-[50px] text-[30px] text-[#060606] font-dm-regular tracking-[-0.25px] md:leading-[60px]">
