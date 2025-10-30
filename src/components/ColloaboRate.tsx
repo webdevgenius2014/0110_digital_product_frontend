@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import axios from "axios";
+// import axios from "axios";
 
 interface CollaboratePopupProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
 
   function handleEmail(data: any) {
@@ -47,7 +47,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
 
     //   console.log("API Response:", response.data);
 
-    //   setShowSuccess(true);
+      setShowSuccess(true);
     // } catch (error) {
     //   console.error("Error sending message:", error);
     //   alert("Something went wrong. Please try again later.");
@@ -126,12 +126,14 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
               <button
                 type="button"
                 onClick={handleSend}
-                disabled={loading}
-                className={`w-full cursor-pointer ${
-                  loading ? "bg-[#555]" : "bg-[#232323] hover:bg-[#2f2f2f]"
-                } text-white rounded-sm py-2 font-medium transition`}
+                // disabled={loading}
+                // className={`w-full cursor-pointer ${
+                //   loading ? "bg-[#555]" : "bg-[#232323] hover:bg-[#2f2f2f]"
+                // } text-white rounded-sm py-2 font-medium transition`}
+                 className={`w-full cursor-pointer text-white rounded-sm py-2 font-medium transition bg-[#232323] hover:bg-[#2f2f2f]`}
               >
-                {loading ? "Sending..." : "Send"}
+                {/* {loading ? "Sending..." : "Send"} */}
+                {"Send"}
               </button>
             </div>
           </form>
