@@ -82,9 +82,6 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
         onMouseLeave={handleMouseLeave}
       >
         <img src="./Logo.svg" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" />
-        {/* <img src="./efeect.png" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" /> */}
-        
-
         <div
           className={`absolute w-[400px] left-[-15px] h-[190px] overflow-hidden rounded-[95px]
             bg-[#212121]/10 border border-white/20 shadow-md
@@ -107,6 +104,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
             mixBlendMode: "screen",
           }}
         >
+          {/* <div className="bg-[#212121]/10 border border-white/20 w-10 absolute left-0 top-0" /> */}
           <img src="./Glass-shape.png" alt="" className="absolute bottom-0 pointer-events-none select-none" />
         </div>
       </div>
@@ -138,69 +136,6 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
           </filter>
         </defs>
       </svg>
-
-
-      {/* <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
-        <defs>
-          <filter id="filter" color-interpolation-filters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="0.1" seed="1" stitchTiles="stitch" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-            <feGaussianBlur in="displaced" stdDeviation="0" result="blurred" />
-
-            <feMerge result="corners">
-              <feMergeNode in="topLeft" />
-              <feMergeNode in="topRight" />
-              <feMergeNode in="bottomLeft" />
-              <feMergeNode in="bottomRight" />
-            </feMerge>
-
-            <feComposite in="blurred" in2="corners" operator="in" result="cornerEffect" />
-            <feBlend in="SourceGraphic" in2="cornerEffect" mode="lighten" />
-          </filter>
-        </defs>
-      </svg> */}
-
-      {/* <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
-        <defs>
-          <filter id="filter" colorInterpolationFilters="sRGB">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.012 0.02"
-              numOctaves="2"
-              seed="2"
-              stitchTiles="stitch"
-              result="map"
-            />
-
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="map"
-              scale="25"
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="displaced"
-            />
-
-            <feGaussianBlur in="displaced" stdDeviation="0.5" result="blurred" />
-
-            <feImage
-              preserveAspectRatio="none"
-              xlinkHref="data:image/svg+xml;utf8,
-          <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
-            <radialGradient id='g' cx='50%' cy='50%' r='75%'>
-              <stop offset='60%' stop-color='black'/>
-              <stop offset='100%' stop-color='white'/>
-            </radialGradient>
-            <rect width='100%' height='100%' fill='url(#g)'/>
-          </svg>"
-              result="maskImage"
-            />
-
-            <feComposite in="blurred" in2="maskImage" operator="out" result="edgesOnly" />
-            <feBlend in="SourceGraphic" in2="edgesOnly" mode="normal" />
-          </filter>
-        </defs>
-      </svg> */}
 
       <CollaboratePopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
     </section>
