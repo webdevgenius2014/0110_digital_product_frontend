@@ -200,19 +200,16 @@ const WhatWeDo = () => {
                                                             0 1 0 0 0  
                                                             0 0 1 0 0  
                                                             0 0 0 1 0" result="original" />
-                {/* <!-- Red channel shift --> */}
-                <feOffset in="original" dx="2" dy="0" result="redShift" />
+                <feOffset in="original" dx="0" dy="2" result="redShift" />
                 <feColorMatrix in="redShift" type="matrix" values="1 0 0 0 0  
                                                         0 0 0 0 0  
                                                         0 0 0 0 0  
                                                         0 0 0 1 0" result="red" />
-                {/* <!-- Green channel shift --> */}
-                <feOffset in="original" dx="-2" dy="0" result="greenShift" />
+                <feOffset in="original" dx="0" dy="-2" result="greenShift" />
                 <feColorMatrix in="greenShift" type="matrix" values="0 0 0 0 0  
                                                           0 1 0 0 0  
                                                           0 0 0 0 0  
                                                           0 0 0 1 0" result="green" />
-                {/* <!-- Blue channel stays centered --> */}
                 <feColorMatrix in="original" type="matrix" values="0 0 0 0 0  
                                                         0 0 0 0 0  
                                                         0 0 1 0 0  
