@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://0110digitalproductfrontendnew.vercel.app/sitemap.xml
