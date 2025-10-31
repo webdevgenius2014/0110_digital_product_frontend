@@ -1,6 +1,93 @@
 @import "tailwindcss";
 
 
+:root {
+
+  --BodySmall: 12px;
+  --BodyMedium: 15px;
+  --BodyLarge: 16px;
+  --Heading1: 56px;
+  --Heading2: 24px;
+  --Heading3: 36px;
+
+  --Gray50: #FAFAFA;
+  --Gray200: #BFBFBF;
+  --Gray700: #232323;
+  --Gray800: #181818;
+  --Black: #0E0E0E;
+  --Black2: #060606;
+
+}
+
+
+.Heading1 {
+  font-size: var(--Heading1);
+}
+
+.Heading2 {
+  font-size: var(--Heading2);
+}
+
+.BodyLarge {
+  font-size: var(--BodyLarge);
+}
+
+.BodyMedium {
+  font-size: var(--BodyMedium);
+}
+
+.BodySmall {
+  font-size: var(--BodySmall);
+}
+
+.Gray50 {
+  color: var(--Gray50);
+}
+
+.Gray200 {
+  color: var(--Gray200);
+}
+
+.Gray700 {
+  color: var(--Gray700);
+}
+
+.Gray800 {
+  color: var(--Gray800);
+}
+
+.Black {
+  color: var(--Black);
+}
+
+.Black2 {
+  color: var(--Black2);
+}
+
+.Gray50-bg {
+  background-color: var(--Gray50);
+}
+
+.Gray200-bg {
+  background-color: var(--Gray200);
+}
+
+.Gray700-bg {
+  background-color: var(--Gray700);
+}
+
+.Gray800-bg {
+  background-color: var(--Gray800);
+}
+
+.Black-bg {
+  background-color: var(--Black);
+}
+
+.Black-bg-2 {
+  background-color: var(--Black);
+}
+
 @font-face {
   font-family: DMSans-Bold;
   src: url("../src//assets/font-family/DMSans-SemiBold.ttf");
@@ -47,14 +134,17 @@
   justify-content: center;
   height: 40px;
   width: 100%;
-  max-width: 181px;
-  padding: 8px 16px;
+  max-width: 184px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   border-radius: 4px;
+  line-height: 24px;
   background: #232323;
   color: white;
   cursor: pointer;
   z-index: 1;
-  transition: all .3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .gradient-border-btn::before {
@@ -70,7 +160,43 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   z-index: -1;
+  opacity: 0.6;
+  transition: opacity 0.3s ease-in-out;
 }
+
+.gradient-border-btn:hover::before {
+  opacity: 1;
+}
+
+.gradient-border-btn:hover>div:first-child,
+.gradient-border-btn[data-active="true"]>div:first-child {
+  animation: rainbowSweep 1.2s ease-in-out 0.1s forwards;
+}
+
+
+@keyframes rainbowSweep {
+  0% {
+    background-size: 300% 100%;
+    background-position-x: 200%;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  50% {
+    background-position-x: 50%;
+    opacity: 1;
+  }
+
+  100% {
+    background-position-x: 0%;
+    opacity: 1;
+    /* 👈 yahan opacity: 1 rakho instead of 0 */
+  }
+}
+
 
 .what-wedo-btn {
   position: relative;
@@ -79,8 +205,7 @@
   justify-content: center;
   padding: 6px 10px;
   border-radius: 4px;
-  color: white;
-  cursor: pointer;
+  color: #FAFAFA;
   z-index: 1;
   background-color: #181818;
 }
@@ -205,17 +330,15 @@
   0% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 50%;
-  }
+
   100% {
-    background-position: 0% 50%;
+    background-position: 100% 50%;
   }
 }
 
 .animate-gradient-flow {
-  animation: gradient-flow 3s ease infinite;
-  background-size: 400% 100%;
+  animation: gradient-flow 0.8s linear forwards;
+  background-size: 250% 100%;
 }
 
 
@@ -233,9 +356,21 @@
   z-index: -1;
 }
 
+
+.mobileNav {
+  position: fixed;
+  bottom: 0;
+  backdrop-filter: blur(2px);
+}
+
 @media screen and (min-width:601px) and (max-width:1023px) {
 
-  .DragW{
+  .Heading1 {
+    font-size: var(--Heading3);
+  }
+
+
+  .DragW {
     width: 263px !important;
   }
 
@@ -279,6 +414,14 @@
     padding-right: 24px !important;
   }
 
+  .footerMn {
+    padding-bottom: 70px;
+  }
+
+  .what-wedo-btn {
+    background-color: #232323 !important;
+  }
+
 }
 
 @media screen and (min-width:1024px) {
@@ -289,12 +432,24 @@
 }
 
 @media screen and (max-width:600px) {
+  .what-wedo-btn {
+    background-color: #232323 !important;
+  }
+
   .hideMb {
     display: none !important;
   }
 
   div .card-btn {
     min-height: 116px;
+  }
+
+  .footerMn {
+    padding-bottom: 70px;
+  }
+
+  .Heading1 {
+    font-size: var(--Heading3);
   }
 
 }
@@ -310,4 +465,21 @@
     max-width: 380px;
   }
 
+}
+
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .CustmWidth {
+    max-width: 100% !important;
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .CustmWidth {
+    max-width: 1583px !important;
+    padding-left: 160px !important;
+    padding-right: 160px !important;
+  }
 }
