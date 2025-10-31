@@ -65,7 +65,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
         onClick={onClose}
       >
         <div className="bg-white rounded-sm text-center px-10 py-10 w-[95%] md:w-full max-w-[480px] shadow-lg">
-          <p className="text-base leading-6 font-dm-regular text-[#060606]">Message sent.</p>
+          <p className="BodyLarge leading-6 font-dm-regular Black2">Message sent.</p>
         </div>
       </div>,
       document.body
@@ -81,12 +81,12 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
         className="bg-white rounded-sm text-center lg:px-10 lg:py-10 px-6 pt-6 pb-8 w-[95%] md:w-full space-y-10 max-w-[480px] shadow-lg relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="md:text-[50px] text-[36px] leading-11 text-[#060606] font-dm-regular tracking-[-0.25px] md:leading-[60px]">
+        <h2 className="md:text-[50px] text-[36px] leading-11 Black2 font-dm-regular tracking-[-0.25px] md:leading-[60px]">
           Let’s collaborate.
         </h2>
 
         <div className="max-h-[calc(100vh-190px)] overflow-y-auto overflow-x-hidden space-y-10">
-          <p className="text-base font-dm-Medium text-[#060606]">
+          <p className="BodyLarge font-dm-Medium Black2">
             Leave your email and we’ll get in touch.
           </p>
 
@@ -97,7 +97,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 placeholder="username"
                 onChange={(data) => handleUsername(data)}
                 value={username}
-                className="w-full text-base leading-6 font-dm-Medium text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
+                className="w-full BodyLarge leading-6 font-dm-Medium text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
             </div> */}
@@ -107,7 +107,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 placeholder="your@email.com"
                 onChange={(data) => handleEmail(data)}
                 value={email}
-                className="w-full text-base leading-6 font-dm-Medium text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
+                className="w-full BodyLarge leading-6 font-dm-Medium text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
             </div>
@@ -117,12 +117,12 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 placeholder="Optional message"
                 onChange={(data) => handleMessage(data)}
                 value={message}
-                className="w-full text-base leading-6 font-dm-Medium resize-none text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center flex items-center justify-center"
+                className="w-full BodyLarge leading-6 font-dm-Medium resize-none text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center flex items-center justify-center"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
             </div>
 
-            <div className="p-px rounded-sm text-base leading-6 bg-linear-to-b from-[#737373] to-[#0E0E0E]">
+            <div className="p-px rounded-sm BodyLarge leading-6 bg-linear-to-b from-[#737373] to-[#0E0E0E]">
               <button
                 type="button"
                 onClick={handleSend}
@@ -138,7 +138,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
             </div>
           </form>
 
-          <p className="text-[#060606] text-base leading-6 text-center">
+          <p className="Black2 BodyLarge leading-6 text-center">
             or email us directly:{" "}
             <a href="mailto:hello@0110.sport" className="underline">
               hello@0110.sport

@@ -1,6 +1,92 @@
 @import "tailwindcss";
 
 
+:root {
+
+  --BodySmall: 12px;
+  --BodyMedium: 15px;
+  --BodyLarge: 16px;
+  --Heading1: 56px;
+  --Heading2: 24px;
+  --Heading3: 36px;
+
+  --Gray50: #FAFAFA;
+  --Gray200: #BFBFBF;
+  --Gray700: #232323;
+  --Gray800: #181818;
+  --Black: #0E0E0E;
+  --Black2: #060606;
+  
+}
+
+
+.Heading1 {
+  font-size: var(--Heading1);
+}
+
+.Heading2 {
+  font-size: var(--Heading2);
+}
+
+.BodyLarge {
+  font-size: var(--BodyLarge);
+}
+
+.BodyMedium {
+  font-size: var(--BodyMedium);
+}
+
+.BodySmall {
+  font-size: var(--BodySmall);
+}
+
+.Gray50 {
+  color: var(--Gray50);
+}
+
+.Gray200 {
+  color: var(--Gray200);
+}
+
+.Gray700 {
+  color: var(--Gray700);
+}
+
+.Gray800 {
+  color: var(--Gray800);
+}
+
+.Black {
+  color: var(--Black);
+}
+.Black2 {
+  color: var(--Black2);
+}
+
+.Gray50-bg {
+  background-color: var(--Gray50);
+}
+
+.Gray200-bg {
+  background-color: var(--Gray200);
+}
+
+.Gray700-bg {
+  background-color: var(--Gray700);
+}
+
+.Gray800-bg {
+  background-color: var(--Gray800);
+}
+
+.Black-bg {
+  background-color: var(--Black);
+}
+
+.Black-bg-2 {
+  background-color: var(--Black);
+}
+
 @font-face {
   font-family: DMSans-Bold;
   src: url("../src//assets/font-family/DMSans-SemiBold.ttf");
@@ -278,6 +364,11 @@
 
 @media screen and (min-width:601px) and (max-width:1023px) {
 
+  .Heading1 {
+    font-size: var(--Heading3);
+  }
+
+
   .DragW {
     width: 263px !important;
   }
@@ -354,6 +445,10 @@
 
   .footerMn {
     padding-bottom: 70px;
+  }
+
+  .Heading1 {
+    font-size: var(--Heading3);
   }
 
 }

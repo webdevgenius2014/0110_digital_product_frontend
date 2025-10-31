@@ -30,7 +30,7 @@ function App() {
 
   if (!ready) {
     return (
-      <div className="bg-[#0E0E0E] min-h-screen flex items-center justify-center">
+      <div className="Black-bg min-h-screen flex items-center justify-center">
         <div className="relative w-12 h-12">
           <div className="absolute inset-0 border-4 border-t-[#BFBFBF] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
           <div className="absolute inset-2 border-4 border-t-transparent border-r-[#BFBFBF] border-b-transparent border-l-transparent rounded-full animate-spin animation-delay-300"></div>
@@ -40,12 +40,12 @@ function App() {
   }
 
   return (
-    <div className="bg-[#0E0E0E] xl:min-h-screen overflow-hidden flex flex-col items-start justify-between">
+    <div className="Black-bg xl:min-h-screen overflow-hidden flex flex-col items-start justify-between">
       <Header />
       <HeroSection triggerGlow={triggerGlow} />
       <WhatWeDo setTriggerGlow={setTriggerGlow} />
 
-      <div className="max-w-[1383px] CustmWidth footerMn lg:justify-start justify-between foot w-full mx-auto px-4 lg:pb-5 pb-4 lg:px-[30px] xl:px-[60px] flex text-[#BFBFBF] items-center text-[12px] lg:gap-4 gap-2">
+      <div className="max-w-[1383px] CustmWidth footerMn lg:justify-start justify-between foot w-full mx-auto px-4 lg:pb-5 pb-4 lg:px-[30px] xl:px-[60px] flex Gray200 items-center BodySmall lg:gap-4 gap-2">
         <div className="flex items-center space-x-1 sm:mb-0">
           <span>© 2025 · 0110 · London, UK</span>
         </div>
@@ -83,7 +83,7 @@ function App() {
 
           <div className="rounded-sm overflow-hidden w-full max-w-[162px]">
             <button
-              className="bg-[#FAFAFA] h-8 cursor-pointer font-dm-Medium rounded-sm w-full text-base leading-6 flex items-center justify-center px-3 relative overflow-hidden group"
+              className="Gray50 h-8 cursor-pointer font-dm-Medium rounded-sm w-full BodyLarge leading-6 flex items-center justify-center px-3 relative overflow-hidden group"
               onClick={() => {
                 if (buttonDebounceRef.current) return; // debounce
                 buttonDebounceRef.current = true;
@@ -130,7 +130,7 @@ function App() {
               />
 
               <span
-                className={`relative z-20 font-dm-Medium text-[#0E0E0E] ${triggerGlow ? "animate-gradient-flow text-transparent bg-clip-text" : ""
+                className={`relative z-20 font-dm-Medium Black ${triggerGlow ? "animate-gradient-flow text-transparent bg-clip-text" : ""
                   }`}
                 style={{
                   backgroundImage: triggerGlow
