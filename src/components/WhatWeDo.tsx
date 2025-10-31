@@ -87,14 +87,14 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
   };
 
   return (
-    <section className="max-w-[1383px] WhatWeDo w-full mx-auto px-4 lg:px-[30px] xl:px-[60px] text-white py-10 overflow-hidden">
+    <section className="max-w-[1383px] CustmWidth WhatWeDo w-full mx-auto px-4 lg:px-[30px] xl:px-[60px] text-white py-10 overflow-hidden">
       <h2 className="text-[24px] leading-7 tracking-[-0.25px] text-[#BFBFBF] font-dm-regular mb-6">
         What we do
       </h2>
 
       <div className="flex flex-wrap lg:gap-4 gap-2 mb-4">
         {categories.map((cat, idx) => (
-          <span key={idx} className="what-wedo-btn h-7 font-dm-Medium text-[12px] leading-base tracking-[-0.2px]">
+          <span key={idx} className="what-wedo-btn h-7 font-dm-Medium lg:text-[#FAFAFA] text-[#FAFAFA] text-[12px] leading-base tracking-[-0.2px]">
             {cat}
           </span>
         ))}
@@ -190,13 +190,9 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
                   ? "transform 0.15s ease-out, opacity 3s ease, scale 0.15s ease"
                   : "opacity 3s ease",
               border: "1px solid #6363634d",
-              boxShadow:
-                "inset 0 0 30px #0000004f, 0 0 60px rgba(255,255,255,0.15), inset 0 0 80px #0000004f",
               backdropFilter: "url(#filterWhatwedo)",
               WebkitBackdropFilter: "url(#filterWhatwedo)",
               mixBlendMode: "screen",
-              filter:
-                "drop-shadow(0 0 6px #0000004f)",
               animation: "distort 3s ease-in-out infinite",
             }}
           />

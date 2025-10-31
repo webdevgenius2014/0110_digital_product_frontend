@@ -34,7 +34,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
   };
 
   return (
-    <section className="max-w-[1383px] heroSec w-full pt-20 pb-8 px-4 lg:px-[30px] xl:px-[60px] flex items-center mx-auto justify-between sm:py-10">
+    <section className="max-w-[1383px] CustmWidth heroSec w-full pt-20 pb-8 px-4 lg:px-[30px] xl:px-[60px] flex items-center mx-auto justify-between sm:py-10">
       <div className="text-[#FAFAFA]">
         <h1 className="text-[36px] cusm-heads md:text-[56px] leading-11 font-dm-Medium md:leading-[60px] mb-6 max-w-[500px] lg:max-w-[700px]">
           Simple, efficient digital  solutions for sport brands.
@@ -44,7 +44,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
           perform with clarity and focus.
         </p>
 
-        <div className="rounded-md hidden sm:inline-block hide-tab w-full overflow-hidden mb-6 xl:mb-10">
+        <div className="rounded-sm hidden sm:inline-block hide-tab w-full overflow-hidden mb-6 xl:mb-10">
           <button
             className="gradient-border-btn group relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] backdrop-blur-[2px] bg-white/5 hover:bg-white/10"
             onClick={() => setShowPopup(true)}
@@ -104,14 +104,13 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
             mixBlendMode: "screen",
           }}
         >
-          {/* <div className="bg-[#212121]/10 border border-white/20 w-10 absolute left-0 top-0" /> */}
           <img src="./Glass-shape.png" alt="" className="absolute bottom-0 pointer-events-none select-none" />
         </div>
       </div>
 
       <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
         <defs>
-          <filter id="filter" colorInterpolationFilters="sRGB">
+          <filter id="filterf" colorInterpolationFilters="sRGB">
             <feTurbulence
               type="fractalNoise"
               baseFrequency="0.00 0.022"
@@ -122,6 +121,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
             />
 
             <feDisplacementMap in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G" result="dispRed" />
+
             <feColorMatrix in="dispRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
 
             <feDisplacementMap in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G" result="dispGreen" />

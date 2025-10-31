@@ -11,7 +11,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
   const [showSuccess, setShowSuccess] = useState(false);
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  // const [username, setUsername] = useState('');
   // const [loading, setLoading] = useState(false);
 
 
@@ -23,9 +23,9 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
     setMessage(data.target.value);
   }
 
-  function handleUsername(data: any) {
-    setUsername(data.target.value);
-  }
+  // function handleUsername(data: any) {
+  //   setUsername(data.target.value);
+  // }
 
   async function handleSend() {
     // if (loading) return;
@@ -81,7 +81,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
         className="bg-white rounded-sm text-center lg:px-10 lg:py-10 px-6 pt-6 pb-8 w-[95%] md:w-full space-y-10 max-w-[480px] shadow-lg relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="md:text-[50px] text-[36px] leading-[44px] text-[#060606] font-dm-regular tracking-[-0.25px] md:leading-[60px]">
+        <h2 className="md:text-[50px] text-[36px] leading-11 text-[#060606] font-dm-regular tracking-[-0.25px] md:leading-[60px]">
           Let’s collaborate.
         </h2>
 
@@ -91,7 +91,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
           </p>
 
           <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
-            <div className="relative w-full">
+            {/* <div className="relative w-full">
               <input
                 type="name"
                 placeholder="username"
@@ -100,7 +100,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 className="w-full text-base leading-6 font-dm-Medium text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
-            </div>
+            </div> */}
             <div className="relative w-full">
               <input
                 type="email"
@@ -114,7 +114,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
 
             <div className="relative w-full mt-4">
               <textarea
-                placeholder="Optional"
+                placeholder="Optional message"
                 onChange={(data) => handleMessage(data)}
                 value={message}
                 className="w-full text-base leading-6 font-dm-Medium resize-none text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center flex items-center justify-center"
