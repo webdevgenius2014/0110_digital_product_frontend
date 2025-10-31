@@ -57,13 +57,11 @@ function App() {
       <div
         className="show-tab mobileNav navHead sm:hidden w-full gradient-border-nav mx-auto px-4 lg:px-[30px] xl:px-[60px]"
         style={{
-          // opacity: 0.95,
-          backdropFilter: "url(#filterWhatwedo)",
-          WebkitBackdropFilter: "url(#filterWhatwedo)",
           mixBlendMode: "screen",
           filter:
             "drop-shadow(0 0 6px #0000004f)",
           animation: "distort 3s ease-in-out infinite",
+          
         }}
       >
         <div

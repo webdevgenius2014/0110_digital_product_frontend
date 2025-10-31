@@ -16,7 +16,7 @@
   --Gray800: #181818;
   --Black: #0E0E0E;
   --Black2: #060606;
-  
+
 }
 
 
@@ -59,6 +59,7 @@
 .Black {
   color: var(--Black);
 }
+
 .Black2 {
   color: var(--Black2);
 }
@@ -133,8 +134,9 @@
   justify-content: center;
   height: 40px;
   width: 100%;
-  max-width: 181px;
-  padding: 8px auto;
+  max-width: 184px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   border-radius: 4px;
   line-height: 24px;
   background: #232323;
@@ -171,6 +173,7 @@
   animation: rainbowSweep 1.2s ease-in-out 0.1s forwards;
 }
 
+
 @keyframes rainbowSweep {
   0% {
     background-size: 300% 100%;
@@ -187,13 +190,10 @@
     opacity: 1;
   }
 
-  90% {
-    opacity: 1;
-  }
-
   100% {
-    background-position-x: -100%;
-    opacity: 0;
+    background-position-x: 0%;
+    opacity: 1;
+    /* 👈 yahan opacity: 1 rakho instead of 0 */
   }
 }
 
@@ -360,6 +360,7 @@
 .mobileNav {
   position: fixed;
   bottom: 0;
+  backdrop-filter: blur(2px);
 }
 
 @media screen and (min-width:601px) and (max-width:1023px) {

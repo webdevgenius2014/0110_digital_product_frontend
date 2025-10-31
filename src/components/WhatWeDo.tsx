@@ -179,7 +179,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
           <div
             ref={dragDivRef}
-            className={`absolute DragW rounded-md w-[204px] backdrop-blur-[1px] h-28 z-5 pointer-events-none overflow-hidden transition-all duration-500 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            className={`absolute DragW rounded-md w-[200px] backdrop-blur-[1px] h-[126px] z-5 pointer-events-none overflow-hidden transition-all duration-500 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
               }`}
             style={{
               transform: position
