@@ -107,7 +107,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 placeholder="your@email.com"
                 onChange={(data) => handleEmail(data)}
                 value={email}
-                className="w-full BodyLarge leading-6 font-dm-Medium text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
+                className="w-full BodyLarge leading-6 font-dm-bold text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
             </div>
@@ -117,7 +117,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 placeholder="Optional message"
                 onChange={(data) => handleMessage(data)}
                 value={message}
-                className="w-full BodyLarge leading-6 font-dm-Medium resize-none text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center flex items-center justify-center"
+                className="w-full BodyLarge leading-6 font-dm-bold resize-none text-[#616161] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center flex items-center justify-center"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6]" />
             </div>
