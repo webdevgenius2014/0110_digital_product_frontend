@@ -40,7 +40,7 @@ function App() {
   }
 
   return (
-    <div className="Black-bg xl:min-h-screen overflow-hidden flex flex-col items-start justify-between">
+    <div className="Black-bg xl:min-h-screen overflow-hidden flex flex-col items-start justify--between">
       <Header />
       <HeroSection triggerGlow={triggerGlow} />
       <WhatWeDo setTriggerGlow={setTriggerGlow} />

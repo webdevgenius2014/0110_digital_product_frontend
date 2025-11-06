@@ -32,14 +32,14 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
     setIsHovering(false);
     setPosition({ x: 0, y: 0 });
   };
-
+ 
   return (
     <section className="max-w-[1383px] CustmWidth heroSec w-full pt-20 pb-8 px-4 lg:px-[30px] xl:px-[60px] flex items-center mx-auto justify-between sm:py-10">
       <div className="Gray50">
-        <h1 className="cusm-heads Heading1 leading-11 font-dm-Medium md:leading-[60px] mb-6 max-w-[500px] lg:max-w-[700px]">
+        <h1 className="cusm-heads Heading1 font-dm-Medium mb-6 max-w-[500px] lg:max-w-[700px]">
           Simple, efficient digital solutions for sport brands.
         </h1>
-        <p className="BodyLarge custmP leading-6 font-dm-Regular font-medium max-w-[395px] md:mb-6">
+        <p className="BodyLarge custmP font-dm-Regular font-medium max-w-[387px] md:mb-6">
           We design and build digital products for sport. From race platforms to watch faces, our work helps athletes
           perform with clarity and focus.
         </p>
@@ -109,7 +109,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
         </div>
       </div>
 
-      <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
+      {/* <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
         <defs>
           <filter id="filter" colorInterpolationFilters="sRGB">
             <feTurbulence
@@ -136,7 +136,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
             <feGaussianBlur in="output" stdDeviation="0.7" />
           </filter>
         </defs>
-      </svg>
+      </svg> */}
 
       <CollaboratePopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
     </section>
