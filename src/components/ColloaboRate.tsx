@@ -170,21 +170,21 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
               hello@0110.sport
             </a>
           </p>
+        </div>
+      </div>
 
           {showCopied && (
             <div
               className="fixed inset-0 bg-black/50 backdrop-blur-[5px] flex items-center justify-center z-50"
               onClick={() => setShowCopied(false)}
             >
-              <div className="bg-white rounded-sm text-center px-10 py-10 w-[95%] md:w-full max-w-[480px] shadow-lg">
+              <div className="bg-white rounded-sm text-center px-10 py-10 w-[95%] md:w-full max-w-[400px] shadow-lg">
                 <p className="BodyLarge leading-6 font-dm-regular Black2">
                   Email copied.
                 </p>
               </div>
             </div>
           )}
-        </div>
-      </div>
     </div>,
     document.body
   );

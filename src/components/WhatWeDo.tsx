@@ -20,39 +20,51 @@ const categories = [
 ]
 
 const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
-
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null)
   const [visible, setVisible] = useState(false)
+  const [cardSize, setCardSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 })
   const dragDivRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
   const isFirstEnter = useRef(true)
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const OVERFLOW = 10
-  const DIV_WIDTH = 204
-  const DIV_HEIGHT = 112
+
+  // Measure the first .card-btn when mounted or on resize
+  React.useEffect(() => {
+    const updateSize = () => {
+      if (!gridRef.current) return
+      const firstCard = gridRef.current.querySelector(".card-btn") as HTMLElement
+      if (firstCard) {
+        const rect = firstCard.getBoundingClientRect()
+        setCardSize({ width: rect.width, height: rect.height })
+      }
+    }
+
+    updateSize()
+    window.addEventListener("resize", updateSize)
+    return () => window.removeEventListener("resize", updateSize)
+  }, [])
 
   const clamp = (val: number, min: number, max: number) =>
     Math.max(min, Math.min(val, max))
 
   const getClampedPos = (e: React.MouseEvent) => {
-    if (!dragDivRef.current) return null
-    const container = dragDivRef.current.parentElement
-    if (!container) return null
+    if (!dragDivRef.current || !gridRef.current) return null
+    const container = gridRef.current
     const rect = container.getBoundingClientRect()
-    const newX = e.clientX - rect.left - DIV_WIDTH / 2
-    const newY = e.clientY - rect.top - DIV_HEIGHT / 2
+    const { width, height } = cardSize
+    const newX = e.clientX - rect.left - width / 2
+    const newY = e.clientY - rect.top - height / 2
     const minX = -OVERFLOW
-    const maxX = rect.width - DIV_WIDTH + OVERFLOW
+    const maxX = rect.width - width + OVERFLOW
     const minY = -OVERFLOW
-    const maxY = rect.height - DIV_HEIGHT + OVERFLOW
+    const maxY = rect.height - height + OVERFLOW
     return { x: clamp(newX, minX, maxX), y: clamp(newY, minY, maxY) }
   }
 
   const handleMouseEnter = (e: React.MouseEvent) => {
-    if (hideTimeout.current) {
-      clearTimeout(hideTimeout.current)
-      hideTimeout.current = null
-    }
+    if (hideTimeout.current) clearTimeout(hideTimeout.current)
     const pos = getClampedPos(e)
     if (pos) {
       setPosition(pos)
@@ -62,10 +74,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (hideTimeout.current) {
-      clearTimeout(hideTimeout.current)
-      hideTimeout.current = null
-    }
+    if (hideTimeout.current) clearTimeout(hideTimeout.current)
     const pos = getClampedPos(e)
     if (!pos) return
     setPosition(pos)
@@ -82,10 +91,9 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
   }
 
   const handleCardClick = () => {
-    setTriggerGlow(true);
-    setTimeout(() => setTriggerGlow(false), 1500);
-  };
-
+    setTriggerGlow(true)
+    setTimeout(() => setTriggerGlow(false), 1500)
+  }
   return (
     <section className="max-w-[1383px] CustmWidth WhatWeDo w-full mx-auto px-4 lg:px-[30px] xl:px-[60px] Gray50 py-10 overflow-hidden">
       <h2 className="Heading2 Gray200 font-dm-regular mb-6">
@@ -94,7 +102,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
       <div className="flex flex-wrap lg:gap-4 gap-2 mb-4">
         {categories.map((cat, idx) => (
-          <span key={idx} className="what-wedo-btn h-7 font-dm-Regular Gray50 BodySmall">
+          <span key={idx} className="what-wedo-btn font-dm-Regular Gray50 BodySmall">
             {cat}
           </span>
         ))}
@@ -102,6 +110,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
       <div className="relative hideMb overflow-visible">
         <div
+          ref={gridRef}
           className="grid grid-cols-1 group tabView sm:grid-cols-2 md:grid-cols-6 gap-4"
           onMouseEnter={handleMouseEnter}
           onMouseMove={handleMouseMove}
@@ -179,17 +188,15 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
           <div
             ref={dragDivRef}
-            className={`absolute DragW rounded-md w-[200px] backdrop-blur-[1px] h-[126px] z-5 pointer-events-none overflow-hidden transition-all duration-500 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            className={`absolute pointer-events-none z-50 transition-all duration-300 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
               }`}
             style={{
-              transform: position
-                ? `translate(${position.x}px, ${position.y}px)`
-                : "translate(-9999px, -9999px)",
-              transition:
-                position && visible
-                  ? "transform 0.15s ease-out, opacity 3s ease, scale 0.15s ease"
-                  : "opacity 3s ease",
+              width: `${cardSize.width * 1.04}px`,
+              height: `${cardSize.height * 1.04}px`,
+              left: position ? `${position.x - (cardSize.width * 0.04) / 2}px` : "-9999px",
+              top: position ? `${position.y - (cardSize.height * 0.04) / 2}px` : "-9999px",
               border: "1px solid #6363634d",
+              borderRadius: "8px",
               backdropFilter: "url(#filterWhatwedo)",
               WebkitBackdropFilter: "url(#filterWhatwedo)",
               mixBlendMode: "screen",
