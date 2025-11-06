@@ -476,7 +476,7 @@
 }
 
 
-/* @media (min-width: 1024px) and (max-width: 1439px) {
+@media (min-width: 1024px) and (max-width: 1439px) {
   .CustmWidth {
     max-width: 100% !important;
     padding-left: 96px;
@@ -491,10 +491,10 @@
     padding-left: 160px !important;
     padding-right: 160px !important;
   }
-} */
+}
 
 
-@media (min-width: 1024px) and (max-width: 1439px) {
+/* @media (min-width: 1024px) and (max-width: 1439px) {
   .CustmWidth .header-bar {
     margin-bottom: 96px;
   }
@@ -506,8 +506,8 @@
 
   .CustmWidth.WhatWeDo {
     padding-top: 0 !important;
-    margin-bottom: 96px;
-    padding-bottom: 0 !important;
+    margin-bottom: 0;
+    padding-bottom: 96px !important;
   }
 }
 
@@ -523,7 +523,11 @@
 
   .CustmWidth.WhatWeDo {
     padding-top: 0 !important;
-    margin-bottom: 160px;
-    padding-bottom: 0 !important;
+    margin-bottom: 0;
+    padding-bottom: 160px !important;
   }
+} */
+
+.deskMn {
+  top: -40px;
 }
