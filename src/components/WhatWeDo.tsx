@@ -88,13 +88,13 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
   return (
     <section className="max-w-[1383px] CustmWidth WhatWeDo w-full mx-auto px-4 lg:px-[30px] xl:px-[60px] Gray50 py-10 overflow-hidden">
-      <h2 className="Heading2 leading-7 tracking-[-0.25px] Gray200 font-dm-regular mb-6">
+      <h2 className="Heading2 Gray200 font-dm-regular mb-6">
         What we do
       </h2>
 
       <div className="flex flex-wrap lg:gap-4 gap-2 mb-4">
         {categories.map((cat, idx) => (
-          <span key={idx} className="what-wedo-btn h-7 font-dm-Medium Gray50 BodySmall leading-base tracking-[-0.2px]">
+          <span key={idx} className="what-wedo-btn h-7 font-dm-Regular Gray50 BodySmall">
             {cat}
           </span>
         ))}
@@ -110,7 +110,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
           <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#8D2629_0%,#F9E072_25.96%,#FFFFFF_54.81%,#772EAB_80.77%,#4D3591_100%)]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Pace IQ</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Pace IQ</h3>
               <p className="Gray200 BodySmall leading-4">
                 Smart pacing and
                 <br />
@@ -122,7 +122,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
           <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden " onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#4D3591_0%,#FFFFFF_54.81%,#F9E072_100%)]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Transpyrenea</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Transpyrenea</h3>
               <p className="Gray200 BodySmall leading-4">
                 Ultra-race site + live
                 <br />
@@ -134,7 +134,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
           <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#FFE05D_0%,#E9681C_29.81%,#A32825_53.85%,#243A42_81.25%,#2F0E03_100%)]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Water Finder</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Water Finder</h3>
               <p className="Gray200 BodySmall leading-4">
                 Offline water geo tagging
                 <br />
@@ -146,7 +146,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
           <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#3A415B_0%,#44492E_25%,#635041_50.48%,#170C08_70.67%,#EDF3F3_100%)]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Checkpoint</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Checkpoint</h3>
               <p className="Gray200 BodySmall leading-4">
                 Volunteer and checkpoint
                 <br />
@@ -158,7 +158,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
           <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-9 bg-[linear-gradient(90deg,#EDF3F3_0%,#EDF3F3_25%,#EDF3F3_50.48%,#EDF3F3_70.67%,#EDF3F3_100%)]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Athlete Payments</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Athlete Payments</h3>
               <p className="Gray200 BodySmall leading-4">
                 Payments flow for
                 <br />
@@ -170,7 +170,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
           <div className="card-btn backdrop-blur-2xl bg-white/5 transition-colors relative overflow-hidden" onClick={handleCardClick}>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-8 bg-[linear-gradient(90deg,#B2ECFF_0%,#8B48DD_52.4%,#582483_100%)]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Garmin Race Face</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Garmin Race Face</h3>
               <p className="Gray200 BodySmall leading-4">
                 Connect IQ watch face
               </p>
@@ -242,7 +242,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
             </div>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Pace IQ</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Pace IQ</h3>
               <p className="Gray200 BodySmall leading-4" dangerouslySetInnerHTML={{ __html: "Smart pacing and analytics for ultra <br /> events" }} />
             </div>
           </div>
@@ -259,7 +259,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Transpyrenea</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Transpyrenea</h3>
               <p className="Gray200 BodySmall leading-4" dangerouslySetInnerHTML={{ __html: "Ultra-race site + live <br /> tracking" }} />
             </div>
           </div>
@@ -276,7 +276,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Water Finder</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Water Finder</h3>
               <p className="Gray200 BodySmall leading-4" dangerouslySetInnerHTML={{ __html: "Offline water geo <br /> tagging for runners" }} />
             </div>
           </div>
@@ -293,7 +293,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Checkpoint</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Checkpoint</h3>
               <p className="Gray200 BodySmall leading-4" dangerouslySetInnerHTML={{ __html: "Volunteer and checkpoint <br /> coordination for races" }} />
             </div>
           </div>
@@ -310,7 +310,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Athlete  <br /> Payments</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Athlete  <br /> Payments</h3>
               <p className="Gray200 BodySmall leading-4" dangerouslySetInnerHTML={{ __html: "Payments flow for <br /> organisers" }} />
             </div>
           </div>
@@ -326,7 +326,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
             </div>
             <div className="absolute h-[99%] w-[99%] left-[0.5%] top-[0.5%] opacity-[0.1]" />
             <div className="relative z-10">
-              <h3 className="BodyLarge font-medium leading-6 tracking-[-0.2px] mb-2">Garmin  <br /> Race Face</h3>
+              <h3 className="BodyLarge font-medium  mb-2">Garmin  <br /> Race Face</h3>
               <p className="Gray200 BodySmall leading-4" dangerouslySetInnerHTML={{ __html: "Connect IQ watch <br /> face" }} />
             </div>
           </div>

@@ -12,7 +12,7 @@
 
   --Gray50: #FAFAFA;
   --Gray200: #BFBFBF;
-  --Gray700: #232323;
+  --Gray700: #616161;
   --Gray800: #181818;
   --Black: #0E0E0E;
   --Black2: #060606;
@@ -22,14 +22,19 @@
 
 .Heading1 {
   font-size: var(--Heading1);
+  line-height: 60px;
 }
 
 .Heading2 {
   font-size: var(--Heading2);
+  letter-spacing: -0.25px;
+  line-height: 28px;
 }
 
 .BodyLarge {
   font-size: var(--BodyLarge);
+  line-height: 24px;
+  letter-spacing: -0.2px;
 }
 
 .BodyMedium {
@@ -193,7 +198,6 @@
   100% {
     background-position-x: 0%;
     opacity: 1;
-    /* 👈 yahan opacity: 1 rakho instead of 0 */
   }
 }
 
@@ -208,6 +212,8 @@
   color: #FAFAFA;
   z-index: 1;
   background-color: #181818;
+  letter-spacing: -0.2px;
+  line-height: 16px;
 }
 
 .what-wedo-btn::before {
@@ -367,6 +373,7 @@
 
   .Heading1 {
     font-size: var(--Heading3);
+    line-height: 44px;
   }
 
 
@@ -403,7 +410,7 @@
   .heroSec {
 
     padding-top: 80px !important;
-    padding-bottom: 0 !important;
+    padding-bottom: 40px !important;
   }
 
   .navHead,
@@ -450,6 +457,7 @@
 
   .Heading1 {
     font-size: var(--Heading3);
+    line-height: 44px;
   }
 
 }
@@ -468,7 +476,7 @@
 }
 
 
-@media (min-width: 1024px) and (max-width: 1439px) {
+/* @media (min-width: 1024px) and (max-width: 1439px) {
   .CustmWidth {
     max-width: 100% !important;
     padding-left: 96px;
@@ -479,7 +487,43 @@
 @media (min-width: 1440px) {
   .CustmWidth {
     max-width: 1583px !important;
+    margin: 0 auto;
     padding-left: 160px !important;
     padding-right: 160px !important;
+  }
+} */
+
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .CustmWidth .header-bar {
+    margin-bottom: 96px;
+  }
+
+  .CustmWidth.heroSec {
+    padding-bottom: 0 !important;
+    margin-bottom: 96px;
+  }
+
+  .CustmWidth.WhatWeDo {
+    padding-top: 0 !important;
+    margin-bottom: 96px;
+    padding-bottom: 0 !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .CustmWidth .header-bar {
+    margin-bottom: 160px;
+  }
+
+  .CustmWidth.heroSec {
+    padding-bottom: 0 !important;
+    margin-bottom: 160px;
+  }
+
+  .CustmWidth.WhatWeDo {
+    padding-top: 0 !important;
+    margin-bottom: 160px;
+    padding-bottom: 0 !important;
   }
 }

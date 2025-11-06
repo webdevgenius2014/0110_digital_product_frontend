@@ -32,14 +32,14 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
     setIsHovering(false);
     setPosition({ x: 0, y: 0 });
   };
-
+ 
   return (
     <section className="max-w-[1383px] CustmWidth heroSec w-full pt-20 pb-8 px-4 lg:px-[30px] xl:px-[60px] flex items-center mx-auto justify-between sm:py-10">
       <div className="Gray50">
-        <h1 className="cusm-heads Heading1 leading-11 font-dm-Medium md:leading-[60px] mb-6 max-w-[500px] lg:max-w-[700px]">
-          Simple, efficient digital  solutions for sport brands.
+        <h1 className="cusm-heads Heading1 font-dm-Medium mb-6 max-w-[500px] lg:max-w-[700px]">
+          Simple, efficient digital solutions for sport brands.
         </h1>
-        <p className="BodyLarge custmP leading-6 font-dm-Regular font-medium max-w-[395px] md:mb-6">
+        <p className="BodyLarge custmP font-dm-Regular font-medium max-w-[387px] md:mb-6">
           We design and build digital products for sport. From race platforms to watch faces, our work helps athletes
           perform with clarity and focus.
         </p>
@@ -58,13 +58,13 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
               style={{
                 background: `linear-gradient(90deg, rgba(141, 38, 41, 0.2) 0%, rgba(249, 224, 114, 0.2) 3.65%, rgba(255, 255, 255, 0.2) 8.48%, rgba(119, 46, 171, 0.2) 12.69%, rgba(77, 53, 145, 0.2) 16.63%, rgba(191, 232, 241, 0.2) 20.71%, rgba(255, 255, 255, 0.2) 25.04%, rgba(248, 254, 155, 0.2) 31.53%, rgba(255, 224, 93, 0.2) 35.1%, rgba(233, 104, 28, 0.2) 38.92%, rgba(163, 40, 37, 0.2) 43.25%, rgba(36, 58, 66, 0.2) 47.2%, rgba(47, 14, 3, 0.2) 50.89%, rgba(58, 65, 91, 0.2) 54.96%, rgba(68, 73, 46, 0.2) 58.91%, rgba(99, 80, 65, 0.2) 62.61%, rgba(23, 12, 8, 0.2) 66.55%, rgba(237, 243, 243, 0.2) 89.35%, rgba(217, 253, 255, 0.2) 92.28%, rgba(178, 236, 255, 0.2) 95.2%, rgba(139, 72, 221, 0.2) 97.5%, rgba(88, 36, 131, 0.2) 100%)`,
                 boxShadow: `
-          0 0 2px 1px rgba(255,255,255,0.05) inset,
-          0 0 10px 4px rgba(255,255,255,0.08) inset,
-          0px 4px 16px rgba(17,17,26,0.05),
-          0px 8px 24px rgba(17,17,26,0.05),
-          0px 16px 56px rgba(17,17,26,0.05)
-        `,
-                filter: "saturate(120%) brightness(1.3) contrast(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.2))",
+                0 0 2px 1px rgba(255,255,255,0.05) inset,
+                0 0 10px 4px rgba(255,255,255,0.08) inset,
+                0px 4px 16px rgba(17,17,26,0.05),
+                0px 8px 24px rgba(17,17,26,0.05),
+                0px 16px 56px rgba(17,17,26,0.05)
+              `,
+                filter: "saturate(  %) brightness(1.1) contrast(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.2))",
                 mixBlendMode: "screen",
               }}
             />
@@ -81,7 +81,8 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <img src="./Logo.svg" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" />
+       <img src="./Logo.svg" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" />
+        
         <div
           className={`absolute w-[400px] left-[-15px] h-[190px] overflow-hidden rounded-[95px]
             bg-[#212121]/10 border border-white/20 shadow-md
@@ -99,8 +100,8 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
               0px 8px 24px rgba(17,17,26,0.05),
               0px 16px 56px rgba(17,17,26,0.05)
             `,
-            backdropFilter: "url(#filter) brightness(1.1) saturate(0)",
-            WebkitBackdropFilter: "url(#filter) brightness(1.1) saturate(0)",
+            backdropFilter: "url(#filter) blur(2px) brightness(1.2)",
+            WebkitBackdropFilter: "url(#filter) blur(2px) brightness(1.2)",
             mixBlendMode: "screen",
           }}
         >
@@ -108,7 +109,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
         </div>
       </div>
 
-      <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
+      {/* <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
         <defs>
           <filter id="filter" colorInterpolationFilters="sRGB">
             <feTurbulence
@@ -135,7 +136,7 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
             <feGaussianBlur in="output" stdDeviation="0.7" />
           </filter>
         </defs>
-      </svg>
+      </svg> */}
 
       <CollaboratePopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
     </section>
