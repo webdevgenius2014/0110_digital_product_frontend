@@ -16,21 +16,17 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
   // const [loading, setLoading] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const isMobile = window.innerWidth <= 767;
+    e.preventDefault(); // stop mailto from opening
+
     const email = "hello@0110.sport";
 
-    if (isMobile) {
-      e.preventDefault(); // stop mailto
-      navigator.clipboard.writeText(email);
-      setShowCopied(true);
+    navigator.clipboard.writeText(email);
+    setShowCopied(true);
 
-      // hide popup after 3s
-      setTimeout(() => {
-        setShowCopied(false);
-      }, 3000);
-    }
+    setTimeout(() => {
+      setShowCopied(false);
+    }, 3000);
   };
-
 
   function handleEmail(data: any) {
     setEmail(data.target.value);
@@ -159,12 +155,12 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
 
           <p className="Black2 BodyLarge leading-6 text-center">
             or email us directly:{" "}
-            <a href="mailto:hello@0110.sport" className="underline hidden md:inline-block">
+            {/* <a href="mailto:hello@0110.sport" className="underline hidden md:inline-block">
               hello@0110.sport
-            </a>
+            </a> */}
             <a
               href="mailto:hello@0110.sport"
-              className="underline md:hidden"
+              className="underline"
               onClick={handleClick}
             >
               hello@0110.sport
@@ -173,18 +169,19 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
         </div>
       </div>
 
-          {showCopied && (
-            <div
-              className="fixed inset-0 bg-black/50 backdrop-blur-[5px] flex items-center justify-center z-50"
-              onClick={() => setShowCopied(false)}
-            >
-              <div className="bg-white rounded-sm text-center px-10 py-10 w-[95%] md:w-full max-w-[400px] shadow-lg">
-                <p className="BodyLarge leading-6 font-dm-regular Black2">
-                  Email copied.
-                </p>
-              </div>
-            </div>
-          )}
+      {showCopied && (
+        <div
+          className="fixed inset-x-0 top-0 flex items-start justify-center pt-5 z-50"
+          onClick={() => setShowCopied(false)}
+        >
+          <div className="bg-white rounded-sm text-center px-10 py-4 w-[95%] md:w-full max-w-[300px] shadow-lg">
+            <p className="BodyLarge leading-6 font-dm-regular Black2">
+              Email copied.
+            </p>
+          </div>
+        </div>
+      )}
+
     </div>,
     document.body
   );

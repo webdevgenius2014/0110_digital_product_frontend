@@ -173,7 +173,13 @@
   opacity: 1;
 } */
 
-.gradient-border-btn:hover>div:first-child,
+/* .gradient-border-btn:hover>div:first-child,
+.gradient-border-btn[data-active="true"]>div:first-child {
+  animation: rainbowSweep 1.2s ease-in-out 0.1s forwards;
+} */
+
+.gradient-border-btn:focus>div:first-child,
+.gradient-border-btn:active>div:first-child,
 .gradient-border-btn[data-active="true"]>div:first-child {
   animation: rainbowSweep 1.2s ease-in-out 0.1s forwards;
 }
@@ -502,7 +508,7 @@
 
 @media (min-width: 1440px) {
   .CustmWidth {
-    max-width: 100% !important;
+    max-width: 1583px !important;
     margin: 0 auto;
     padding-left: 160px !important;
     padding-right: 160px !important;
