@@ -277,8 +277,8 @@ export default class LiquidGlassMeshes extends Three {
       let distance = capsule.center.distanceTo(capsule.pointer);
       let target = distance <= capsule.range ? capsule.pointer : capsule.center;
 
-      capsule.position.x += (target.x - capsule.position.x) * 0.04;
-      capsule.position.y += (target.y - capsule.position.y) * 0.04;
+      capsule.position.x += (target.x - capsule.position.x) * 0.01;
+      capsule.position.y += (target.y - capsule.position.y) * 0.01;
 
       capsule.mesh.position.x = capsule.position.x;
       capsule.mesh.position.z = capsule.position.y;
