@@ -47,8 +47,8 @@ export default class Three {
       this.sizes.width * 0.5,
       this.sizes.height * 0.5,
       -this.sizes.height * 0.5,
-      10,
-      2000
+      1,
+      10000
     );
     this.camera.position.y = 1000;
     this.camera.lookAt(0, 0, 0);
@@ -63,7 +63,7 @@ export default class Three {
       alpha: true,
       premultipliedAlpha: false,
       powerPreference: "high-performance",
-      // antialias: false,
+      antialias: true,
       // stencil: false,
       // depth: false,
     });

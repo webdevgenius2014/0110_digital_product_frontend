@@ -117,7 +117,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
         ))}
       </div>
 
-      <div className="relative hideMb overflow-visible">
+      <div id="what-we-do-cards" className="relative hideMb overflow-visible">
         <div
           ref={gridRef}
           className="grid grid-cols-1 group tabView sm:grid-cols-2 md:grid-cols-6 gap-4"

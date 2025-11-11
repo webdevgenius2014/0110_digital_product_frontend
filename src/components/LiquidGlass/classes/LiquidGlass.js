@@ -5,6 +5,7 @@ import * as THREE from "three";
 import * as lil from "three/addons/libs/lil-gui.module.min.js";
 import html2canvas from "html2canvas-pro";
 import { RoundedBoxGeometry } from "three/examples/jsm/Addons.js";
+import gsap from "gsap";
 
 const PARAMS = {
   // Physical Material
@@ -12,14 +13,16 @@ const PARAMS = {
   metalness: 0,
   clearcoat: 0.4,
   clearcoatRoughness: 0.05,
-  ior: 1.8,
-  iridescence: 0,
-  iridescenceIOR: 0,
-  thickness: 50,
+  ior: 2.3,
+  iridescence: 1,
+  iridescenceIOR: 2.3,
+  thickness: 120,
+  backsideThickness: 100,
+  reflectivity: 0,
 
   // Transition Material
-  chromaticAberration: 0.05,
-  anisotrophicBlur: 0.1,
+  chromaticAberration: 1,
+  anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.5,
   temporalDistortion: 0,
@@ -34,6 +37,7 @@ export default class LiquidGlassMeshes extends Three {
     this.captureScreen();
     this.setMaterial();
     this.addCapsuleMesh();
+    this.addCardMesh();
   }
 
   setPanel() {
@@ -92,7 +96,7 @@ export default class LiquidGlassMeshes extends Three {
   }
 
   setMaterial() {
-    let material = Object.assign(new MeshTransmissionMaterial(8), {
+    let material = Object.assign(new MeshTransmissionMaterial(24), {
       roughness: PARAMS.roughness,
       metalness: PARAMS.metalness,
       clearcoat: PARAMS.clearcoat,
@@ -101,7 +105,8 @@ export default class LiquidGlassMeshes extends Three {
       iridescence: PARAMS.iridescence,
       iridescenceIOR: PARAMS.iridescenceIOR,
       thickness: PARAMS.thickness,
-      reflectivity: 0.2,
+      backsideThickness: PARAMS.backsideThickness,
+      reflectivity: PARAMS.reflectivity,
 
       chromaticAberration: PARAMS.chromaticAberration,
       anisotrophicBlur: PARAMS.anisotrophicBlur,
@@ -151,12 +156,22 @@ export default class LiquidGlassMeshes extends Three {
         this.material.iridescenceIOR = value;
       });
 
-    panelFolder.add(PARAMS, "thickness", 0, 200, 1).onChange((value) => {
+    panelFolder.add(PARAMS, "thickness", 0, 1000, 1).onChange((value) => {
       this.material.thickness = value;
     });
 
     panelFolder
-      .add(PARAMS, "chromaticAberration", 0, 1, 0.01)
+      .add(PARAMS, "backsideThickness", 0, 1000, 1)
+      .onChange((value) => {
+        this.material.backsideThickness = value;
+      });
+
+    panelFolder.add(PARAMS, "reflectivity", 0, 1, 1).onChange((value) => {
+      this.material.reflectivity = value;
+    });
+
+    panelFolder
+      .add(PARAMS, "chromaticAberration", 0, 10, 0.01)
       .onChange((value) => {
         this.material.chromaticAberration = value;
       });
@@ -220,7 +235,8 @@ export default class LiquidGlassMeshes extends Three {
     let debugMaterial = new THREE.MeshNormalMaterial({ wireframe: true });
     let mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.set(capsule.position.x, 0, capsule.position.y);
-    mesh.scale.y = 0.8;
+    mesh.scale.y = 10 / borderRadius;
+    mesh.position.y = 10;
     this.scene.add(mesh);
 
     window.addEventListener("mousemove", (e) => {
@@ -237,6 +253,68 @@ export default class LiquidGlassMeshes extends Three {
 
       mesh.position.x = capsule.position.x;
       mesh.position.z = capsule.position.y;
+    });
+  }
+
+  addCardMesh() {
+    let cardsContainer = document.getElementById("what-we-do-cards");
+    let card = {
+      width: 0,
+      height: 0,
+      scale: 0,
+      centerY: 0,
+    };
+
+    let setCardSizes = () => {
+      let el = cardsContainer.querySelector(".card-btn");
+      let rect = el.getBoundingClientRect();
+      console.log(el);
+
+      card.width = el.offsetWidth;
+      card.height = el.offsetHeight + 4;
+      card.centerY = rect.top + rect.height * 0.5 - this.sizes.height * 0.5 - 3;
+    };
+    setCardSizes();
+
+    console.log(card);
+
+    let geometry = new RoundedBoxGeometry(card.width, 10, card.height, 2, 2);
+
+    let mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.y = 10;
+    mesh.position.z = card.centerY;
+    mesh.scale.setScalar(0);
+    mesh.visible = false;
+    this.scene.add(mesh);
+
+    let cardTl = gsap.timeline().pause();
+    cardTl.to(card, {
+      scale: 1,
+      ease: "back.out",
+      onStart: () => {
+        mesh.visible = true;
+      },
+      onUpdate: () => {
+        mesh.scale.setScalar(card.scale);
+      },
+      onReverseComplete: () => {
+        mesh.visible = false;
+      },
+    });
+
+    cardTl.play();
+
+    cardsContainer.addEventListener("mouseenter", () => {
+      cardTl.play();
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      let px = e.clientX - this.sizes.width * 0.5;
+      mesh.position.x = px;
+    });
+
+    cardsContainer.addEventListener("mouseleave", () => {
+      cardTl.reverse();
     });
   }
 }
