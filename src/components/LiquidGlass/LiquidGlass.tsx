@@ -14,7 +14,7 @@ const LiquidGlass = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50"
+      className="fixed inset-0 z-50 opacity-100"
       data-html2canvas-ignore
       ref={containerRef}
     >

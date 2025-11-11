@@ -55,7 +55,7 @@ export default class Three {
 
     if (DEBUG) {
       this.controls = new OrbitControls(this.camera, this.domElement);
-      this.scene.add(new THREE.AxesHelper(1000));
+      // this.scene.add(new THREE.AxesHelper(1000));
     }
 
     this.renderer = new THREE.WebGLRenderer({
