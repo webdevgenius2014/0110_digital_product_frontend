@@ -13,6 +13,8 @@
     "axios": "^1.13.1",
     "gsap": "^3.13.0",
     "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^1.5.13",
+    "lodash": "^4.17.21",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "three": "^0.180.0"

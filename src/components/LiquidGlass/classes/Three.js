@@ -74,6 +74,8 @@ export default class Three {
   }
 
   addEventListeners() {
+    console.log("event listeners added");
+
     window.addEventListener("resize", () => {
       this.resize();
     });
