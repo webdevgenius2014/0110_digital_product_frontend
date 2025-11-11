@@ -9,19 +9,19 @@ import gsap from "gsap";
 
 const PARAMS = {
   // Physical Material
-  roughness: 0.01,
+  roughness: 0.5,
   metalness: 0,
   clearcoat: 0.4,
   clearcoatRoughness: 0.05,
   ior: 2.3,
   iridescence: 1,
   iridescenceIOR: 2.3,
-  thickness: 120,
-  backsideThickness: 100,
+  thickness: 2,
+  backsideThickness: 2,
   reflectivity: 0,
 
   // Transition Material
-  chromaticAberration: 1,
+  chromaticAberration: 1.5,
   anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.5,
@@ -84,7 +84,7 @@ export default class LiquidGlassMeshes extends Three {
           // this.scene.environment = texture;
         });
       },
-      40,
+      300,
       {
         onStart: () => {},
         onComplete: () => {},
@@ -203,41 +203,66 @@ export default class LiquidGlassMeshes extends Three {
     let capsule = {
       width: 0,
       height: 0,
+      borderRadius: 0,
       center: new THREE.Vector2(),
       pointer: new THREE.Vector2(),
       position: new THREE.Vector2(),
       range: 320,
+      geometry: null,
+      mesh: null,
     };
 
-    let setCapsuleSizes = () => {
-      let rect = logo.getBoundingClientRect();
-
-      capsule.width = logo.offsetWidth + offset;
-      capsule.height = logo.offsetHeight * 1.2 + offset;
-
-      capsule.center.x = rect.left + rect.width * 0.5 - this.sizes.width * 0.5;
-      capsule.center.y = rect.top + rect.height * 0.5 - this.sizes.height * 0.5;
-
-      capsule.position.copy(capsule.center);
+    let removeCapsuleMesh = () => {
+      if (capsule.mesh) {
+        capsule.mesh.visible = false;
+        this.scene.remove(capsule.mesh);
+        capsule.mesh = null;
+      }
     };
-    setCapsuleSizes();
 
-    let borderRadius = Math.min(capsule.width, capsule.height);
+    let createCapsuleMesh = debounceWithHooks(
+      () => {
+        let rect = logo.getBoundingClientRect();
 
-    let geometry = new RoundedBoxGeometry(
-      capsule.width,
-      borderRadius,
-      capsule.height,
-      8,
-      borderRadius
+        capsule.width = logo.offsetWidth + offset;
+        capsule.height = logo.offsetHeight * 1.2 + offset;
+        capsule.borderRadius = Math.min(capsule.width, capsule.height);
+
+        capsule.center.x =
+          rect.left + rect.width * 0.5 - this.sizes.width * 0.5;
+        capsule.center.y =
+          rect.top + rect.height * 0.5 - this.sizes.height * 0.5;
+
+        capsule.position.copy(capsule.center);
+      },
+      300,
+      {
+        onComplete: () => {
+          removeCapsuleMesh();
+
+          if (this.sizes.width < 1024) {
+            return;
+          }
+
+          capsule.geometry = new RoundedBoxGeometry(
+            capsule.width,
+            capsule.borderRadius,
+            capsule.height,
+            8,
+            capsule.borderRadius
+          );
+
+          let mesh = new THREE.Mesh(capsule.geometry, this.material);
+          mesh.position.set(capsule.position.x, 0, capsule.position.y);
+          mesh.scale.y = 10 / capsule.borderRadius;
+          mesh.position.y = 10;
+          this.scene.add(mesh);
+          capsule.mesh = mesh;
+        },
+      }
     );
 
-    let debugMaterial = new THREE.MeshNormalMaterial({ wireframe: true });
-    let mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.set(capsule.position.x, 0, capsule.position.y);
-    mesh.scale.y = 10 / borderRadius;
-    mesh.position.y = 10;
-    this.scene.add(mesh);
+    createCapsuleMesh();
 
     window.addEventListener("mousemove", (e) => {
       capsule.pointer.x = e.clientX - this.sizes.width * 0.5;
@@ -245,15 +270,22 @@ export default class LiquidGlassMeshes extends Three {
     });
 
     this.onTick(() => {
+      if (!capsule.mesh) {
+        return;
+      }
+
       let distance = capsule.center.distanceTo(capsule.pointer);
       let target = distance <= capsule.range ? capsule.pointer : capsule.center;
 
       capsule.position.x += (target.x - capsule.position.x) * 0.04;
       capsule.position.y += (target.y - capsule.position.y) * 0.04;
 
-      mesh.position.x = capsule.position.x;
-      mesh.position.z = capsule.position.y;
+      capsule.mesh.position.x = capsule.position.x;
+      capsule.mesh.position.z = capsule.position.y;
     });
+
+    window.addEventListener("resize", createCapsuleMesh);
+    window.addEventListener("scroll", createCapsuleMesh);
   }
 
   addCardMesh() {
@@ -263,58 +295,105 @@ export default class LiquidGlassMeshes extends Three {
       height: 0,
       scale: 0,
       centerY: 0,
+      geometry: null,
+      mesh: null,
+      timeline: null,
     };
 
-    let setCardSizes = () => {
-      let el = cardsContainer.querySelector(".card-btn");
-      let rect = el.getBoundingClientRect();
-      console.log(el);
-
-      card.width = el.offsetWidth;
-      card.height = el.offsetHeight + 4;
-      card.centerY = rect.top + rect.height * 0.5 - this.sizes.height * 0.5 - 3;
+    let removeCardMesh = () => {
+      if (card.mesh) {
+        card.mesh.visible = false;
+        this.scene.remove(card.mesh);
+        card.mesh = null;
+      }
     };
-    setCardSizes();
 
-    console.log(card);
+    let createCardMesh = debounceWithHooks(
+      () => {
+        let el = cardsContainer.querySelector(".card-btn");
 
-    let geometry = new RoundedBoxGeometry(card.width, 10, card.height, 2, 2);
+        let rect = el.getBoundingClientRect();
 
-    let mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.y = 10;
-    mesh.position.z = card.centerY;
-    mesh.scale.setScalar(0);
-    mesh.visible = false;
-    this.scene.add(mesh);
-
-    let cardTl = gsap.timeline().pause();
-    cardTl.to(card, {
-      scale: 1,
-      ease: "back.out",
-      onStart: () => {
-        mesh.visible = true;
+        card.width = el.offsetWidth;
+        card.height = el.offsetHeight;
+        card.centerY = rect.top + rect.height * 0.5 - this.sizes.height * 0.5;
       },
-      onUpdate: () => {
-        mesh.scale.setScalar(card.scale);
-      },
-      onReverseComplete: () => {
-        mesh.visible = false;
-      },
-    });
+      300,
+      {
+        onStart: () => {},
+        onComplete: () => {
+          removeCardMesh();
 
-    cardTl.play();
+          if (this.sizes.width < 1024) {
+            return;
+          }
+
+          let geometry = new RoundedBoxGeometry(
+            card.width,
+            10,
+            card.height,
+            2,
+            2
+          );
+
+          if (card.mesh) {
+            card.mesh.visible = false;
+            this.scene.remove(card.mesh);
+          }
+
+          let mesh = new THREE.Mesh(geometry, this.material);
+          mesh.position.y = 10;
+          mesh.position.z = card.centerY;
+          mesh.scale.setScalar(0);
+          mesh.visible = false;
+          this.scene.add(mesh);
+          card.mesh = mesh;
+
+          if (card.timeline) {
+            card.timeline.clear();
+            card.timeline = null;
+          }
+
+          let cardTl = gsap.timeline().pause();
+
+          cardTl.to(card, {
+            scale: 1,
+            ease: "back.out",
+            onStart: () => {
+              card.mesh.visible = true;
+            },
+            onUpdate: () => {
+              card.mesh.scale.setScalar(card.scale);
+            },
+            onReverseComplete: () => {
+              card.mesh.visible = false;
+            },
+          });
+
+          card.timeline = cardTl;
+          // cardTl.play();
+        },
+      }
+    );
+
+    createCardMesh();
 
     cardsContainer.addEventListener("mouseenter", () => {
-      cardTl.play();
+      card.timeline.play();
+    });
+
+    cardsContainer.addEventListener("mouseleave", () => {
+      card.timeline.reverse();
     });
 
     window.addEventListener("mousemove", (e) => {
       let px = e.clientX - this.sizes.width * 0.5;
-      mesh.position.x = px;
+      if (card.mesh) {
+        card.mesh.position.x = px;
+      }
     });
 
-    cardsContainer.addEventListener("mouseleave", () => {
-      cardTl.reverse();
-    });
+    window.addEventListener("resize", createCardMesh);
+    window.addEventListener("scroll", createCardMesh);
   }
 }
