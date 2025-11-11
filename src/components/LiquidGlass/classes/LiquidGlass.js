@@ -18,10 +18,10 @@ const PARAMS = {
   iridescenceIOR: 2.3,
   thickness: 60,
   backsideThickness: 2,
-  reflectivity: 0,
+  reflectivity: 0.1,
 
   // Transition Material
-  chromaticAberration: 0.2,
+  chromaticAberration: 0.1,
   anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.5,
@@ -314,8 +314,8 @@ export default class LiquidGlassMeshes extends Three {
 
         let rect = el.getBoundingClientRect();
 
-        card.width = el.offsetWidth;
-        card.height = el.offsetHeight;
+        card.width = el.offsetWidth + 8;
+        card.height = el.offsetHeight + 8;
         card.centerY = rect.top + rect.height * 0.5 - this.sizes.height * 0.5;
       },
       300,
@@ -332,7 +332,7 @@ export default class LiquidGlassMeshes extends Three {
             card.width,
             card.height,
             card.height,
-            8,
+            12,
             16
           );
 
@@ -343,12 +343,14 @@ export default class LiquidGlassMeshes extends Three {
           }
 
           let material = this.material.clone();
-          material.thickness = 80;
-          material.chromaticAberration = 1.5;
-          material.reflectivity = 0.2;
+          material.thickness = 40;
+          material.chromaticAberration = 100.5;
+          material.reflectivity = 1;
+          material.ior = 2.3;
+          // material.
 
           let mesh = new THREE.Mesh(geometry, material);
-          mesh.position.y = card.height;
+          mesh.position.y = 0;
           mesh.position.z = card.centerY;
           mesh.scale.setScalar(0);
           mesh.visible = false;
@@ -385,11 +387,11 @@ export default class LiquidGlassMeshes extends Three {
     createCardMesh();
 
     cardsContainer.addEventListener("mouseenter", () => {
-      card.timeline.play();
+      if (card.timeline) card.timeline.play();
     });
 
     cardsContainer.addEventListener("mouseleave", () => {
-      card.timeline.reverse();
+      if (card.timeline) card.timeline.reverse();
     });
 
     window.addEventListener("mousemove", (e) => {
