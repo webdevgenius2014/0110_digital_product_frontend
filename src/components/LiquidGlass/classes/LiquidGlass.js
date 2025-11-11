@@ -9,19 +9,19 @@ import gsap from "gsap";
 
 const PARAMS = {
   // Physical Material
-  roughness: 0.5,
+  roughness: 0,
   metalness: 0,
   clearcoat: 0.4,
   clearcoatRoughness: 0.05,
   ior: 2.3,
   iridescence: 1,
   iridescenceIOR: 2.3,
-  thickness: 2,
+  thickness: 60,
   backsideThickness: 2,
   reflectivity: 0,
 
   // Transition Material
-  chromaticAberration: 1.5,
+  chromaticAberration: 0.2,
   anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.5,
@@ -166,12 +166,12 @@ export default class LiquidGlassMeshes extends Three {
         this.material.backsideThickness = value;
       });
 
-    panelFolder.add(PARAMS, "reflectivity", 0, 1, 1).onChange((value) => {
+    panelFolder.add(PARAMS, "reflectivity", 0, 1, 0.01).onChange((value) => {
       this.material.reflectivity = value;
     });
 
     panelFolder
-      .add(PARAMS, "chromaticAberration", 0, 10, 0.01)
+      .add(PARAMS, "chromaticAberration", 0, 2, 0.01)
       .onChange((value) => {
         this.material.chromaticAberration = value;
       });
@@ -254,8 +254,8 @@ export default class LiquidGlassMeshes extends Three {
 
           let mesh = new THREE.Mesh(capsule.geometry, this.material);
           mesh.position.set(capsule.position.x, 0, capsule.position.y);
-          mesh.scale.y = 10 / capsule.borderRadius;
-          mesh.position.y = 10;
+          // mesh.scale.y =  capsule.borderRadius;
+          mesh.position.y = capsule.borderRadius;
           this.scene.add(mesh);
           capsule.mesh = mesh;
         },
@@ -330,19 +330,25 @@ export default class LiquidGlassMeshes extends Three {
 
           let geometry = new RoundedBoxGeometry(
             card.width,
-            10,
             card.height,
-            2,
-            2
+            card.height,
+            8,
+            16
           );
 
           if (card.mesh) {
             card.mesh.visible = false;
+            card.material.dispose();
             this.scene.remove(card.mesh);
           }
 
-          let mesh = new THREE.Mesh(geometry, this.material);
-          mesh.position.y = 10;
+          let material = this.material.clone();
+          material.thickness = 80;
+          material.chromaticAberration = 1.5;
+          material.reflectivity = 0.2;
+
+          let mesh = new THREE.Mesh(geometry, material);
+          mesh.position.y = card.height;
           mesh.position.z = card.centerY;
           mesh.scale.setScalar(0);
           mesh.visible = false;

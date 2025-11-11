@@ -215,7 +215,7 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
 
           <div
             ref={dragDivRef}
-            className={`absolute pointer-events-none z-50 transition-all duration-300 ease-out ${
+            className={`hidden absolute pointer-events-none z-50 transition-all duration-300 ease-out ${
               visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
             }`}
             style={{
