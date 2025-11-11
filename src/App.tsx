@@ -1,9 +1,10 @@
-import Header from './components/Header';
-import HeroSection from './components/HeroSection';
-import WhatWeDo from './components/WhatWeDo';
-import { useEffect, useRef, useState } from 'react';
-import './index.css';
-import CollaboratePopup from './components/ColloaboRate';
+import Header from "./components/Header";
+import HeroSection from "./components/HeroSection";
+import WhatWeDo from "./components/WhatWeDo";
+import { useEffect, useRef, useState } from "react";
+import "./index.css";
+import CollaboratePopup from "./components/ColloaboRate";
+import LiquidGlass from "./components/LiquidGlass/LiquidGlass";
 
 function App() {
   const [showPopup, setShowPopup] = useState(false);
@@ -14,19 +15,18 @@ function App() {
   useEffect(() => {
     const handleLoad = () => setReady(true);
 
-    if (document.readyState === 'complete') {
+    if (document.readyState === "complete") {
       setReady(true);
     } else {
-      window.addEventListener('load', handleLoad);
+      window.addEventListener("load", handleLoad);
       const fallback = setTimeout(() => setReady(true), 3000);
 
       return () => {
-        window.removeEventListener('load', handleLoad);
+        window.removeEventListener("load", handleLoad);
         clearTimeout(fallback);
       };
     }
   }, []);
-
 
   if (!ready) {
     return (
@@ -49,26 +49,22 @@ function App() {
         <div className="flex items-center space-x-1 sm:mb-0">
           <span>© 2025 · 0110 · London, UK</span>
         </div>
-        <span>
-          hello@0110.sport
-        </span>
+        <span>hello@0110.sport</span>
       </div>
 
       <div
         className="show-tab mobileNav navHead sm:hidden w-full gradient-border-nav mx-auto px-4 lg:px-[30px] xl:px-[60px]"
         style={{
           mixBlendMode: "screen",
-          filter:
-            "drop-shadow(0 0 6px #0000004f)",
+          filter: "drop-shadow(0 0 6px #0000004f)",
           animation: "distort 3s ease-in-out infinite",
-
         }}
       >
         <div
           className="absolute h-[99%] w-[99%]"
           style={{
             backgroundImage:
-              'linear-gradient(90deg, rgba(141, 38, 41, 0.2) 0%, rgba(249, 224, 114, 0.2) 3.65%, rgba(255, 255, 255, 0.2) 8.48%, rgba(119, 46, 171, 0.2) 12.69%, rgba(77, 53, 145, 0.2) 16.63%, rgba(191, 232, 241, 0.2) 20.71%, rgba(255, 255, 255, 0.2) 25.04%, rgba(248, 254, 155, 0.2) 31.53%, rgba(255, 224, 93, 0.2) 35.1%, rgba(233, 104, 28, 0.2) 38.92%, rgba(163, 40, 37, 0.2) 43.25%, rgba(36, 58, 66, 0.2) 47.2%, rgba(47, 14, 3, 0.2) 50.89%, rgba(58, 65, 91, 0.2) 54.96%, rgba(68, 73, 46, 0.2) 58.91%, rgba(99, 80, 65, 0.2) 62.61%, rgba(23, 12, 8, 0.2) 66.55%, rgba(237, 243, 243, 0.2) 89.35%, rgba(217, 253, 255, 0.2) 92.28%, rgba(178, 236, 255, 0.2) 95.2%, rgba(139, 72, 221, 0.2) 97.5%, rgba(88, 36, 131, 0.2) 100%)',
+              "linear-gradient(90deg, rgba(141, 38, 41, 0.2) 0%, rgba(249, 224, 114, 0.2) 3.65%, rgba(255, 255, 255, 0.2) 8.48%, rgba(119, 46, 171, 0.2) 12.69%, rgba(77, 53, 145, 0.2) 16.63%, rgba(191, 232, 241, 0.2) 20.71%, rgba(255, 255, 255, 0.2) 25.04%, rgba(248, 254, 155, 0.2) 31.53%, rgba(255, 224, 93, 0.2) 35.1%, rgba(233, 104, 28, 0.2) 38.92%, rgba(163, 40, 37, 0.2) 43.25%, rgba(36, 58, 66, 0.2) 47.2%, rgba(47, 14, 3, 0.2) 50.89%, rgba(58, 65, 91, 0.2) 54.96%, rgba(68, 73, 46, 0.2) 58.91%, rgba(99, 80, 65, 0.2) 62.61%, rgba(23, 12, 8, 0.2) 66.55%, rgba(237, 243, 243, 0.2) 89.35%, rgba(217, 253, 255, 0.2) 92.28%, rgba(178, 236, 255, 0.2) 95.2%, rgba(139, 72, 221, 0.2) 97.5%, rgba(88, 36, 131, 0.2) 100%)",
           }}
         />
 
@@ -79,33 +75,33 @@ function App() {
             </a>
           </div>
 
-         <div className="rounded-sm overflow-hidden w-full max-w-[162px]">
-  <button
-    className="bg-[#FAFAFA] h-8 cursor-pointer font-dm-Medium rounded-sm w-full text-base leading-6 flex items-center justify-center px-3 relative overflow-hidden group"
-    onClick={() => {
-      if (buttonDebounceRef.current) return; // debounce >400ms
-      buttonDebounceRef.current = true;
+          <div className="rounded-sm overflow-hidden w-full max-w-[162px]">
+            <button
+              className="bg-[#FAFAFA] h-8 cursor-pointer font-dm-Medium rounded-sm w-full text-base leading-6 flex items-center justify-center px-3 relative overflow-hidden group"
+              onClick={() => {
+                if (buttonDebounceRef.current) return; // debounce >400ms
+                buttonDebounceRef.current = true;
 
-      // restart shimmer cleanly
-      setTriggerGlow(false);
-      requestAnimationFrame(() => setTriggerGlow(true));
+                // restart shimmer cleanly
+                setTriggerGlow(false);
+                requestAnimationFrame(() => setTriggerGlow(true));
 
-      setTimeout(() => {
-        buttonDebounceRef.current = false;
-      }, 420); // ~>400ms debounce
+                setTimeout(() => {
+                  buttonDebounceRef.current = false;
+                }, 420); // ~>400ms debounce
 
-      setShowPopup(true);
-    }}
-    onMouseEnter={() => setTriggerGlow(true)}
-    onMouseLeave={() => setTriggerGlow(false)}
-  >
-    <div
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        opacity: triggerGlow ? 1 : 0,
-        transform: triggerGlow ? 'scale(1)' : 'scale(0.97)',
-        transition: 'all 600ms cubic-bezier(0.22, 1, 0.36, 1)',
-        background: `linear-gradient(
+                setShowPopup(true);
+              }}
+              onMouseEnter={() => setTriggerGlow(true)}
+              onMouseLeave={() => setTriggerGlow(false)}
+            >
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  opacity: triggerGlow ? 1 : 0,
+                  transform: triggerGlow ? "scale(1)" : "scale(0.97)",
+                  transition: "all 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  background: `linear-gradient(
           90deg,
           rgba(141,38,41,0.25) 0%,
           rgba(249,224,114,0.25) 7%,
@@ -124,26 +120,28 @@ function App() {
           rgba(23,12,8,0.25) 96%,
           rgba(237,243,243,0.25) 100%
         )`,
-        boxShadow: `
+                  boxShadow: `
           0 0 2px 1px rgba(255,255,255,0.05) inset,
           0 0 10px 4px rgba(255,255,255,0.08) inset,
           0px 4px 16px rgba(17,17,26,0.05),
           0px 8px 24px rgba(17,17,26,0.05),
           0px 16px 56px rgba(17,17,26,0.05)
         `,
-        filter:
-          'saturate(120%) brightness(1.15) contrast(1.1) drop-shadow(0 0 6px rgba(255,255,255,0.12))',
-        mixBlendMode: 'screen',
-      }}
-    />
+                  filter:
+                    "saturate(120%) brightness(1.15) contrast(1.1) drop-shadow(0 0 6px rgba(255,255,255,0.12))",
+                  mixBlendMode: "screen",
+                }}
+              />
 
-    <span
-      className={`relative z-20 font-dm-Medium text-[#0E0E0E] ${
-        triggerGlow ? 'animate-gradient-flow text-transparent bg-clip-text' : ''
-      }`}
-      style={{
-        backgroundImage: triggerGlow
-          ? `linear-gradient(
+              <span
+                className={`relative z-20 font-dm-Medium text-[#0E0E0E] ${
+                  triggerGlow
+                    ? "animate-gradient-flow text-transparent bg-clip-text"
+                    : ""
+                }`}
+                style={{
+                  backgroundImage: triggerGlow
+                    ? `linear-gradient(
               90deg,
               #8D2629 0%,
               #F9E072 7%,
@@ -162,44 +160,73 @@ function App() {
               #170C08 96%,
               #EDF3F3 100%
             )`
-          : 'none',
-        WebkitBackgroundClip: 'text',
-        backgroundClip: 'text',
-        backgroundSize: '250% 100%',
-        backgroundPosition: '0% 50%',
-        transition: 'background-position 600ms cubic-bezier(0.22, 1, 0.36, 1)',
-      }}
-    >
-      Request the deck
-    </span>
-  </button>
-</div>
-
-
-
+                    : "none",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  backgroundSize: "250% 100%",
+                  backgroundPosition: "0% 50%",
+                  transition:
+                    "background-position 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+              >
+                Request the deck
+              </span>
+            </button>
+          </div>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" className="absolute">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="0"
+          height="0"
+          className="absolute"
+        >
           <defs>
             <filter id="filterWhatwedo" colorInterpolationFilters="sRGB">
-              <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="3" result="noise" />
-              <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.8"
+                numOctaves="1"
+                seed="3"
+                result="noise"
+              />
+              <feColorMatrix
+                in="SourceGraphic"
+                type="matrix"
+                values="1 0 0 0 0  
                                                             0 1 0 0 0  
                                                             0 0 1 0 0  
-                                                            0 0 0 1 0" result="original" />
+                                                            0 0 0 1 0"
+                result="original"
+              />
               <feOffset in="original" dx="0" dy="2" result="redShift" />
-              <feColorMatrix in="redShift" type="matrix" values="1 0 0 0 0  
+              <feColorMatrix
+                in="redShift"
+                type="matrix"
+                values="1 0 0 0 0  
                                                         0 0 0 0 0  
                                                         0 0 0 0 0  
-                                                        0 0 0 1 0" result="red" />
+                                                        0 0 0 1 0"
+                result="red"
+              />
               <feOffset in="original" dx="0" dy="-2" result="greenShift" />
-              <feColorMatrix in="greenShift" type="matrix" values="0 0 0 0 0  
+              <feColorMatrix
+                in="greenShift"
+                type="matrix"
+                values="0 0 0 0 0  
                                                           0 1 0 0 0  
                                                           0 0 0 0 0  
-                                                          0 0 0 1 0" result="green" />
-              <feColorMatrix in="original" type="matrix" values="0 0 0 0 0  
+                                                          0 0 0 1 0"
+                result="green"
+              />
+              <feColorMatrix
+                in="original"
+                type="matrix"
+                values="0 0 0 0 0  
                                                         0 0 0 0 0  
                                                         0 0 1 0 0  
-                                                        0 0 0 1 0" result="blue" />
+                                                        0 0 0 1 0"
+                result="blue"
+              />
 
               <feBlend in="red" in2="green" mode="screen" result="rg" />
               <feBlend in="rg" in2="blue" mode="screen" result="glitched" />
@@ -211,7 +238,12 @@ function App() {
         </svg>
       </div>
 
-      <CollaboratePopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
+      <CollaboratePopup
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+      />
+
+      <LiquidGlass />
     </div>
   );
 }
