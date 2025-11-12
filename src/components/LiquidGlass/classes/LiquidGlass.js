@@ -42,18 +42,18 @@ const CAPSULE_PARAMS = {
 const CARD_PARAMS = {
   // Physical Material
   roughness: 0,
-  metalness: 0,
+  metalness: 0.08,
   clearcoat: 0.4,
   clearcoatRoughness: 0.05,
-  ior: 2.3,
+  ior: 1.4,
   iridescence: 1,
-  iridescenceIOR: 2.3,
-  thickness: 100,
-  backsideThickness: 30,
-  reflectivity: 0.5,
+  iridescenceIOR: 1.4,
+  thickness: 40,
+  backsideThickness: 70,
+  reflectivity: 0.3,
 
   // Transition Material
-  chromaticAberration: 0.12,
+  chromaticAberration: 0.4,
   anisotrophicBlur: 0.02,
   distortion: 0,
   distortionScale: 0.0,
@@ -371,6 +371,54 @@ export default class LiquidGlassMeshes extends Three {
       timeline: null,
     };
 
+    let createCardGeometry = (width, height, radius = 16) => {
+      let w = width;
+      let h = height;
+      let r = radius;
+
+      let geometry = new THREE.PlaneGeometry(
+        w,
+        h,
+        Math.floor(w / 8),
+        Math.floor(h / 8)
+      );
+      let positions = geometry.attributes.position;
+      let normals = geometry.attributes.normal;
+
+      let center = new THREE.Vector3();
+      center.z = -Math.min(w, h) * 1;
+
+      for (let i = 0; i < positions.count; i++) {
+        let p = new THREE.Vector3(
+          positions.getX(i),
+          positions.getY(i),
+          positions.getZ(i)
+        );
+
+        let dX = w * 0.5 - Math.abs(p.x);
+        let dY = h * 0.5 - Math.abs(p.y);
+
+        let edge = Math.min(dX, dY);
+        if (edge <= r) {
+          let l = (r - edge) / r;
+          l = Math.pow(l, 3) * r;
+
+          p.z += l;
+        }
+
+        positions.setXYZ(i, ...p.toArray());
+
+        let normal = p.clone().sub(center).normalize();
+        normals.setXYZ(i, ...normal.toArray());
+      }
+
+      positions.needsUpdate = true;
+      geometry.rotateX(-Math.PI * 0.5);
+      // geometry.rotateY(-Math.PI * 0.2);
+
+      return geometry;
+    };
+
     let removeCardMesh = () => {
       if (card.mesh) {
         card.mesh.visible = false;
@@ -399,25 +447,31 @@ export default class LiquidGlassMeshes extends Three {
             return;
           }
 
-          let geometry = new RoundedBoxGeometry(
-            card.width,
-            320,
-            card.height,
-            8,
-            20
-          );
+          // let geometry = new RoundedBoxGeometry(
+          //   card.width,
+          //   320,
+          //   card.height,
+          //   8,
+          //   20
+          // );
+
+          let geometry = createCardGeometry(card.width, card.height, 32);
 
           if (card.mesh) {
             card.mesh.visible = false;
-            card.material.dispose();
             this.scene.remove(card.mesh);
           }
 
           let mesh = new THREE.Mesh(geometry, this.cardMaterial);
+          // let mesh = new THREE.Mesh(
+          //   geometry,
+          //   new THREE.MeshNormalMaterial({ wireframe: true })
+          // );
+
           let mask = new THREE.Mesh(geometry, this.maskMaterial);
           mesh.add(mask);
 
-          mesh.position.y = -100;
+          mesh.position.y = 50;
           mesh.position.z = card.centerY;
           mesh.scale.setScalar(0);
           mesh.visible = false;
