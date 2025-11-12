@@ -4,8 +4,18 @@ import { MeshTransmissionMaterial } from "./MeshTransmissionMaterial";
 import * as THREE from "three";
 import * as lil from "three/addons/libs/lil-gui.module.min.js";
 import html2canvas from "html2canvas-pro";
-import { RoundedBoxGeometry } from "three/examples/jsm/Addons.js";
+import {
+  RoundedBoxGeometry,
+  HueSaturationShader,
+  ColorCorrectionShader,
+  BokehShader,
+} from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
+
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 const PARAMS = {
   // Physical Material
@@ -17,15 +27,22 @@ const PARAMS = {
   iridescence: 1,
   iridescenceIOR: 2.3,
   thickness: 60,
-  backsideThickness: 2,
-  reflectivity: 0.1,
+  backsideThickness: 30,
+  reflectivity: 0.15,
 
   // Transition Material
-  chromaticAberration: 0.1,
+  chromaticAberration: 0.01,
   anisotrophicBlur: 0.0,
   distortion: 0,
-  distortionScale: 0.5,
+  distortionScale: 0.0,
   temporalDistortion: 0,
+};
+
+const POSTPROCESSING = {
+  hue: 2.8,
+  saturation: 0,
+  brightness: 0.2,
+  contrast: 0.4,
 };
 
 export default class LiquidGlassMeshes extends Three {
@@ -39,6 +56,7 @@ export default class LiquidGlassMeshes extends Three {
     this.setMaskMaterial();
     this.addCapsuleMesh();
     this.addCardMesh();
+    this.addPostprocessing();
   }
 
   setPanel() {
@@ -50,7 +68,7 @@ export default class LiquidGlassMeshes extends Three {
     let geometry = new THREE.PlaneGeometry(1, 1);
     geometry.rotateX(-Math.PI * 0.5);
     let material = new THREE.MeshBasicMaterial({
-      // color: 0xff0000,
+      color: new THREE.Color(1, 1, 1).multiplyScalar(1.2),
       stencilWrite: true,
       stencilRef: 1,
       stencilFunc: THREE.EqualStencilFunc,
@@ -62,7 +80,6 @@ export default class LiquidGlassMeshes extends Three {
     let mesh = new THREE.Mesh(geometry, material);
     mesh.renderOrder = 2;
     mesh.scale.set(this.sizes.width, 1, this.sizes.height);
-    // mesh.visible = false;
 
     this.onResize((sizes) => {
       mesh.scale.set(sizes.width, 1, sizes.height);
@@ -309,8 +326,8 @@ export default class LiquidGlassMeshes extends Three {
       let distance = capsule.center.distanceTo(capsule.pointer);
       let target = distance <= capsule.range ? capsule.pointer : capsule.center;
 
-      capsule.position.x += (target.x - capsule.position.x) * 0.01;
-      capsule.position.y += (target.y - capsule.position.y) * 0.01;
+      capsule.position.x += (target.x - capsule.position.x) * 0.02;
+      capsule.position.y += (target.y - capsule.position.y) * 0.02;
 
       capsule.mesh.position.x = capsule.position.x;
       capsule.mesh.position.z = capsule.position.y;
@@ -401,8 +418,8 @@ export default class LiquidGlassMeshes extends Three {
 
           cardTl.to(card, {
             scale: 1,
-            duration: 0.8,
-            ease: "back.out(2)",
+            duration: 0.4,
+            ease: "back.out(1.6)",
             onStart: () => {
               card.mesh.visible = true;
             },
@@ -439,5 +456,48 @@ export default class LiquidGlassMeshes extends Three {
 
     window.addEventListener("resize", createCardMesh);
     window.addEventListener("scroll", createCardMesh);
+  }
+
+  addPostprocessing() {
+    let renderTarget = new THREE.WebGLRenderTarget(
+      this.sizes.width,
+      this.sizes.height,
+      {
+        stencilBuffer: true,
+      }
+    );
+    let composer = new EffectComposer(this.renderer, renderTarget);
+
+    let renderPass = new RenderPass(this.scene, this.camera);
+    composer.addPass(renderPass);
+
+    let huePass = new ShaderPass(HueSaturationShader);
+    huePass.uniforms.hue.value = POSTPROCESSING.hue;
+    huePass.uniforms.saturation.value = POSTPROCESSING.saturation;
+    composer.addPass(huePass);
+
+    // let ccShader = new ShaderPass(ColorCorrectionShader);
+    // console.log(ccShader);
+    // ccShader.uniforms.powRGB.value = new THREE.Vector3().setScalar(0.9);
+    // composer.addPass(ccShader);
+
+    let outputPass = new OutputPass();
+    composer.addPass(outputPass);
+
+    this.onTick(() => {
+      composer.render();
+    });
+
+    let folder = this.panel.addFolder("Postprocessing");
+
+    folder
+      .add(POSTPROCESSING, "hue", 0, Math.PI * 2, 0.01)
+      .onChange((value) => {
+        huePass.uniforms.hue.value = value;
+      });
+
+    folder.add(POSTPROCESSING, "saturation", 0, 1, 0.01).onChange((value) => {
+      huePass.uniforms.saturation.value = value;
+    });
   }
 }

@@ -63,7 +63,7 @@ export default class Three {
       alpha: true,
       premultipliedAlpha: false,
       powerPreference: "high-performance",
-      antialias: true,
+      antialias: false,
       stencil: true,
     });
     this.renderer.setSize(this.sizes.width, this.sizes.height);
@@ -102,7 +102,7 @@ export default class Three {
 
   tick() {
     // Postprocessing will handle the rendering
-    this.renderer.render(this.scene, this.camera);
+    // this.renderer.render(this.scene, this.camera);
 
     let elapsed = this.clock.getElapsedTime();
     this.tickCallbacks.forEach((callback) => {
