@@ -8,7 +8,7 @@ import {
   RoundedBoxGeometry,
   HueSaturationShader,
   ColorCorrectionShader,
-  BokehShader,
+  FXAAShader,
 } from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
 
@@ -16,8 +16,9 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { SMAAPass } from "three/examples/jsm/Addons.js";
 
-const PARAMS = {
+const CAPSULE_PARAMS = {
   // Physical Material
   roughness: 0,
   metalness: 0,
@@ -38,11 +39,30 @@ const PARAMS = {
   temporalDistortion: 0,
 };
 
+const CARD_PARAMS = {
+  // Physical Material
+  roughness: 0,
+  metalness: 0,
+  clearcoat: 0.4,
+  clearcoatRoughness: 0.05,
+  ior: 2.3,
+  iridescence: 1,
+  iridescenceIOR: 2.3,
+  thickness: 100,
+  backsideThickness: 30,
+  reflectivity: 0.5,
+
+  // Transition Material
+  chromaticAberration: 0.12,
+  anisotrophicBlur: 0.02,
+  distortion: 0,
+  distortionScale: 0.0,
+  temporalDistortion: 0,
+};
+
 const POSTPROCESSING = {
   hue: 2.8,
   saturation: 0,
-  brightness: 0.2,
-  contrast: 0.4,
 };
 
 export default class LiquidGlassMeshes extends Three {
@@ -52,10 +72,15 @@ export default class LiquidGlassMeshes extends Three {
     this.setPanel();
     this.addTexturePlane();
     this.captureScreen();
-    this.setMaterial();
+
+    this.capsuleMaterial = this.createMaterial("Capsule", CAPSULE_PARAMS);
+    this.cardMaterial = this.createMaterial("Card", CARD_PARAMS);
+
     this.setMaskMaterial();
+
     this.addCapsuleMesh();
     this.addCardMesh();
+
     this.addPostprocessing();
   }
 
@@ -124,106 +149,103 @@ export default class LiquidGlassMeshes extends Three {
     window.addEventListener("scroll", updateTexture);
   }
 
-  setMaterial() {
+  createMaterial(name, parameters) {
     let material = Object.assign(new MeshTransmissionMaterial(24), {
-      roughness: PARAMS.roughness,
-      metalness: PARAMS.metalness,
-      clearcoat: PARAMS.clearcoat,
-      clearcoatRoughness: PARAMS.clearcoatRoughness,
-      ior: PARAMS.ior,
-      iridescence: PARAMS.iridescence,
-      iridescenceIOR: PARAMS.iridescenceIOR,
-      thickness: PARAMS.thickness,
-      backsideThickness: PARAMS.backsideThickness,
-      reflectivity: PARAMS.reflectivity,
+      roughness: parameters.roughness,
+      metalness: parameters.metalness,
+      clearcoat: parameters.clearcoat,
+      clearcoatRoughness: parameters.clearcoatRoughness,
+      ior: parameters.ior,
+      iridescence: parameters.iridescence,
+      iridescenceIOR: parameters.iridescenceIOR,
+      thickness: parameters.thickness,
+      backsideThickness: parameters.backsideThickness,
+      reflectivity: parameters.reflectivity,
 
-      chromaticAberration: PARAMS.chromaticAberration,
-      anisotrophicBlur: PARAMS.anisotrophicBlur,
-      anisotrophicBlur: PARAMS.anisotrophicBlur,
-      distortion: PARAMS.distortion,
-      distortionScale: PARAMS.distortionScale,
-      temporalDistortion: PARAMS.temporalDistortion,
+      chromaticAberration: parameters.chromaticAberration,
+      anisotrophicBlur: parameters.anisotrophicBlur,
+      anisotrophicBlur: parameters.anisotrophicBlur,
+      distortion: parameters.distortion,
+      distortionScale: parameters.distortionScale,
+      temporalDistortion: parameters.temporalDistortion,
 
       transmission: 1,
 
       iridescenceThicknessRange: [0, 140],
     });
 
-    this.material = material;
+    let folder = this.panel.addFolder(`${name} Material`);
+    folder.close();
 
-    let panelFolder = this.panel.addFolder("Material");
-
-    panelFolder.add(PARAMS, "roughness", 0, 1, 0.01).onChange((value) => {
-      this.material.roughness = value;
+    folder.add(parameters, "roughness", 0, 1, 0.01).onChange((value) => {
+      material.roughness = value;
     });
 
-    panelFolder.add(PARAMS, "metalness", 0, 1, 0.01).onChange((value) => {
-      this.material.metalness = value;
+    folder.add(parameters, "metalness", 0, 1, 0.01).onChange((value) => {
+      material.metalness = value;
     });
 
-    panelFolder.add(PARAMS, "clearcoat", 0, 1, 0.01).onChange((value) => {
-      this.material.clearcoat = value;
+    folder.add(parameters, "clearcoat", 0, 1, 0.01).onChange((value) => {
+      material.clearcoat = value;
     });
 
-    panelFolder
-      .add(PARAMS, "clearcoatRoughness", 0, 1, 0.01)
+    folder
+      .add(parameters, "clearcoatRoughness", 0, 1, 0.01)
       .onChange((value) => {
-        this.material.clearcoatRoughness = value;
+        material.clearcoatRoughness = value;
       });
 
-    panelFolder.add(PARAMS, "ior", 1, 2.3, 0.01).onChange((value) => {
-      this.material.ior = value;
+    folder.add(parameters, "ior", 1, 2.3, 0.01).onChange((value) => {
+      material.ior = value;
     });
 
-    panelFolder.add(PARAMS, "iridescence", 0, 1, 0.01).onChange((value) => {
-      this.material.iridescence = value;
+    folder.add(parameters, "iridescence", 0, 1, 0.01).onChange((value) => {
+      material.iridescence = value;
     });
 
-    panelFolder
-      .add(PARAMS, "iridescenceIOR", 1, 2.3, 0.01)
+    folder.add(parameters, "iridescenceIOR", 1, 2.3, 0.01).onChange((value) => {
+      material.iridescenceIOR = value;
+    });
+
+    folder.add(parameters, "thickness", 0, 300, 1).onChange((value) => {
+      material.thickness = value;
+    });
+
+    folder.add(parameters, "backsideThickness", 0, 300, 1).onChange((value) => {
+      material.backsideThickness = value;
+    });
+
+    folder.add(parameters, "reflectivity", 0, 1, 0.01).onChange((value) => {
+      material.reflectivity = value;
+    });
+
+    folder
+      .add(parameters, "chromaticAberration", 0, 2, 0.01)
       .onChange((value) => {
-        this.material.iridescenceIOR = value;
+        material.chromaticAberration = value;
       });
 
-    panelFolder.add(PARAMS, "thickness", 0, 1000, 1).onChange((value) => {
-      this.material.thickness = value;
-    });
-
-    panelFolder
-      .add(PARAMS, "backsideThickness", 0, 1000, 1)
+    folder
+      .add(parameters, "anisotrophicBlur", 0, 10, 0.01)
       .onChange((value) => {
-        this.material.backsideThickness = value;
+        material.anisotrophicBlur = value;
       });
 
-    panelFolder.add(PARAMS, "reflectivity", 0, 1, 0.01).onChange((value) => {
-      this.material.reflectivity = value;
+    folder.add(parameters, "distortion", 0, 10, 0.01).onChange((value) => {
+      material.distortion = value;
     });
 
-    panelFolder
-      .add(PARAMS, "chromaticAberration", 0, 2, 0.01)
-      .onChange((value) => {
-        this.material.chromaticAberration = value;
-      });
-
-    panelFolder
-      .add(PARAMS, "anisotrophicBlur", 0, 10, 0.01)
-      .onChange((value) => {
-        this.material.anisotrophicBlur = value;
-      });
-
-    panelFolder.add(PARAMS, "distortion", 0, 10, 0.01).onChange((value) => {
-      this.material.distortion = value;
+    folder.add(parameters, "distortionScale", 0, 1, 0.01).onChange((value) => {
+      material.distortionScale = value;
     });
 
-    panelFolder.add(PARAMS, "distortionScale", 0, 1, 0.01).onChange((value) => {
-      this.material.distortionScale = value;
-    });
-
-    panelFolder
-      .add(PARAMS, "temporalDistortion", 0, 1, 0.01)
+    folder
+      .add(parameters, "temporalDistortion", 0, 1, 0.01)
       .onChange((value) => {
-        this.material.temporalDistortion = value;
+        material.temporalDistortion = value;
       });
+
+    return material;
   }
 
   setMaskMaterial() {
@@ -297,7 +319,7 @@ export default class LiquidGlassMeshes extends Three {
             capsule.borderRadius
           );
 
-          let mesh = new THREE.Mesh(capsule.geometry, this.material);
+          let mesh = new THREE.Mesh(capsule.geometry, this.capsuleMaterial);
           let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
           mesh.add(mask);
 
@@ -381,8 +403,8 @@ export default class LiquidGlassMeshes extends Three {
             card.width,
             320,
             card.height,
-            3,
-            16
+            8,
+            20
           );
 
           if (card.mesh) {
@@ -391,13 +413,7 @@ export default class LiquidGlassMeshes extends Three {
             this.scene.remove(card.mesh);
           }
 
-          let material = this.material.clone();
-          material.thickness = 40;
-          material.chromaticAberration = 1.5;
-          material.reflectivity = 0.5;
-          material.ior = 2.3;
-
-          let mesh = new THREE.Mesh(geometry, material);
+          let mesh = new THREE.Mesh(geometry, this.cardMaterial);
           let mask = new THREE.Mesh(geometry, this.maskMaterial);
           mesh.add(mask);
 
@@ -481,6 +497,9 @@ export default class LiquidGlassMeshes extends Three {
     // ccShader.uniforms.powRGB.value = new THREE.Vector3().setScalar(0.9);
     // composer.addPass(ccShader);
 
+    let smaaPass = new SMAAPass();
+    composer.addPass(smaaPass);
+
     let outputPass = new OutputPass();
     composer.addPass(outputPass);
 
@@ -489,6 +508,7 @@ export default class LiquidGlassMeshes extends Three {
     });
 
     let folder = this.panel.addFolder("Postprocessing");
+    folder.close();
 
     folder
       .add(POSTPROCESSING, "hue", 0, Math.PI * 2, 0.01)
