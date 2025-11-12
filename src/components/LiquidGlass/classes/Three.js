@@ -64,11 +64,11 @@ export default class Three {
       premultipliedAlpha: false,
       powerPreference: "high-performance",
       antialias: true,
-      // stencil: false,
-      // depth: false,
+      stencil: true,
     });
     this.renderer.setSize(this.sizes.width, this.sizes.height);
     this.renderer.setPixelRatio(this.sizes.pixelRatio);
+    this.renderer.setClearColor(0x000000, 0);
 
     this.clock = new THREE.Clock();
   }

@@ -36,6 +36,7 @@ export default class LiquidGlassMeshes extends Three {
     this.addTexturePlane();
     this.captureScreen();
     this.setMaterial();
+    this.setMaskMaterial();
     this.addCapsuleMesh();
     this.addCardMesh();
   }
@@ -48,9 +49,20 @@ export default class LiquidGlassMeshes extends Three {
   addTexturePlane() {
     let geometry = new THREE.PlaneGeometry(1, 1);
     geometry.rotateX(-Math.PI * 0.5);
-    let material = new THREE.MeshBasicMaterial();
+    let material = new THREE.MeshBasicMaterial({
+      // color: 0xff0000,
+      stencilWrite: true,
+      stencilRef: 1,
+      stencilFunc: THREE.EqualStencilFunc,
+      stencilZPass: THREE.KeepStencilOp,
+      stencilFail: THREE.KeepStencilOp,
+      stencilZFail: THREE.KeepStencilOp,
+    });
+
     let mesh = new THREE.Mesh(geometry, material);
+    mesh.renderOrder = 2;
     mesh.scale.set(this.sizes.width, 1, this.sizes.height);
+    // mesh.visible = false;
 
     this.onResize((sizes) => {
       mesh.scale.set(sizes.width, 1, sizes.height);
@@ -197,6 +209,21 @@ export default class LiquidGlassMeshes extends Three {
       });
   }
 
+  setMaskMaterial() {
+    this.maskMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00ff00,
+      colorWrite: false,
+      depthWrite: false,
+      depthTest: false,
+      stencilWrite: true,
+      stencilRef: 1,
+      stencilFunc: THREE.AlwaysStencilFunc,
+      stencilFail: THREE.KeepStencilOp,
+      stencilZFail: THREE.KeepStencilOp,
+      stencilZPass: THREE.ReplaceStencilOp,
+    });
+  }
+
   addCapsuleMesh() {
     let logo = document.getElementById("hero-section-logo");
     let offset = 32;
@@ -215,6 +242,7 @@ export default class LiquidGlassMeshes extends Three {
     let removeCapsuleMesh = () => {
       if (capsule.mesh) {
         capsule.mesh.visible = false;
+        capsule.mesh.clear();
         this.scene.remove(capsule.mesh);
         capsule.mesh = null;
       }
@@ -253,7 +281,11 @@ export default class LiquidGlassMeshes extends Three {
           );
 
           let mesh = new THREE.Mesh(capsule.geometry, this.material);
+          let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
+          mesh.add(mask);
+
           mesh.position.set(capsule.position.x, 0, capsule.position.y);
+          mesh.renderOrder = 1;
           // mesh.scale.y =  capsule.borderRadius;
           mesh.position.y = capsule.borderRadius;
           this.scene.add(mesh);
@@ -330,9 +362,9 @@ export default class LiquidGlassMeshes extends Three {
 
           let geometry = new RoundedBoxGeometry(
             card.width,
+            320,
             card.height,
-            card.height,
-            12,
+            3,
             16
           );
 
@@ -344,16 +376,19 @@ export default class LiquidGlassMeshes extends Three {
 
           let material = this.material.clone();
           material.thickness = 40;
-          material.chromaticAberration = 100.5;
-          material.reflectivity = 1;
+          material.chromaticAberration = 1.5;
+          material.reflectivity = 0.5;
           material.ior = 2.3;
-          // material.
 
           let mesh = new THREE.Mesh(geometry, material);
-          mesh.position.y = 0;
+          let mask = new THREE.Mesh(geometry, this.maskMaterial);
+          mesh.add(mask);
+
+          mesh.position.y = -100;
           mesh.position.z = card.centerY;
           mesh.scale.setScalar(0);
           mesh.visible = false;
+          mesh.renderOrder = 1;
           this.scene.add(mesh);
           card.mesh = mesh;
 
@@ -366,7 +401,8 @@ export default class LiquidGlassMeshes extends Three {
 
           cardTl.to(card, {
             scale: 1,
-            ease: "back.out",
+            duration: 0.8,
+            ease: "back.out(2)",
             onStart: () => {
               card.mesh.visible = true;
             },
