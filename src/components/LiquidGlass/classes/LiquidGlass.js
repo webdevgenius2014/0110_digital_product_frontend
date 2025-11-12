@@ -27,7 +27,7 @@ const CAPSULE_PARAMS = {
   ior: 2.3,
   iridescence: 1,
   iridescenceIOR: 2.3,
-  thickness: 60,
+  thickness: 80,
   backsideThickness: 30,
   reflectivity: 0.15,
 
@@ -61,7 +61,7 @@ const CARD_PARAMS = {
 };
 
 const POSTPROCESSING = {
-  hue: 2.8,
+  hue: 0,
   saturation: 0,
 };
 
@@ -72,6 +72,7 @@ export default class LiquidGlassMeshes extends Three {
     this.setPanel();
     this.addTexturePlane();
     this.captureScreen();
+    this.loadTextures();
 
     this.capsuleMaterial = this.createMaterial("Capsule", CAPSULE_PARAMS);
     this.cardMaterial = this.createMaterial("Card", CARD_PARAMS);
@@ -147,6 +148,15 @@ export default class LiquidGlassMeshes extends Three {
     updateTexture();
     window.addEventListener("resize", updateTexture);
     window.addEventListener("scroll", updateTexture);
+  }
+
+  loadTextures() {
+    let loader = new THREE.TextureLoader();
+
+    this.textures = {};
+    let glass = loader.load("Glass-shape.png");
+    glass.colorSpace = THREE.SRGBColorSpace;
+    this.textures.glass = glass;
   }
 
   createMaterial(name, parameters) {
@@ -320,6 +330,25 @@ export default class LiquidGlassMeshes extends Three {
           );
 
           let mesh = new THREE.Mesh(capsule.geometry, this.capsuleMaterial);
+          let glassShapeGeometry = new THREE.PlaneGeometry(
+            capsule.width,
+            capsule.height * 0.5
+          );
+          let glassShapeMaterial = new THREE.MeshBasicMaterial({
+            // color: 0xff0000,
+            map: this.textures.glass,
+            transparent: true,
+            depthTest: false,
+            opacity: 0.75,
+          });
+          let glassShape = new THREE.Mesh(
+            glassShapeGeometry,
+            glassShapeMaterial
+          );
+          glassShape.rotation.x = -Math.PI * 0.5;
+          glassShape.position.z = capsule.height * 0.25;
+          mesh.add(glassShape);
+
           let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
           mesh.add(mask);
 
