@@ -237,7 +237,7 @@ export default class LiquidGlassMeshes extends Three {
           width: mobileBar.offsetWidth,
           height: mobileBar.offsetHeight,
           y: window.scrollY + rect.top,
-          scale: window.devicePixelRatio * 2,
+          scale: window.devicePixelRatio * 0.2,
           windowWidth: document.documentElement.clientWidth,
         }).then((canvas) => {
           if (texture) {

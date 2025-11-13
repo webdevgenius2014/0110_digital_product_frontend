@@ -52,7 +52,7 @@ function App() {
         <span>hello@0110.sport</span>
       </div>
 
-      <div 
+      <div
         id="mobile-bar"
         className="!z-[100] show-tab mobileNav navHead sm:hidden w-full gradient-border-nav mx-auto px-4 lg:px-[30px] xl:px-[60px] !bg-transparent"
         data-html2canvas-ignore
@@ -162,6 +162,10 @@ function App() {
               </span>
             </button>
           </div>
+        </div>
+
+        <div id="mobile-bar-background" className="absolute inset-0 backdrop-blur-[1px] bg-[#00000072]">
+          <img src="Rainbow.jpg" className="w-full h-full opacity-15" />
         </div>
       </div>
 
