@@ -42,19 +42,19 @@ const CAPSULE_PARAMS = {
 const CARD_PARAMS = {
   // Physical Material
   roughness: 0,
-  metalness: 0.08,
-  clearcoat: 0.4,
+  metalness: 0.02,
+  clearcoat: 0.1,
   clearcoatRoughness: 0.05,
-  ior: 1.4,
+  ior: 2.3,
   iridescence: 1,
   iridescenceIOR: 1.4,
   thickness: 40,
   backsideThickness: 70,
-  reflectivity: 0.3,
+  reflectivity: 0.5,
 
   // Transition Material
-  chromaticAberration: 0.4,
-  anisotrophicBlur: 0.02,
+  chromaticAberration: 1.9,
+  anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.0,
   temporalDistortion: 0,
@@ -415,7 +415,7 @@ export default class LiquidGlassMeshes extends Three {
       let normals = geometry.attributes.normal;
 
       let center = new THREE.Vector3();
-      center.z = -Math.min(w, h) * 1;
+      center.z = -Math.min(w, h) * 1.6;
 
       for (let i = 0; i < positions.count; i++) {
         let p = new THREE.Vector3(
@@ -430,13 +430,11 @@ export default class LiquidGlassMeshes extends Three {
         let edge = Math.min(dX, dY);
         if (edge <= r) {
           let l = (r - edge) / r;
-          l = Math.pow(l, 3) * r;
-
+          l = Math.pow(l, 3) * r * 1.5;
           p.z += l;
         }
 
         positions.setXYZ(i, ...p.toArray());
-
         let normal = p.clone().sub(center).normalize();
         normals.setXYZ(i, ...normal.toArray());
       }
@@ -500,7 +498,7 @@ export default class LiquidGlassMeshes extends Three {
           let mask = new THREE.Mesh(geometry, this.maskMaterial);
           mesh.add(mask);
 
-          mesh.position.y = 50;
+          mesh.position.y = 1000;
           mesh.position.z = card.centerY;
           mesh.scale.setScalar(0);
           mesh.visible = false;
@@ -520,13 +518,13 @@ export default class LiquidGlassMeshes extends Three {
             duration: 0.4,
             ease: "back.out(1.6)",
             onStart: () => {
-              card.mesh.visible = true;
+              if (card.mesh) card.mesh.visible = true;
             },
             onUpdate: () => {
-              card.mesh.scale.setScalar(card.scale);
+              if (card.mesh) card.mesh.scale.setScalar(card.scale);
             },
             onReverseComplete: () => {
-              card.mesh.visible = false;
+              if (card.mesh) card.mesh.visible = false;
             },
           });
 
