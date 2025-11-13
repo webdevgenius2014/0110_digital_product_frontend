@@ -60,6 +60,27 @@ const CARD_PARAMS = {
   temporalDistortion: 0,
 };
 
+const MOBILE_BAR_PARAMS = {
+  // Physical Material
+  roughness: 0.06,
+  metalness: 0.3,
+  clearcoat: 1,
+  clearcoatRoughness: 0.05,
+  ior: 1.27,
+  iridescence: 1,
+  iridescenceIOR: 1,
+  thickness: 208,
+  backsideThickness: 0,
+  reflectivity: 0.3,
+
+  // Transition Material
+  chromaticAberration: 0.07,
+  anisotrophicBlur: 0.0,
+  distortion: 0,
+  distortionScale: 0.0,
+  temporalDistortion: 0,
+};
+
 const POSTPROCESSING = {
   hue: 0,
   saturation: 0,
@@ -70,21 +91,18 @@ export default class LiquidGlassMeshes extends Three {
     super(domElement);
 
     this.selectReferences();
+    this.loadTextures();
 
     this.setPanel();
 
     this.addDesktopTexturePlane();
     this.addMobileTexturePlane();
 
-    this.loadTextures();
-
-    this.capsuleMaterial = this.createMaterial("Capsule", CAPSULE_PARAMS);
-    this.cardMaterial = this.createMaterial("Card", CARD_PARAMS);
-
-    this.setMaskMaterial();
+    this.setMaterials();
 
     this.addCapsuleMesh();
     this.addCardMesh();
+    this.addMobileBarMesh();
 
     this.addPostprocessing();
   }
@@ -213,14 +231,13 @@ export default class LiquidGlassMeshes extends Three {
         }
 
         let rect = mobileBar.getBoundingClientRect();
-        console.log(rect.top);
 
         html2canvas(document.body, {
           useCORS: false,
           width: mobileBar.offsetWidth,
           height: mobileBar.offsetHeight,
           y: window.scrollY + rect.top,
-          scale: window.devicePixelRatio,
+          scale: window.devicePixelRatio * 2,
           windowWidth: document.documentElement.clientWidth,
         }).then((canvas) => {
           if (texture) {
@@ -228,12 +245,15 @@ export default class LiquidGlassMeshes extends Three {
           }
           texture = new THREE.CanvasTexture(canvas);
           texture.colorSpace = THREE.SRGBColorSpace;
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          // texture.minFilter = THREE.NearestFilter;
           texture.needsUpdate = true;
           material.map = texture;
           material.needsUpdate = true;
         });
       },
-      60 / 1000,
+      1000 / 60,
       {
         onStart: () => {},
         onComplete: () => {},
@@ -244,8 +264,6 @@ export default class LiquidGlassMeshes extends Three {
     window.addEventListener("resize", updateTexture);
     window.addEventListener("scroll", updateTexture);
   }
-
-  captureScreen() {}
 
   loadTextures() {
     let loader = new THREE.TextureLoader();
@@ -355,7 +373,14 @@ export default class LiquidGlassMeshes extends Three {
     return material;
   }
 
-  setMaskMaterial() {
+  setMaterials() {
+    this.capsuleMaterial = this.createMaterial("Capsule", CAPSULE_PARAMS);
+    this.cardMaterial = this.createMaterial("Card", CARD_PARAMS);
+    this.mobileBarMaterial = this.createMaterial(
+      "MobileBar",
+      MOBILE_BAR_PARAMS
+    );
+
     this.maskMaterial = new THREE.MeshBasicMaterial({
       color: 0x00ff00,
       colorWrite: false,
@@ -650,6 +675,41 @@ export default class LiquidGlassMeshes extends Three {
 
     window.addEventListener("resize", createCardMesh);
     window.addEventListener("scroll", createCardMesh);
+  }
+
+  addMobileBarMesh() {
+    let mobileBar = this.references.mobileBar;
+    let bar = {
+      width: 0,
+      height: 0,
+      geometry: null,
+      mesh: null,
+    };
+
+    let createMesh = () => {
+      bar.width = mobileBar.offsetWidth;
+      bar.height = mobileBar.offsetHeight;
+
+      let geometry = new THREE.CylinderGeometry(
+        bar.height * 0.5,
+        bar.height * 0.5,
+        bar.width * 1.5,
+        32,
+        12
+      );
+      geometry.scale(0.2, 1, 1);
+      geometry.rotateZ(Math.PI * 0.5);
+      let material = new THREE.MeshNormalMaterial({
+        transparent: true,
+        opacity: 0.5,
+      });
+      let mesh = new THREE.Mesh(geometry, this.mobileBarMaterial);
+      mesh.position.z = this.sizes.height * 0.5 - bar.height * 0.5;
+
+      this.scene.add(mesh);
+    };
+
+    createMesh();
   }
 
   addPostprocessing() {

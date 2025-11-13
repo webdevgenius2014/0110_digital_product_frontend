@@ -52,8 +52,10 @@ function App() {
         <span>hello@0110.sport</span>
       </div>
 
-      <div id="mobile-bar"
+      <div 
+        id="mobile-bar"
         className="!z-[100] show-tab mobileNav navHead sm:hidden w-full gradient-border-nav mx-auto px-4 lg:px-[30px] xl:px-[60px] !bg-transparent"
+        data-html2canvas-ignore
       >
         <div className="flex justify-between items-center w-full relative z-10">
           <div className="header-bar h-14 py-3">
