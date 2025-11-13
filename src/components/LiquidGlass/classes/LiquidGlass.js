@@ -69,9 +69,13 @@ export default class LiquidGlassMeshes extends Three {
   constructor(domElement) {
     super(domElement);
 
+    this.selectReferences();
+
     this.setPanel();
-    this.addTexturePlane();
-    this.captureScreen();
+
+    this.addDesktopTexturePlane();
+    this.addMobileTexturePlane();
+
     this.loadTextures();
 
     this.capsuleMaterial = this.createMaterial("Capsule", CAPSULE_PARAMS);
@@ -85,12 +89,20 @@ export default class LiquidGlassMeshes extends Three {
     this.addPostprocessing();
   }
 
+  selectReferences() {
+    this.references = {};
+
+    this.references.logo = document.getElementById("hero-section-logo");
+    this.references.cards = document.getElementById("what-we-do-cards");
+    this.references.mobileBar = document.getElementById("mobile-bar");
+  }
+
   setPanel() {
     this.panel = new lil.GUI();
     this.panel.close();
   }
 
-  addTexturePlane() {
+  addDesktopTexturePlane() {
     let geometry = new THREE.PlaneGeometry(1, 1);
     geometry.rotateX(-Math.PI * 0.5);
     let material = new THREE.MeshBasicMaterial({
@@ -108,17 +120,24 @@ export default class LiquidGlassMeshes extends Three {
     mesh.scale.set(this.sizes.width, 1, this.sizes.height);
 
     this.onResize((sizes) => {
-      mesh.scale.set(sizes.width, 1, sizes.height);
+      if (sizes.width <= 1024) {
+        mesh.visible = false;
+      } else {
+        mesh.visible = true;
+        mesh.scale.set(sizes.width, 1, sizes.height);
+      }
     });
 
     this.scene.add(mesh);
-    this.texturePlane = mesh;
-  }
 
-  captureScreen() {
     let texture;
+
     let updateTexture = debounceWithHooks(
       () => {
+        if (this.sizes.width <= 1024) {
+          return;
+        }
+
         html2canvas(document.body, {
           useCORS: false,
           width: this.sizes.width,
@@ -133,10 +152,8 @@ export default class LiquidGlassMeshes extends Three {
           texture = new THREE.CanvasTexture(canvas);
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.needsUpdate = true;
-          this.texturePlane.material.map = texture;
-          this.texturePlane.material.needsUpdate = true;
-          // this.scene.background = texture;
-          // this.scene.environment = texture;
+          material.map = texture;
+          material.needsUpdate = true;
         });
       },
       300,
@@ -145,10 +162,90 @@ export default class LiquidGlassMeshes extends Three {
         onComplete: () => {},
       }
     );
+
     updateTexture();
     window.addEventListener("resize", updateTexture);
     window.addEventListener("scroll", updateTexture);
   }
+
+  addMobileTexturePlane() {
+    let mobileBar = this.references.mobileBar;
+
+    let geometry = new THREE.PlaneGeometry(1, 1);
+    geometry.rotateX(-Math.PI * 0.5);
+    let material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(1, 1, 1).multiplyScalar(1),
+      // stencilWrite: true,
+      // stencilRef: 1,
+      // stencilFunc: THREE.EqualStencilFunc,
+      // stencilZPass: THREE.KeepStencilOp,
+      // stencilFail: THREE.KeepStencilOp,
+      // stencilZFail: THREE.KeepStencilOp,
+    });
+    // material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+    let mesh = new THREE.Mesh(geometry, material);
+    mesh.renderOrder = 2;
+
+    let updateMeshPosition = () => {
+      mesh.scale.set(mobileBar.offsetWidth, 1, mobileBar.offsetHeight);
+      mesh.position.z = this.sizes.height * 0.5 - mobileBar.offsetHeight * 0.5;
+    };
+    updateMeshPosition();
+
+    this.onResize((sizes) => {
+      if (sizes.width <= 1024) {
+        mesh.visible = true;
+        updateMeshPosition();
+      } else {
+        mesh.visible = false;
+      }
+    });
+
+    this.scene.add(mesh);
+
+    let texture;
+
+    let updateTexture = debounceWithHooks(
+      () => {
+        if (this.sizes.width > 1024) {
+          return;
+        }
+
+        let rect = mobileBar.getBoundingClientRect();
+        console.log(rect.top);
+
+        html2canvas(document.body, {
+          useCORS: false,
+          width: mobileBar.offsetWidth,
+          height: mobileBar.offsetHeight,
+          y: window.scrollY + rect.top,
+          scale: window.devicePixelRatio,
+          windowWidth: document.documentElement.clientWidth,
+        }).then((canvas) => {
+          if (texture) {
+            texture.dispose();
+          }
+          texture = new THREE.CanvasTexture(canvas);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.needsUpdate = true;
+          material.map = texture;
+          material.needsUpdate = true;
+        });
+      },
+      60 / 1000,
+      {
+        onStart: () => {},
+        onComplete: () => {},
+      }
+    );
+
+    updateTexture();
+    window.addEventListener("resize", updateTexture);
+    window.addEventListener("scroll", updateTexture);
+  }
+
+  captureScreen() {}
 
   loadTextures() {
     let loader = new THREE.TextureLoader();
@@ -274,7 +371,7 @@ export default class LiquidGlassMeshes extends Three {
   }
 
   addCapsuleMesh() {
-    let logo = document.getElementById("hero-section-logo");
+    let logo = this.references.logo;
     let offset = 32;
     let capsule = {
       width: 0,
@@ -389,7 +486,7 @@ export default class LiquidGlassMeshes extends Three {
   }
 
   addCardMesh() {
-    let cardsContainer = document.getElementById("what-we-do-cards");
+    let cardsContainer = this.references.cards;
     let card = {
       width: 0,
       height: 0,

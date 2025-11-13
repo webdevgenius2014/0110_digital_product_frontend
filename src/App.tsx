@@ -52,22 +52,9 @@ function App() {
         <span>hello@0110.sport</span>
       </div>
 
-      <div
-        className="show-tab mobileNav navHead sm:hidden w-full gradient-border-nav mx-auto px-4 lg:px-[30px] xl:px-[60px]"
-        style={{
-          mixBlendMode: "screen",
-          filter: "drop-shadow(0 0 6px #0000004f)",
-          animation: "distort 3s ease-in-out infinite",
-        }}
+      <div id="mobile-bar"
+        className="!z-[100] show-tab mobileNav navHead sm:hidden w-full gradient-border-nav mx-auto px-4 lg:px-[30px] xl:px-[60px] !bg-transparent"
       >
-        <div
-          className="absolute h-[99%] w-[99%]"
-          style={{
-            backgroundImage:
-              "linear-gradient(90deg, rgba(141, 38, 41, 0.2) 0%, rgba(249, 224, 114, 0.2) 3.65%, rgba(255, 255, 255, 0.2) 8.48%, rgba(119, 46, 171, 0.2) 12.69%, rgba(77, 53, 145, 0.2) 16.63%, rgba(191, 232, 241, 0.2) 20.71%, rgba(255, 255, 255, 0.2) 25.04%, rgba(248, 254, 155, 0.2) 31.53%, rgba(255, 224, 93, 0.2) 35.1%, rgba(233, 104, 28, 0.2) 38.92%, rgba(163, 40, 37, 0.2) 43.25%, rgba(36, 58, 66, 0.2) 47.2%, rgba(47, 14, 3, 0.2) 50.89%, rgba(58, 65, 91, 0.2) 54.96%, rgba(68, 73, 46, 0.2) 58.91%, rgba(99, 80, 65, 0.2) 62.61%, rgba(23, 12, 8, 0.2) 66.55%, rgba(237, 243, 243, 0.2) 89.35%, rgba(217, 253, 255, 0.2) 92.28%, rgba(178, 236, 255, 0.2) 95.2%, rgba(139, 72, 221, 0.2) 97.5%, rgba(88, 36, 131, 0.2) 100%)",
-          }}
-        />
-
         <div className="flex justify-between items-center w-full relative z-10">
           <div className="header-bar h-14 py-3">
             <a href="/">
@@ -174,68 +161,6 @@ function App() {
             </button>
           </div>
         </div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="0"
-          height="0"
-          className="absolute"
-        >
-          <defs>
-            <filter id="filterWhatwedo" colorInterpolationFilters="sRGB">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.8"
-                numOctaves="1"
-                seed="3"
-                result="noise"
-              />
-              <feColorMatrix
-                in="SourceGraphic"
-                type="matrix"
-                values="1 0 0 0 0  
-                                                            0 1 0 0 0  
-                                                            0 0 1 0 0  
-                                                            0 0 0 1 0"
-                result="original"
-              />
-              <feOffset in="original" dx="0" dy="2" result="redShift" />
-              <feColorMatrix
-                in="redShift"
-                type="matrix"
-                values="1 0 0 0 0  
-                                                        0 0 0 0 0  
-                                                        0 0 0 0 0  
-                                                        0 0 0 1 0"
-                result="red"
-              />
-              <feOffset in="original" dx="0" dy="-2" result="greenShift" />
-              <feColorMatrix
-                in="greenShift"
-                type="matrix"
-                values="0 0 0 0 0  
-                                                          0 1 0 0 0  
-                                                          0 0 0 0 0  
-                                                          0 0 0 1 0"
-                result="green"
-              />
-              <feColorMatrix
-                in="original"
-                type="matrix"
-                values="0 0 0 0 0  
-                                                        0 0 0 0 0  
-                                                        0 0 1 0 0  
-                                                        0 0 0 1 0"
-                result="blue"
-              />
-
-              <feBlend in="red" in2="green" mode="screen" result="rg" />
-              <feBlend in="rg" in2="blue" mode="screen" result="glitched" />
-              <feMerge>
-                <feMergeNode in="glitched" />
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
       </div>
 
       <CollaboratePopup
