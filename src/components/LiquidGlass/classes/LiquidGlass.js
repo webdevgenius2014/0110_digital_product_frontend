@@ -104,7 +104,7 @@ export default class LiquidGlassMeshes extends Three {
     this.addCardMesh();
     this.addMobileBarMesh();
 
-    this.addPostprocessing();
+    // this.addPostprocessing(); // might be needed for color corrections
   }
 
   selectReferences() {
@@ -124,7 +124,7 @@ export default class LiquidGlassMeshes extends Three {
     let geometry = new THREE.PlaneGeometry(1, 1);
     geometry.rotateX(-Math.PI * 0.5);
     let material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(1, 1, 1).multiplyScalar(1.2),
+      color: 0x000000,
       stencilWrite: true,
       stencilRef: 1,
       stencilFunc: THREE.EqualStencilFunc,
@@ -172,6 +172,7 @@ export default class LiquidGlassMeshes extends Three {
           texture.needsUpdate = true;
           material.map = texture;
           material.needsUpdate = true;
+          material.color = new THREE.Color(1, 1, 1).multiplyScalar(1.2);
         });
       },
       300,
@@ -405,9 +406,11 @@ export default class LiquidGlassMeshes extends Three {
       center: new THREE.Vector2(),
       pointer: new THREE.Vector2(),
       position: new THREE.Vector2(),
-      range: 320,
+      range: 400,
       geometry: null,
       mesh: null,
+      timeline: null,
+      scale: 0,
     };
 
     let removeCapsuleMesh = () => {
@@ -478,8 +481,24 @@ export default class LiquidGlassMeshes extends Three {
           mesh.renderOrder = 1;
           // mesh.scale.y =  capsule.borderRadius;
           mesh.position.y = capsule.borderRadius;
+          mesh.scale.setScalar(0);
+          capsule.scale = 0;
           this.scene.add(mesh);
           capsule.mesh = mesh;
+
+          if (capsule.timeline) {
+            capsule.timeline.clear();
+          }
+
+          let timeline = gsap.timeline();
+          timeline.to(capsule, {
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out",
+            onUpdate: () => {
+              mesh.scale.setScalar(capsule.scale);
+            },
+          });
         },
       }
     );
@@ -492,7 +511,7 @@ export default class LiquidGlassMeshes extends Three {
     });
 
     this.onTick(() => {
-      if (!capsule.mesh) {
+      if (!capsule.mesh || capsule.scale < 0.99) {
         return;
       }
 
@@ -507,7 +526,7 @@ export default class LiquidGlassMeshes extends Three {
     });
 
     window.addEventListener("resize", createCapsuleMesh);
-    window.addEventListener("scroll", createCapsuleMesh);
+    // window.addEventListener("scroll", createCapsuleMesh);
   }
 
   addCardMesh() {
