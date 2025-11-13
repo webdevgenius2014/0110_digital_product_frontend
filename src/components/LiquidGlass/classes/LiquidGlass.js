@@ -45,15 +45,15 @@ const CARD_PARAMS = {
   metalness: 0.02,
   clearcoat: 0.1,
   clearcoatRoughness: 0.05,
-  ior: 2.3,
+  ior: 1.5,
   iridescence: 1,
   iridescenceIOR: 1.4,
-  thickness: 40,
-  backsideThickness: 70,
-  reflectivity: 0.5,
+  thickness: 27,
+  backsideThickness: 0,
+  reflectivity: 0.8,
 
   // Transition Material
-  chromaticAberration: 1.9,
+  chromaticAberration: 2,
   anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.0,
@@ -517,6 +517,7 @@ export default class LiquidGlassMeshes extends Three {
       height: 0,
       scale: 0,
       centerY: 0,
+      positionY: -4000,
       geometry: null,
       mesh: null,
       timeline: null,
@@ -553,7 +554,7 @@ export default class LiquidGlassMeshes extends Three {
         if (edge <= r) {
           let l = (r - edge) / r;
           l = Math.pow(l, 3) * r * 1.5;
-          p.z += l;
+          p.z -= l * 6;
         }
 
         positions.setXYZ(i, ...p.toArray());
@@ -563,6 +564,7 @@ export default class LiquidGlassMeshes extends Three {
 
       positions.needsUpdate = true;
       geometry.rotateX(-Math.PI * 0.5);
+
       // geometry.rotateY(-Math.PI * 0.2);
 
       return geometry;
@@ -596,14 +598,6 @@ export default class LiquidGlassMeshes extends Three {
             return;
           }
 
-          // let geometry = new RoundedBoxGeometry(
-          //   card.width,
-          //   320,
-          //   card.height,
-          //   8,
-          //   20
-          // );
-
           let geometry = createCardGeometry(card.width, card.height, 32);
 
           if (card.mesh) {
@@ -612,15 +606,11 @@ export default class LiquidGlassMeshes extends Three {
           }
 
           let mesh = new THREE.Mesh(geometry, this.cardMaterial);
-          // let mesh = new THREE.Mesh(
-          //   geometry,
-          //   new THREE.MeshNormalMaterial({ wireframe: true })
-          // );
 
           let mask = new THREE.Mesh(geometry, this.maskMaterial);
           mesh.add(mask);
 
-          mesh.position.y = 1000;
+          mesh.position.y = card.positionY;
           mesh.position.z = card.centerY;
           mesh.scale.setScalar(0);
           mesh.visible = false;
@@ -637,13 +627,17 @@ export default class LiquidGlassMeshes extends Three {
 
           cardTl.to(card, {
             scale: 1,
+            positionY: 1000,
             duration: 0.4,
             ease: "back.out(1.6)",
             onStart: () => {
               if (card.mesh) card.mesh.visible = true;
             },
             onUpdate: () => {
-              if (card.mesh) card.mesh.scale.setScalar(card.scale);
+              if (card.mesh) {
+                card.mesh.scale.setScalar(card.scale);
+                card.mesh.position.y = card.positionY;
+              }
             },
             onReverseComplete: () => {
               if (card.mesh) card.mesh.visible = false;
