@@ -11,12 +11,14 @@ import {
   FXAAShader,
 } from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
+import mobileBarVs from "./shaders/mobileBarVs.glsl?raw";
+import mobileBarFs from "./shaders/mobileBarFs.glsl?raw";
 
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
-import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import { SMAAPass } from "three/examples/jsm/Addons.js";
+// import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+// import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+// import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+// import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+// import { SMAAPass } from "three/examples/jsm/Addons.js";
 
 const CAPSULE_PARAMS = {
   // Physical Material
@@ -95,8 +97,8 @@ export default class LiquidGlassMeshes extends Three {
 
     this.setPanel();
 
-    this.addDesktopTexturePlane();
     this.addMobileTexturePlane();
+    this.addDesktopTexturePlane();
 
     this.setMaterials();
 
@@ -118,6 +120,84 @@ export default class LiquidGlassMeshes extends Three {
   setPanel() {
     this.panel = new lil.GUI();
     this.panel.close();
+  }
+
+  addMobileTexturePlane() {
+    let mobileBar = this.references.mobileBar;
+
+    let geometry = new THREE.PlaneGeometry(1, 1);
+    geometry.rotateX(-Math.PI * 0.5);
+    let material = new THREE.ShaderMaterial({
+      vertexShader: mobileBarVs,
+      fragmentShader: mobileBarFs,
+      uniforms: {
+        uTexture: new THREE.Uniform(),
+        uTextureHeight: new THREE.Uniform(0),
+        uMeshHeight: new THREE.Uniform(this.sizes.height),
+        uScreenHeight: new THREE.Uniform(window.innerHeight),
+        uScrollY: new THREE.Uniform(0),
+      },
+    });
+
+    let mesh = new THREE.Mesh(geometry, material);
+    mesh.scale.set(mobileBar.offsetWidth, 1, mobileBar.offsetHeight);
+    mesh.renderOrder = 2;
+
+    this.onResize((sizes) => {
+      if (sizes.width <= 1024) {
+        mesh.visible = true;
+
+        material.uniforms.uMeshHeight.value = mobileBar.offsetHeight;
+        material.uniforms.uScreenHeight.value = window.innerHeight;
+      } else {
+        mesh.visible = false;
+      }
+    });
+
+    this.onTick(() => {
+      if (this.sizes.width <= 1024) {
+        material.uniforms.uScrollY.value = window.scrollY;
+      }
+    });
+
+    this.scene.add(mesh);
+
+    let texture;
+
+    let updateTexture = debounceWithHooks(
+      () => {
+        if (this.sizes.width > 1024) {
+          return;
+        }
+
+        html2canvas(document.body, {
+          useCORS: false,
+          scale: 1,
+          windowWidth: document.documentElement.clientWidth,
+        }).then((canvas) => {
+          if (texture) {
+            texture.dispose();
+          }
+
+          texture = new THREE.CanvasTexture(canvas);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          // texture.flipY = true;
+          // texture.wrapS = THREE.ClampToEdgeWrapping;
+          // texture.wrapT = THREE.ClampToEdgeWrapping;
+          texture.needsUpdate = true;
+          material.uniforms.uTexture.value = texture;
+          material.uniforms.uTextureHeight.value = canvas.height;
+        });
+      },
+      1000 / 60,
+      {
+        onStart: () => {},
+        onComplete: () => {},
+      }
+    );
+
+    updateTexture();
+    window.addEventListener("resize", updateTexture);
   }
 
   addDesktopTexturePlane() {
@@ -187,85 +267,6 @@ export default class LiquidGlassMeshes extends Three {
     window.addEventListener("scroll", updateTexture);
   }
 
-  addMobileTexturePlane() {
-    let mobileBar = this.references.mobileBar;
-
-    let geometry = new THREE.PlaneGeometry(1, 1);
-    geometry.rotateX(-Math.PI * 0.5);
-    let material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(1, 1, 1).multiplyScalar(1),
-      // stencilWrite: true,
-      // stencilRef: 1,
-      // stencilFunc: THREE.EqualStencilFunc,
-      // stencilZPass: THREE.KeepStencilOp,
-      // stencilFail: THREE.KeepStencilOp,
-      // stencilZFail: THREE.KeepStencilOp,
-    });
-    // material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-
-    let mesh = new THREE.Mesh(geometry, material);
-    mesh.renderOrder = 2;
-
-    let updateMeshPosition = () => {
-      mesh.scale.set(mobileBar.offsetWidth, 1, mobileBar.offsetHeight);
-      mesh.position.z = this.sizes.height * 0.5 - mobileBar.offsetHeight * 0.5;
-    };
-    updateMeshPosition();
-
-    this.onResize((sizes) => {
-      if (sizes.width <= 1024) {
-        mesh.visible = true;
-        updateMeshPosition();
-      } else {
-        mesh.visible = false;
-      }
-    });
-
-    this.scene.add(mesh);
-
-    let texture;
-
-    let updateTexture = debounceWithHooks(
-      () => {
-        if (this.sizes.width > 1024) {
-          return;
-        }
-
-        let rect = mobileBar.getBoundingClientRect();
-
-        html2canvas(document.body, {
-          useCORS: false,
-          width: mobileBar.offsetWidth,
-          height: mobileBar.offsetHeight,
-          y: window.scrollY + rect.top,
-          scale: window.devicePixelRatio * 0.2,
-          windowWidth: document.documentElement.clientWidth,
-        }).then((canvas) => {
-          if (texture) {
-            texture.dispose();
-          }
-          texture = new THREE.CanvasTexture(canvas);
-          texture.colorSpace = THREE.SRGBColorSpace;
-          texture.wrapS = THREE.RepeatWrapping;
-          texture.wrapT = THREE.RepeatWrapping;
-          // texture.minFilter = THREE.NearestFilter;
-          texture.needsUpdate = true;
-          material.map = texture;
-          material.needsUpdate = true;
-        });
-      },
-      1000 / 60,
-      {
-        onStart: () => {},
-        onComplete: () => {},
-      }
-    );
-
-    updateTexture();
-    window.addEventListener("resize", updateTexture);
-    window.addEventListener("scroll", updateTexture);
-  }
-
   loadTextures() {
     let loader = new THREE.TextureLoader();
 
@@ -275,8 +276,8 @@ export default class LiquidGlassMeshes extends Three {
     this.textures.glass = glass;
   }
 
-  createMaterial(name, parameters) {
-    let material = Object.assign(new MeshTransmissionMaterial(24), {
+  createMaterial(name, parameters, samples = 16) {
+    let material = Object.assign(new MeshTransmissionMaterial(samples), {
       roughness: parameters.roughness,
       metalness: parameters.metalness,
       clearcoat: parameters.clearcoat,
@@ -379,7 +380,8 @@ export default class LiquidGlassMeshes extends Three {
     this.cardMaterial = this.createMaterial("Card", CARD_PARAMS);
     this.mobileBarMaterial = this.createMaterial(
       "MobileBar",
-      MOBILE_BAR_PARAMS
+      MOBILE_BAR_PARAMS,
+      2
     );
 
     this.maskMaterial = new THREE.MeshBasicMaterial({
@@ -699,30 +701,31 @@ export default class LiquidGlassMeshes extends Three {
       mesh: null,
     };
 
-    let createMesh = () => {
-      bar.width = mobileBar.offsetWidth;
-      bar.height = mobileBar.offsetHeight;
+    bar.width = mobileBar.offsetWidth;
+    bar.height = mobileBar.offsetHeight;
 
-      let geometry = new THREE.CylinderGeometry(
-        bar.height * 0.5,
-        bar.height * 0.5,
-        bar.width * 1.5,
-        32,
-        12
-      );
-      geometry.scale(0.2, 1, 1);
-      geometry.rotateZ(Math.PI * 0.5);
-      let material = new THREE.MeshNormalMaterial({
-        transparent: true,
-        opacity: 0.5,
-      });
-      let mesh = new THREE.Mesh(geometry, this.mobileBarMaterial);
-      mesh.position.z = this.sizes.height * 0.5 - bar.height * 0.5;
+    let geometry = new THREE.CylinderGeometry(
+      bar.height * 0.5,
+      bar.height * 0.5,
+      bar.width * 1.5,
+      32,
+      12
+    );
+    geometry.scale(0.2, 1, 1);
+    geometry.rotateZ(Math.PI * 0.5);
+    let material = new THREE.MeshNormalMaterial({
+      transparent: true,
+      opacity: 0.5,
+    });
+    let mesh = new THREE.Mesh(geometry, this.mobileBarMaterial);
+    bar.mesh = mesh;
+    this.mobileBar = bar;
 
-      this.scene.add(mesh);
-    };
+    this.onResize((sizes) => {
+      mesh.visible = sizes <= 1024;
+    });
 
-    createMesh();
+    this.scene.add(mesh);
   }
 
   addPostprocessing() {
