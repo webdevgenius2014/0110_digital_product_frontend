@@ -96,11 +96,11 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-       <img src="./Logo.svg" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" />
+       <img src="./Logo.svg" alt="0110 Logo" id="hero-section-logo" className="w-[370px] object-contain opacity-[0.3]" />
         
         <div
           className={`absolute w-[400px] left-[-15px] h-[190px] overflow-hidden rounded-[95px]
-            bg-[#212121]/10 border border-white/20 shadow-md
+            bg-[#212121]/10 border border-white/20 shadow-md hidden
             transition-all duration-300 ease-out`}
           style={{
             opacity: 1,
