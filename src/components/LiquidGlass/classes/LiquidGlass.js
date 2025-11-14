@@ -92,6 +92,7 @@ export default class LiquidGlassMeshes extends Three {
   constructor(domElement) {
     super(domElement);
 
+    this.setResponsivenessValues();
     this.selectReferences();
     this.loadTextures();
 
@@ -107,6 +108,28 @@ export default class LiquidGlassMeshes extends Three {
     this.addMobileBarMesh();
 
     // this.addPostprocessing(); // might be needed for color corrections
+  }
+
+  setResponsivenessValues() {
+    let isTouchDevice = () => {
+      return (
+        "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0 ||
+        navigator.msMaxTouchPoints > 0
+      );
+    };
+
+    let isMobile = () => {
+      return window.innerWidth < 1024;
+    };
+
+    this.isTouchDevice = isTouchDevice();
+    this.isMobile = isMobile();
+
+    window.addEventListener("resize", () => {
+      this.isTouchDevice = isTouchDevice();
+      this.isMobile = isMobile();
+    });
   }
 
   selectReferences() {
@@ -143,8 +166,8 @@ export default class LiquidGlassMeshes extends Three {
     mesh.scale.set(mobileBar.offsetWidth, 1, mobileBar.offsetHeight);
     mesh.renderOrder = 2;
 
-    this.onResize((sizes) => {
-      if (sizes.width <= 1024) {
+    this.onResize(() => {
+      if (this.isMobile) {
         mesh.visible = true;
 
         material.uniforms.uMeshHeight.value = mobileBar.offsetHeight;
@@ -155,7 +178,7 @@ export default class LiquidGlassMeshes extends Three {
     });
 
     this.onTick(() => {
-      if (this.sizes.width <= 1024) {
+      if (this.isMobile) {
         material.uniforms.uScrollY.value = window.scrollY;
       }
     });
@@ -164,37 +187,26 @@ export default class LiquidGlassMeshes extends Three {
 
     let texture;
 
-    let updateTexture = debounceWithHooks(
-      () => {
-        if (this.sizes.width > 1024) {
-          return;
-        }
-
-        html2canvas(document.body, {
-          useCORS: false,
-          scale: 1,
-          windowWidth: document.documentElement.clientWidth,
-        }).then((canvas) => {
-          if (texture) {
-            texture.dispose();
-          }
-
-          texture = new THREE.CanvasTexture(canvas);
-          texture.colorSpace = THREE.SRGBColorSpace;
-          // texture.flipY = true;
-          // texture.wrapS = THREE.ClampToEdgeWrapping;
-          // texture.wrapT = THREE.ClampToEdgeWrapping;
-          texture.needsUpdate = true;
-          material.uniforms.uTexture.value = texture;
-          material.uniforms.uTextureHeight.value = canvas.height;
-        });
-      },
-      1000 / 60,
-      {
-        onStart: () => {},
-        onComplete: () => {},
+    let updateTexture = debounceWithHooks(() => {
+      if (!this.isMobile) {
+        return;
       }
-    );
+
+      html2canvas(document.body, {
+        useCORS: false,
+        scale: 1,
+        windowWidth: document.documentElement.clientWidth,
+      }).then((canvas) => {
+        if (texture) {
+          texture.dispose();
+        }
+        texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.needsUpdate = true;
+        material.uniforms.uTexture.value = texture;
+        material.uniforms.uTextureHeight.value = canvas.height;
+      });
+    }, 300);
 
     updateTexture();
     window.addEventListener("resize", updateTexture);
@@ -218,7 +230,7 @@ export default class LiquidGlassMeshes extends Three {
     mesh.scale.set(this.sizes.width, 1, this.sizes.height);
 
     this.onResize((sizes) => {
-      if (sizes.width <= 1024) {
+      if (this.isMobile) {
         mesh.visible = false;
       } else {
         mesh.visible = true;
@@ -230,37 +242,30 @@ export default class LiquidGlassMeshes extends Three {
 
     let texture;
 
-    let updateTexture = debounceWithHooks(
-      () => {
-        if (this.sizes.width <= 1024) {
-          return;
-        }
-
-        html2canvas(document.body, {
-          useCORS: false,
-          width: this.sizes.width,
-          height: this.sizes.height,
-          y: window.scrollY,
-          scale: window.devicePixelRatio,
-          windowWidth: document.documentElement.clientWidth,
-        }).then((canvas) => {
-          if (texture) {
-            texture.dispose();
-          }
-          texture = new THREE.CanvasTexture(canvas);
-          texture.colorSpace = THREE.SRGBColorSpace;
-          texture.needsUpdate = true;
-          material.map = texture;
-          material.needsUpdate = true;
-          material.color = new THREE.Color(1, 1, 1).multiplyScalar(1.2);
-        });
-      },
-      300,
-      {
-        onStart: () => {},
-        onComplete: () => {},
+    let updateTexture = debounceWithHooks(() => {
+      if (this.isMobile) {
+        return;
       }
-    );
+
+      html2canvas(document.body, {
+        useCORS: false,
+        width: this.sizes.width,
+        height: this.sizes.height,
+        y: window.scrollY,
+        scale: window.devicePixelRatio,
+        windowWidth: document.documentElement.clientWidth,
+      }).then((canvas) => {
+        if (texture) {
+          texture.dispose();
+        }
+        texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.needsUpdate = true;
+        material.map = texture;
+        material.needsUpdate = true;
+        material.color = new THREE.Color(1, 1, 1).multiplyScalar(1.2);
+      });
+    }, 300);
 
     updateTexture();
     window.addEventListener("resize", updateTexture);
@@ -444,7 +449,7 @@ export default class LiquidGlassMeshes extends Three {
         onComplete: () => {
           removeCapsuleMesh();
 
-          if (this.sizes.width < 1024) {
+          if (this.isMobile) {
             return;
           }
 
@@ -462,7 +467,6 @@ export default class LiquidGlassMeshes extends Three {
             capsule.height * 0.5
           );
           let glassShapeMaterial = new THREE.MeshBasicMaterial({
-            // color: 0xff0000,
             map: this.textures.glass,
             transparent: true,
             depthTest: false,
@@ -481,7 +485,6 @@ export default class LiquidGlassMeshes extends Three {
 
           mesh.position.set(capsule.position.x, 0, capsule.position.y);
           mesh.renderOrder = 1;
-          // mesh.scale.y =  capsule.borderRadius;
           mesh.position.y = capsule.borderRadius;
           mesh.scale.setScalar(0);
           capsule.scale = 0;
@@ -517,6 +520,10 @@ export default class LiquidGlassMeshes extends Three {
         return;
       }
 
+      if (this.isMobile || this.isTouchDevice) {
+        return;
+      }
+
       let distance = capsule.center.distanceTo(capsule.pointer);
       let target = distance <= capsule.range ? capsule.pointer : capsule.center;
 
@@ -528,7 +535,6 @@ export default class LiquidGlassMeshes extends Three {
     });
 
     window.addEventListener("resize", createCapsuleMesh);
-    // window.addEventListener("scroll", createCapsuleMesh);
   }
 
   addCardMesh() {
@@ -586,8 +592,6 @@ export default class LiquidGlassMeshes extends Three {
       positions.needsUpdate = true;
       geometry.rotateX(-Math.PI * 0.5);
 
-      // geometry.rotateY(-Math.PI * 0.2);
-
       return geometry;
     };
 
@@ -611,11 +615,10 @@ export default class LiquidGlassMeshes extends Three {
       },
       300,
       {
-        onStart: () => {},
         onComplete: () => {
           removeCardMesh();
 
-          if (this.sizes.width < 1024) {
+          if (this.isMobile) {
             return;
           }
 
@@ -666,7 +669,6 @@ export default class LiquidGlassMeshes extends Three {
           });
 
           card.timeline = cardTl;
-          // cardTl.play();
         },
       }
     );
@@ -718,11 +720,13 @@ export default class LiquidGlassMeshes extends Three {
       opacity: 0.5,
     });
     let mesh = new THREE.Mesh(geometry, this.mobileBarMaterial);
+    mesh.visible = this.isMobile;
+
     bar.mesh = mesh;
     this.mobileBar = bar;
 
-    this.onResize((sizes) => {
-      mesh.visible = sizes <= 1024;
+    this.onResize(() => {
+      mesh.visible = this.isMobile;
     });
 
     this.scene.add(mesh);
