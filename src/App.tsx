@@ -79,33 +79,36 @@ function App() {
             </a>
           </div>
 
-         <div className="rounded-sm overflow-hidden w-full max-w-[162px]">
-  <button
-    className="bg-[#FAFAFA] h-8 cursor-pointer font-dm-Medium rounded-sm w-full text-base leading-6 flex items-center justify-center px-3 relative overflow-hidden group"
-    onClick={() => {
-      if (buttonDebounceRef.current) return; // debounce >400ms
-      buttonDebounceRef.current = true;
+          <div className="rounded-sm overflow-hidden w-full max-w-[162px]">
+            <button
+              className="bg-[#FAFAFA] h-8 cursor-pointer font-dm-Medium rounded-sm w-full text-base leading-6 flex items-center justify-center px-3 relative overflow-hidden group"
+              onClick={() => {
+                if (buttonDebounceRef.current) return; // debounce >400ms
+                buttonDebounceRef.current = true;
 
-      // restart shimmer cleanly
-      setTriggerGlow(false);
-      requestAnimationFrame(() => setTriggerGlow(true));
+                // restart shimmer cleanly
+                setTriggerGlow(false);
+                requestAnimationFrame(() => setTriggerGlow(true));
 
-      setTimeout(() => {
-        buttonDebounceRef.current = false;
-      }, 420); // ~>400ms debounce
+                setTimeout(() => {
+                  buttonDebounceRef.current = false;
+                }, 420); // ~>400ms debounce
 
-      setShowPopup(true);
-    }}
-    onMouseEnter={() => setTriggerGlow(true)}
-    onMouseLeave={() => setTriggerGlow(false)}
-  >
-    <div
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        opacity: triggerGlow ? 1 : 0,
-        transform: triggerGlow ? 'scale(1)' : 'scale(0.97)',
-        transition: 'all 600ms cubic-bezier(0.22, 1, 0.36, 1)',
-        background: `linear-gradient(
+                // delay popup open (optional 2s delay)
+                setTimeout(() => setShowPopup(true), 1200);
+              }}
+              onFocus={() => setTriggerGlow(true)}
+              onBlur={() => setTriggerGlow(false)}
+              onMouseDown={() => setTriggerGlow(true)}
+              onMouseUp={() => setTriggerGlow(false)}
+            >
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  opacity: triggerGlow ? 1 : 0,
+                  transform: triggerGlow ? 'scale(1)' : 'scale(0.97)',
+                  transition: 'all 600ms cubic-bezier(0.22, 1, 0.36, 1)',
+                  background: `linear-gradient(
           90deg,
           rgba(141,38,41,0.25) 0%,
           rgba(249,224,114,0.25) 7%,
@@ -124,26 +127,25 @@ function App() {
           rgba(23,12,8,0.25) 96%,
           rgba(237,243,243,0.25) 100%
         )`,
-        boxShadow: `
+                  boxShadow: `
           0 0 2px 1px rgba(255,255,255,0.05) inset,
           0 0 10px 4px rgba(255,255,255,0.08) inset,
           0px 4px 16px rgba(17,17,26,0.05),
           0px 8px 24px rgba(17,17,26,0.05),
           0px 16px 56px rgba(17,17,26,0.05)
         `,
-        filter:
-          'saturate(120%) brightness(1.15) contrast(1.1) drop-shadow(0 0 6px rgba(255,255,255,0.12))',
-        mixBlendMode: 'screen',
-      }}
-    />
+                  filter:
+                    'saturate(120%) brightness(1.15) contrast(1.1) drop-shadow(0 0 6px rgba(255,255,255,0.12))',
+                  mixBlendMode: 'screen',
+                }}
+              />
 
-    <span
-      className={`relative z-20 font-dm-Medium text-[#0E0E0E] ${
-        triggerGlow ? 'animate-gradient-flow text-transparent bg-clip-text' : ''
-      }`}
-      style={{
-        backgroundImage: triggerGlow
-          ? `linear-gradient(
+              <span
+                className={`relative z-20 font-dm-Medium text-[#0E0E0E] ${triggerGlow ? 'animate-gradient-flow text-transparent bg-clip-text' : ''
+                  }`}
+                style={{
+                  backgroundImage: triggerGlow
+                    ? `linear-gradient(
               90deg,
               #8D2629 0%,
               #F9E072 7%,
@@ -162,18 +164,18 @@ function App() {
               #170C08 96%,
               #EDF3F3 100%
             )`
-          : 'none',
-        WebkitBackgroundClip: 'text',
-        backgroundClip: 'text',
-        backgroundSize: '250% 100%',
-        backgroundPosition: '0% 50%',
-        transition: 'background-position 600ms cubic-bezier(0.22, 1, 0.36, 1)',
-      }}
-    >
-      Request the deck
-    </span>
-  </button>
-</div>
+                    : 'none',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  backgroundSize: '250% 100%',
+                  backgroundPosition: '0% 50%',
+                  transition: 'background-position 600ms cubic-bezier(0.22, 1, 0.36, 1)',
+                }}
+              >
+                Request the deck
+              </span>
+            </button>
+          </div>
 
 
 
