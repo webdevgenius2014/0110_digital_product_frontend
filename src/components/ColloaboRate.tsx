@@ -120,7 +120,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 placeholder="your@email.com"
                 onChange={(data) => handleEmail(data)}
                 value={email}
-                className="w-full BodyLarge leading-6 font-dm-bold Gray700 placeholder:text-[#616161] hover:placeholder:text-[#212121] hover:text-[#212121] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center"
+                className="w-full BodyLarge leading-6 font-dm-bold placeholder:text-[#616161] hover:placeholder:text-[#616161] hover:text-[#616161] focus:text-[#616161] focus:placeholder:text-[#616161] active:text-[#616161]! h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center [&:not(:placeholder-shown)+div]:bg-[#1967D2]"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6] group-hover:bg-[#212121] group-focus-within:bg-[#1967D2]" />
             </div>
@@ -130,7 +130,7 @@ const CollaboratePopup: React.FC<CollaboratePopupProps> = ({ isOpen, onClose }) 
                 placeholder="Optional message"
                 onChange={(data) => handleMessage(data)}
                 value={message}
-                className="w-full BodyLarge leading-6 font-dm-bold resize-none Gray700 placeholder:text-[#616161] hover:placeholder:text-[#212121] hover:text-[#212121] h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center flex items-center justify-center"
+                className="w-full BodyLarge leading-6 font-dm-bold placeholder:text-[#616161] hover:placeholder:text-[#616161] hover:text-[#616161] focus:text-[#616161] focus:placeholder:text-[#616161] active:text-[#616161]! h-12 bg-[#F1F5F8] rounded-sm px-3 py-2 focus:outline-none text-center [&:not(:placeholder-shown)+div]:bg-[#1967D2] flex items-center justify-center"
               />
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#9AA0A6] group-hover:bg-[#212121] group-focus-within:bg-[#1967D2]" />
             </div>

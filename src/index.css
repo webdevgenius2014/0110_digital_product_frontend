@@ -188,7 +188,7 @@
 @keyframes rainbowSweep {
   0% {
     background-size: 300% 100%;
-    background-position-x: 200%;
+    background-position-x: -200%;
     opacity: 0;
   }
 
@@ -197,7 +197,7 @@
   }
 
   50% {
-    background-position-x: 50%;
+    background-position-x: -50%;
     opacity: 1;
   }
 
@@ -284,7 +284,7 @@
   mask-composite: exclude;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.3;
+  opacity: 0.6;
 }
 
 .logo-mn::before {
@@ -510,8 +510,8 @@
   .CustmWidth {
     max-width: 1583px !important;
     margin: 0 auto;
-    padding-left: 160px !important;
-    padding-right: 160px !important;
+    padding-left: 80px !important;
+    padding-right: 80px !important;
   }
 }
 
