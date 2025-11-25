@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 
 interface WhatWeDoProps {
   setTriggerGlow: (value: boolean) => void; // NEW
@@ -27,6 +27,9 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
   const gridRef = useRef<HTMLDivElement>(null)
   const isFirstEnter = useRef(true)
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const glowTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isAnimatingRef = useRef(false)
+  const animationQueueRef = useRef<number>(0)
 
   const OVERFLOW = 10
 
@@ -45,6 +48,45 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
     window.addEventListener("resize", updateSize)
     return () => window.removeEventListener("resize", updateSize)
   }, [])
+
+  // Cleanup glow timeout and reset state on unmount
+  React.useEffect(() => {
+    return () => {
+      if (glowTimeoutRef.current) {
+        clearTimeout(glowTimeoutRef.current)
+      }
+      animationQueueRef.current = 0
+      isAnimatingRef.current = false
+    }
+  }, [])
+
+  // Function to start the next animation in the queue
+  const startNextAnimation = React.useCallback(() => {
+    // Check if there are pending animations
+    if (animationQueueRef.current > 0) {
+      animationQueueRef.current -= 1
+      isAnimatingRef.current = true
+      
+      // Reset to false first to restart the animation
+      setTriggerGlow(false)
+      
+      // Use requestAnimationFrame to ensure the state reset is processed before setting to true
+      requestAnimationFrame(() => {
+        setTriggerGlow(true)
+        
+        // Set timeout to turn off the glow after animation completes
+        glowTimeoutRef.current = setTimeout(() => {
+          setTriggerGlow(false)
+          isAnimatingRef.current = false
+          
+          // Process next animation in queue if any
+          if (animationQueueRef.current > 0) {
+            startNextAnimation()
+          }
+        }, 1500)
+      })
+    }
+  }, [setTriggerGlow])
 
   const clamp = (val: number, min: number, max: number) =>
     Math.max(min, Math.min(val, max))
@@ -91,8 +133,33 @@ const WhatWeDo = ({ setTriggerGlow }: WhatWeDoProps) => {
   }
 
   const handleCardClick = () => {
-    setTriggerGlow(true)
-    setTimeout(() => setTriggerGlow(false), 1500)
+    // If an animation is currently running, add to queue
+    if (isAnimatingRef.current) {
+      animationQueueRef.current += 1
+      return
+    }
+    
+    // No animation running, start immediately
+    isAnimatingRef.current = true
+    
+    // Reset to false first to restart the animation
+    setTriggerGlow(false)
+    
+    // Use requestAnimationFrame to ensure the state reset is processed before setting to true
+    requestAnimationFrame(() => {
+      setTriggerGlow(true)
+      
+      // Set timeout to turn off the glow after animation completes
+      glowTimeoutRef.current = setTimeout(() => {
+        setTriggerGlow(false)
+        isAnimatingRef.current = false
+        
+        // Process next animation in queue if any
+        if (animationQueueRef.current > 0) {
+          startNextAnimation()
+        }
+      }, 1500)
+    })
   }
   return (
     <section className="max-w-[1383px] CustmWidth WhatWeDo w-full mx-auto px-4 lg:px-[30px] xl:px-[60px] Gray50 py-10 overflow-hidden">

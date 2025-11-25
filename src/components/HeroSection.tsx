@@ -60,9 +60,9 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
           >
             <div
               className={`
-    absolute inset-0 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] blur-[2px]
+    absolute inset-0 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] blur-[2px]
     ${triggerGlow
-                  ? 'opacity-[0.2]!'
+                  ? 'opacity-[0.3]!'
                   : 'group-focus:opacity-[0.2]! group-focus:scale-100 group-active:opacity-[0.2]! group-active:scale-100'}
   `}
               style={{
