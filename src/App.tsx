@@ -104,40 +104,40 @@ function App() {
             >
               <div
                 className="absolute inset-0 pointer-events-none"
-                style={{
-                  opacity: triggerGlow ? 1 : 0,
-                  transform: triggerGlow ? 'scale(1)' : 'scale(0.97)',
-                  transition: 'all 600ms cubic-bezier(0.22, 1, 0.36, 1)',
-                  background: `linear-gradient(
-          90deg,
-          rgba(141,38,41,0.25) 0%,
-          rgba(249,224,114,0.25) 7%,
-          rgba(119,46,171,0.25) 14%,
-          rgba(77,53,145,0.25) 21%,
-          rgba(191,232,241,0.25) 28%,
-          rgba(248,254,155,0.25) 35%,
-          rgba(255,224,93,0.25) 42%,
-          rgba(233,104,28,0.25) 49%,
-          rgba(163,40,37,0.25) 56%,
-          rgba(36,58,66,0.25) 63%,
-          rgba(47,14,3,0.25) 70%,
-          rgba(58,65,91,0.25) 77%,
-          rgba(68,73,46,0.25) 84%,
-          rgba(99,80,65,0.25) 91%,
-          rgba(23,12,8,0.25) 96%,
-          rgba(237,243,243,0.25) 100%
-        )`,
-                  boxShadow: `
-          0 0 2px 1px rgba(255,255,255,0.05) inset,
-          0 0 10px 4px rgba(255,255,255,0.08) inset,
-          0px 4px 16px rgba(17,17,26,0.05),
-          0px 8px 24px rgba(17,17,26,0.05),
-          0px 16px 56px rgba(17,17,26,0.05)
-        `,
-                  filter:
-                    'saturate(120%) brightness(1.15) contrast(1.1) drop-shadow(0 0 6px rgba(255,255,255,0.12))',
-                  mixBlendMode: 'screen',
-                }}
+                  style={{
+                    opacity: triggerGlow ? 1 : 0,
+                    transform: triggerGlow ? 'scale(1)' : 'scale(0.97)',
+                    transition: 'all 600ms cubic-bezier(0.22, 1, 0.36, 1)',
+                    background: `linear-gradient(
+            90deg,
+            rgba(141,38,41,0.25) 0%,
+            rgba(249,224,114,0.25) 7%,
+            rgba(119,46,171,0.25) 14%,
+            rgba(77,53,145,0.25) 21%,
+            rgba(191,232,241,0.25) 28%,
+            rgba(248,254,155,0.25) 35%,
+            rgba(255,224,93,0.25) 42%,
+            rgba(233,104,28,0.25) 49%,
+            rgba(163,40,37,0.25) 56%,
+            rgba(36,58,66,0.25) 63%,
+            rgba(47,14,3,0.25) 70%,
+            rgba(58,65,91,0.25) 77%,
+            rgba(68,73,46,0.25) 84%,
+            rgba(99,80,65,0.25) 91%,
+            rgba(23,12,8,0.25) 96%,
+            rgba(237,243,243,0.25) 100%
+          )`,
+                    boxShadow: `
+            0 0 2px 1px rgba(255,255,255,0.05) inset,
+            0 0 10px 4px rgba(255,255,255,0.08) inset,
+            0px 4px 16px rgba(17,17,26,0.05),
+            0px 8px 24px rgba(17,17,26,0.05),
+            0px 16px 56px rgba(17,17,26,0.05)
+          `,
+                    filter:
+                      'saturate(120%) brightness(1.15) contrast(1.1) drop-shadow(0 0 6px rgba(255,255,255,0.12))',
+                    mixBlendMode: 'screen',
+                  }}
               />
 
               <span
@@ -148,21 +148,23 @@ function App() {
                     ? `linear-gradient(
               90deg,
               #8D2629 0%,
-              #F9E072 7%,
-              #772EAB 14%,
-              #4D3591 21%,
-              #BFE8F1 28%,
-              #F8FE9B 35%,
-              #FFE05D 42%,
-              #E9681C 49%,
-              #A32825 56%,
-              #243A42 63%,
-              #2F0E03 70%,
-              #3A415B 77%,
-              #44492E 84%,
-              #635041 91%,
-              #170C08 96%,
-              #EDF3F3 100%
+              #F9E072 5%,
+              #772EAB 10%,
+              #4D3591 15%,
+              #BFE8F1 20%,
+              #F8FE9B 25%,
+              #FFE05D 30%,
+              #E9681C 35%,
+              #A32825 40%,
+              #243A42 45%,
+              #2F0E03 50%,
+              #3A415B 55%,
+              #0E0E0E 60%,
+              #0E0E0E 65%,
+              #0E0E0E 70%,
+              #0E0E0E 75%,
+              #0E0E0E 80%,
+              #0E0E0E 100%
             )`
                     : 'none',
                   WebkitBackgroundClip: 'text',
