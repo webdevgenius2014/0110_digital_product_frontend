@@ -7,4 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["three-rounded-box"],
   },
+  base: "./",
 });

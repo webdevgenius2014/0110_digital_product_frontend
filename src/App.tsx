@@ -165,7 +165,7 @@ function App() {
         </div>
 
         <div id="mobile-bar-background" className="absolute inset-0 backdrop-blur-[1px] bg-[#00000072]">
-          <img src="Rainbow.jpg" className="w-full h-full opacity-15" />
+          <img src="Rainbow.jpg" className="w-full h-full opacity-25" />
         </div>
       </div>
 

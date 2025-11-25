@@ -13,6 +13,7 @@ import {
 import gsap from "gsap";
 import mobileBarVs from "./shaders/mobileBarVs.glsl?raw";
 import mobileBarFs from "./shaders/mobileBarFs.glsl?raw";
+import { clamp } from "three/src/math/MathUtils.js";
 
 // import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 // import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -23,18 +24,18 @@ import mobileBarFs from "./shaders/mobileBarFs.glsl?raw";
 const CAPSULE_PARAMS = {
   // Physical Material
   roughness: 0,
-  metalness: 0,
+  metalness: 0.07,
   clearcoat: 0.4,
   clearcoatRoughness: 0.05,
-  ior: 2.3,
+  ior: 1.1,
   iridescence: 1,
-  iridescenceIOR: 2.3,
+  iridescenceIOR: 1,
   thickness: 80,
-  backsideThickness: 30,
+  backsideThickness: 0,
   reflectivity: 0.15,
 
   // Transition Material
-  chromaticAberration: 0.01,
+  chromaticAberration: 0.02,
   anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.0,
@@ -65,7 +66,7 @@ const CARD_PARAMS = {
 const MOBILE_BAR_PARAMS = {
   // Physical Material
   roughness: 0.06,
-  metalness: 0.3,
+  metalness: 0,
   clearcoat: 1,
   clearcoatRoughness: 0.05,
   ior: 1.27,
@@ -76,7 +77,7 @@ const MOBILE_BAR_PARAMS = {
   reflectivity: 0.3,
 
   // Transition Material
-  chromaticAberration: 0.07,
+  chromaticAberration: 0.15,
   anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.0,
@@ -405,7 +406,6 @@ export default class LiquidGlassMeshes extends Three {
 
   addCapsuleMesh() {
     let logo = this.references.logo;
-    let offset = 32;
     let capsule = {
       width: 0,
       height: 0,
@@ -413,10 +413,14 @@ export default class LiquidGlassMeshes extends Three {
       center: new THREE.Vector2(),
       pointer: new THREE.Vector2(),
       position: new THREE.Vector2(),
-      range: 400,
       geometry: null,
       mesh: null,
       timeline: null,
+      offset: 64,
+      rangeTop: 80,
+      rangeBottom: 4,
+      limitTop: 0,
+      limitBottom: 0,
       scale: 0,
     };
 
@@ -433,14 +437,17 @@ export default class LiquidGlassMeshes extends Three {
       () => {
         let rect = logo.getBoundingClientRect();
 
-        capsule.width = logo.offsetWidth + offset;
-        capsule.height = logo.offsetHeight * 1.2 + offset;
+        capsule.width = logo.offsetWidth + capsule.offset;
+        capsule.height = logo.offsetHeight * 1.12 + capsule.offset;
         capsule.borderRadius = Math.min(capsule.width, capsule.height);
 
         capsule.center.x =
           rect.left + rect.width * 0.5 - this.sizes.width * 0.5;
         capsule.center.y =
-          rect.top + rect.height * 0.5 - this.sizes.height * 0.5;
+          rect.top + rect.height * 0.5 - this.sizes.height * 0.5 + 52;
+
+        capsule.limitTop = capsule.center.y - capsule.rangeTop;
+        capsule.limitBottom = capsule.center.y + capsule.rangeBottom;
 
         capsule.position.copy(capsule.center);
       },
@@ -524,14 +531,26 @@ export default class LiquidGlassMeshes extends Three {
         return;
       }
 
-      let distance = capsule.center.distanceTo(capsule.pointer);
-      let target = distance <= capsule.range ? capsule.pointer : capsule.center;
+      let pointerX = capsule.pointer.x;
+      let pointerY = capsule.pointer.y;
 
-      capsule.position.x += (target.x - capsule.position.x) * 0.02;
-      capsule.position.y += (target.y - capsule.position.y) * 0.02;
+      let targetY = clamp(pointerY, capsule.limitTop, capsule.limitBottom);
 
-      capsule.mesh.position.x = capsule.position.x;
-      capsule.mesh.position.z = capsule.position.y;
+      let returnOffsetX = 400;
+      let returnOffsetY = 240;
+
+      if (
+        pointerX > capsule.center.x + returnOffsetX ||
+        pointerX < capsule.center.x - returnOffsetX ||
+        pointerY < capsule.limitTop - returnOffsetY ||
+        pointerY > capsule.limitBottom + returnOffsetY
+      ) {
+        targetY = capsule.center.y;
+      }
+
+      // capsule.mesh.position.z = targetY; // Instant update
+
+      capsule.mesh.position.z -= (capsule.mesh.position.z - targetY) * 0.01;
     });
 
     window.addEventListener("resize", createCapsuleMesh);
@@ -558,14 +577,14 @@ export default class LiquidGlassMeshes extends Three {
       let geometry = new THREE.PlaneGeometry(
         w,
         h,
-        Math.floor(w / 8),
-        Math.floor(h / 8)
+        Math.floor(w / 4),
+        Math.floor(h / 4)
       );
       let positions = geometry.attributes.position;
       let normals = geometry.attributes.normal;
 
       let center = new THREE.Vector3();
-      center.z = -Math.min(w, h) * 1.6;
+      center.z = -Math.min(w, h) * 1.5;
 
       for (let i = 0; i < positions.count; i++) {
         let p = new THREE.Vector3(
@@ -580,8 +599,8 @@ export default class LiquidGlassMeshes extends Three {
         let edge = Math.min(dX, dY);
         if (edge <= r) {
           let l = (r - edge) / r;
-          l = Math.pow(l, 3) * r * 1.5;
-          p.z -= l * 6;
+          l = Math.pow(l, 5) * r * 8;
+          p.z -= l;
         }
 
         positions.setXYZ(i, ...p.toArray());
