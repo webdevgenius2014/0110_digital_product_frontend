@@ -81,25 +81,26 @@ function App() {
 
           <div className="rounded-sm overflow-hidden w-full max-w-[162px]">
             <button
-              className="bg-[#FAFAFA] h-8 cursor-pointer font-dm-Medium rounded-sm w-full text-base leading-6 flex items-center justify-center px-3 relative overflow-hidden group"
+              className="bg-[#FAFAFA] h-8 cursor-pointer font-dm-Medium rounded-sm w-full text-base leading-6 flex items-center justify-center px-3 relative overflow-hidden
+              "
               onClick={() => {
                 if (buttonDebounceRef.current) return; // debounce >400ms
                 buttonDebounceRef.current = true;
 
                 // restart shimmer cleanly
                 setTriggerGlow(false);
-                requestAnimationFrame(() => setTriggerGlow(true));
+                requestAnimationFrame(() => setTriggerGlow(false));
 
                 setTimeout(() => {
                   buttonDebounceRef.current = false;
                 }, 420); // ~>400ms debounce
 
                 // delay popup open (optional 2s delay)
-                setTimeout(() => setShowPopup(true), 1200);
+                setTimeout(() => setShowPopup(true), 0);
               }}
-              onFocus={() => setTriggerGlow(true)}
+              onFocus={() => setTriggerGlow(false)}
               onBlur={() => setTriggerGlow(false)}
-              onMouseDown={() => setTriggerGlow(true)}
+              onMouseDown={() => setTriggerGlow(false)}
               onMouseUp={() => setTriggerGlow(false)}
             >
               <div

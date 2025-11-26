@@ -178,7 +178,7 @@
 .gradient-border-btn:focus > div:first-child,
 .gradient-border-btn:active > div:first-child,
 .gradient-border-btn[data-active="true"] > div:first-child {
-  animation: rainbowSweep 1s linear forwards;
+  animation: rainbowSweep 0.6s linear forwards;
 }
 
 @keyframes rainbowSweep {
@@ -510,14 +510,14 @@
     padding-right: 102px !important;
   }
 
-  .CustmWidth.heroSec {
-    padding-top: 75px;
-    padding-bottom: 80px;
-  }
+    /* .CustmWidth.heroSec {
+      padding-top: 75px;
+      padding-bottom: 80px;
+    }
 
-  .CustmWidth.WhatWeDo {
-    padding-bottom: 70px;
-  }
+    .CustmWidth.WhatWeDo {
+      padding-bottom: 70px;
+    } */
 }
 
 .deskMn {
