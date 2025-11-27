@@ -169,34 +169,35 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-/* .gradient-border-btn:hover::before {
-  opacity: 1;
-} */
-
-.gradient-border-btn:hover>div:first-child,
-.gradient-border-btn[data-active="true"]>div:first-child {
-  animation: rainbowSweep 1.2s ease-in-out 0.1s forwards;
+.gradient-border-btn > div:first-child {
+  transform: translateX(120%); /* initial position */
+  opacity: 0; /* initial opacity */
+  transition: none !important; /* prevent snap/jank */
 }
 
+.gradient-border-btn:focus > div:first-child,
+.gradient-border-btn:active > div:first-child,
+.gradient-border-btn[data-active="true"] > div:first-child {
+  animation: rainbowSweep 0.6s linear forwards;
+}
 
 @keyframes rainbowSweep {
   0% {
-    background-size: 300% 100%;
-    background-position-x: 200%;
+    transform: translateX(120%);
     opacity: 0;
   }
 
-  10% {
+  15% {
     opacity: 1;
   }
 
   50% {
-    background-position-x: 50%;
+    transform: translateX(0%);
     opacity: 1;
   }
 
   100% {
-    background-position-x: 0%;
+    transform: translateX(-100%);
     opacity: 1;
   }
 }
@@ -278,7 +279,7 @@
   mask-composite: exclude;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.3;
+  opacity: 0.6;
 }
 
 .logo-mn::before {
@@ -492,57 +493,32 @@
 }
 
 
+
 @media (min-width: 1024px) and (max-width: 1439px) {
   .CustmWidth {
     max-width: 100% !important;
-    padding-left: 96px;
-    padding-right: 96px;
+    padding-left: 50px;
+    padding-right: 50px;
   }
 }
 
 @media (min-width: 1440px) {
   .CustmWidth {
-    max-width: 100% !important;
+    max-width: 1583px !important;
     margin: 0 auto;
-    padding-left: 160px !important;
-    padding-right: 160px !important;
+    padding-left: 102px !important;
+    padding-right: 102px !important;
   }
+
+    /* .CustmWidth.heroSec {
+      padding-top: 75px;
+      padding-bottom: 80px;
+    }
+
+    .CustmWidth.WhatWeDo {
+      padding-bottom: 70px;
+    } */
 }
-
-
-/* @media (min-width: 1024px) and (max-width: 1439px) {
-  .CustmWidth .header-bar {
-    margin-bottom: 96px;
-  }
-
-  .CustmWidth.heroSec {
-    padding-bottom: 0 !important;
-    margin-bottom: 96px;
-  }
-
-  .CustmWidth.WhatWeDo {
-    padding-top: 0 !important;
-    margin-bottom: 0;
-    padding-bottom: 96px !important;
-  }
-}
-
-@media (min-width: 1440px) {
-  .CustmWidth .header-bar {
-    margin-bottom: 160px;
-  }
-
-  .CustmWidth.heroSec {
-    padding-bottom: 0 !important;
-    margin-bottom: 160px;
-  }
-
-  .CustmWidth.WhatWeDo {
-    padding-top: 0 !important;
-    margin-bottom: 0;
-    padding-bottom: 160px !important;
-  }
-} */
 
 .deskMn {
   top: -40px;
