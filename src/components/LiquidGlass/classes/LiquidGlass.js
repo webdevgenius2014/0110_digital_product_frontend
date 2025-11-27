@@ -13,7 +13,7 @@ import {
 import gsap from "gsap";
 import mobileBarVs from "./shaders/mobileBarVs.glsl?raw";
 import mobileBarFs from "./shaders/mobileBarFs.glsl?raw";
-import { clamp } from "three/src/math/MathUtils.js";
+import { clamp, inverseLerp, mapLinear } from "three/src/math/MathUtils.js";
 
 // import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 // import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -48,16 +48,16 @@ const CARD_PARAMS = {
   metalness: 0.02,
   clearcoat: 0.1,
   clearcoatRoughness: 0.05,
-  ior: 1.5,
+  ior: 1.7,
   iridescence: 1,
   iridescenceIOR: 1.4,
-  thickness: 27,
+  thickness: 100,
   backsideThickness: 0,
-  reflectivity: 0.8,
+  reflectivity: 0.64,
 
   // Transition Material
-  chromaticAberration: 2,
-  anisotrophicBlur: 0.0,
+  chromaticAberration: 0.32,
+  anisotrophicBlur: 0.04,
   distortion: 0,
   distortionScale: 0.0,
   temporalDistortion: 0,
@@ -318,65 +318,65 @@ export default class LiquidGlassMeshes extends Three {
       material.metalness = value;
     });
 
-    folder.add(parameters, "clearcoat", 0, 1, 0.01).onChange((value) => {
-      material.clearcoat = value;
-    });
+    // folder.add(parameters, "clearcoat", 0, 1, 0.01).onChange((value) => {
+    //   material.clearcoat = value;
+    // });
 
-    folder
-      .add(parameters, "clearcoatRoughness", 0, 1, 0.01)
-      .onChange((value) => {
-        material.clearcoatRoughness = value;
-      });
+    // folder
+    //   .add(parameters, "clearcoatRoughness", 0, 1, 0.01)
+    //   .onChange((value) => {
+    //     material.clearcoatRoughness = value;
+    //   });
 
-    folder.add(parameters, "ior", 1, 2.3, 0.01).onChange((value) => {
+    folder.add(parameters, "ior", 1, 4, 0.01).onChange((value) => {
       material.ior = value;
     });
 
-    folder.add(parameters, "iridescence", 0, 1, 0.01).onChange((value) => {
-      material.iridescence = value;
-    });
+    // folder.add(parameters, "iridescence", 0, 1, 0.01).onChange((value) => {
+    //   material.iridescence = value;
+    // });
 
-    folder.add(parameters, "iridescenceIOR", 1, 2.3, 0.01).onChange((value) => {
-      material.iridescenceIOR = value;
-    });
+    // folder.add(parameters, "iridescenceIOR", 1, 2.3, 0.01).onChange((value) => {
+    //   material.iridescenceIOR = value;
+    // });
 
     folder.add(parameters, "thickness", 0, 300, 1).onChange((value) => {
       material.thickness = value;
     });
 
-    folder.add(parameters, "backsideThickness", 0, 300, 1).onChange((value) => {
-      material.backsideThickness = value;
-    });
+    // folder.add(parameters, "backsideThickness", 0, 300, 1).onChange((value) => {
+    //   material.backsideThickness = value;
+    // });
 
-    folder.add(parameters, "reflectivity", 0, 1, 0.01).onChange((value) => {
+    folder.add(parameters, "reflectivity", 0, 3, 0.01).onChange((value) => {
       material.reflectivity = value;
     });
 
     folder
-      .add(parameters, "chromaticAberration", 0, 2, 0.01)
+      .add(parameters, "chromaticAberration", 0, 1, 0.01)
       .onChange((value) => {
         material.chromaticAberration = value;
       });
 
     folder
-      .add(parameters, "anisotrophicBlur", 0, 10, 0.01)
+      .add(parameters, "anisotrophicBlur", 0, 0.4, 0.01)
       .onChange((value) => {
         material.anisotrophicBlur = value;
       });
 
-    folder.add(parameters, "distortion", 0, 10, 0.01).onChange((value) => {
-      material.distortion = value;
-    });
+    // folder.add(parameters, "distortion", 0, 10, 0.01).onChange((value) => {
+    //   material.distortion = value;
+    // });
 
-    folder.add(parameters, "distortionScale", 0, 1, 0.01).onChange((value) => {
-      material.distortionScale = value;
-    });
+    // folder.add(parameters, "distortionScale", 0, 1, 0.01).onChange((value) => {
+    //   material.distortionScale = value;
+    // });
 
-    folder
-      .add(parameters, "temporalDistortion", 0, 1, 0.01)
-      .onChange((value) => {
-        material.temporalDistortion = value;
-      });
+    // folder
+    //   .add(parameters, "temporalDistortion", 0, 1, 0.01)
+    //   .onChange((value) => {
+    //     material.temporalDistortion = value;
+    //   });
 
     return material;
   }
@@ -558,33 +558,40 @@ export default class LiquidGlassMeshes extends Three {
 
   addCardMesh() {
     let cardsContainer = this.references.cards;
+    let cards = cardsContainer.querySelectorAll(".card-btn");
+    let cardCenters = [];
+    let snapTo = 0;
+
     let card = {
       width: 0,
       height: 0,
       scale: 0,
+      opacity: 0,
       centerY: 0,
-      positionY: -4000,
       geometry: null,
       mesh: null,
       timeline: null,
     };
 
-    let createCardGeometry = (width, height, radius = 16) => {
-      let w = width;
-      let h = height;
-      let r = radius;
+    let createGeometry = (w, h) => {
+      let borderRadius = 36;
 
-      let geometry = new THREE.PlaneGeometry(
-        w,
-        h,
-        Math.floor(w / 4),
-        Math.floor(h / 4)
-      );
+      let halfW = w / 2;
+      let halfH = h / 2;
+      let xCount = Math.floor(w / 8);
+      let yCount = Math.floor(h / 8);
+
+      if (xCount % 2 != 0) xCount += 1;
+      if (yCount % 2 != 0) yCount += 1;
+
+      let geometry = new THREE.PlaneGeometry(w, h, xCount, yCount);
+      geometry.rotateX(-Math.PI * 0.5);
+      geometry = geometry.toNonIndexed();
+
       let positions = geometry.attributes.position;
       let normals = geometry.attributes.normal;
 
-      let center = new THREE.Vector3();
-      center.z = -Math.min(w, h) * 1.5;
+      let normalTarget = new THREE.Vector3(0, 16, 0);
 
       for (let i = 0; i < positions.count; i++) {
         let p = new THREE.Vector3(
@@ -593,24 +600,56 @@ export default class LiquidGlassMeshes extends Three {
           positions.getZ(i)
         );
 
-        let dX = w * 0.5 - Math.abs(p.x);
-        let dY = h * 0.5 - Math.abs(p.y);
+        // Pushing vertices towards the edges
+        let x, z;
 
-        let edge = Math.min(dX, dY);
-        if (edge <= r) {
-          let l = (r - edge) / r;
-          l = Math.pow(l, 5) * r * 8;
-          p.z -= l;
+        if (p.x > 0.01) {
+          x = mapLinear(p.x, 0, halfW, halfW - borderRadius, halfW);
+        } else if (p.x < 0.01) {
+          x = mapLinear(p.x, 0, -halfW, -halfW + borderRadius, -halfW);
+        } else {
+          x = 0;
         }
 
-        positions.setXYZ(i, ...p.toArray());
-        let normal = p.clone().sub(center).normalize();
-        normals.setXYZ(i, ...normal.toArray());
+        if (p.z > 0.01) {
+          z = mapLinear(p.z, 0, halfH, halfH - borderRadius, halfH);
+        } else if (p.z < 0.01) {
+          z = mapLinear(p.z, 0, -halfH, -halfH + borderRadius, -halfH);
+        } else {
+          z = 0;
+        }
+
+        // Updating vertices y position
+        let nx = inverseLerp(halfW - borderRadius, halfW, Math.abs(x));
+        let nz = inverseLerp(halfH - borderRadius, halfH, Math.abs(z));
+
+        // let y = Math.pow(Math.max(nx, nz), 2) * borderRadius;
+        let snx = Math.pow(nx, 2);
+        let snz = Math.pow(nz, 2);
+        let h = 64;
+
+        let y = snz * h;
+        y += snx * h;
+
+        positions.setXYZ(i, x, y, z);
+
+        p.set(x, y, z);
+
+        let normal = new THREE.Vector3()
+          .subVectors(p, normalTarget)
+          .normalize();
+        let up = new THREE.Vector3(0, 1, 0)
+          .lerp(normal, snx)
+          .lerp(normal, snz)
+          .normalize();
+
+        normals.setXYZ(i, ...up.toArray());
+        // normals.setXYZ(i, ...up.toArray());
       }
 
-      positions.needsUpdate = true;
-      geometry.rotateX(-Math.PI * 0.5);
-
+      // geometry.rotateX(0.4);
+      // geometry.rotateY(0.2);
+      // geometry.rotateZ(0.3);
       return geometry;
     };
 
@@ -624,12 +663,17 @@ export default class LiquidGlassMeshes extends Three {
 
     let createCardMesh = debounceWithHooks(
       () => {
-        let el = cardsContainer.querySelector(".card-btn");
+        cards.forEach((card) => {
+          let rect = card.getBoundingClientRect();
+          let x = rect.x + rect.width * 0.5 - this.sizes.width * 0.5;
+          cardCenters.push(x);
+        });
+        snapTo = cardCenters[0];
 
-        let rect = el.getBoundingClientRect();
+        let rect = cards[0].getBoundingClientRect();
 
-        card.width = el.offsetWidth + 8;
-        card.height = el.offsetHeight + 8;
+        card.width = rect.width;
+        card.height = rect.height;
         card.centerY = rect.top + rect.height * 0.5 - this.sizes.height * 0.5;
       },
       300,
@@ -641,7 +685,10 @@ export default class LiquidGlassMeshes extends Three {
             return;
           }
 
-          let geometry = createCardGeometry(card.width, card.height, 32);
+          // let geometry = createCardGeometry(card.width, card.height, 32);
+          let geometry = createGeometry(card.width, card.height);
+
+          let material = new THREE.MeshNormalMaterial({ wireframe: false });
 
           if (card.mesh) {
             card.mesh.visible = false;
@@ -649,63 +696,67 @@ export default class LiquidGlassMeshes extends Three {
           }
 
           let mesh = new THREE.Mesh(geometry, this.cardMaterial);
+          mesh.material.transparent = true;
+          mesh.material.opacity = 0;
+          mesh.visible = false;
+          // mesh.material.side = THREE.DoubleSide;
+          // mesh.scale.setScalar(0);
+          // let mesh = new THREE.Mesh(geometry, material);
 
           let mask = new THREE.Mesh(geometry, this.maskMaterial);
           mesh.add(mask);
 
-          mesh.position.y = card.positionY;
+          mesh.position.x = cardCenters[0];
+          mesh.position.y = 10;
           mesh.position.z = card.centerY;
-          mesh.scale.setScalar(0);
-          mesh.visible = false;
+
           mesh.renderOrder = 1;
           this.scene.add(mesh);
           card.mesh = mesh;
 
           if (card.timeline) {
             card.timeline.clear();
-            card.timeline = null;
           }
 
-          let cardTl = gsap.timeline().pause();
-
-          cardTl.to(card, {
-            scale: 1,
-            positionY: 1000,
-            duration: 0.4,
-            ease: "back.out(1.6)",
+          let timeline = gsap.timeline();
+          timeline.to(card, {
+            opacity: 1,
+            delay: 0.4,
+            duration: 1.6,
+            ease: "power4.out",
             onStart: () => {
-              if (card.mesh) card.mesh.visible = true;
+              mesh.visible = true;
             },
             onUpdate: () => {
-              if (card.mesh) {
-                card.mesh.scale.setScalar(card.scale);
-                card.mesh.position.y = card.positionY;
-              }
-            },
-            onReverseComplete: () => {
-              if (card.mesh) card.mesh.visible = false;
+              // mesh.scale.setScalar(card.scale);
+              mesh.material.opacity = card.opacity;
             },
           });
-
-          card.timeline = cardTl;
         },
       }
     );
 
     createCardMesh();
 
-    cardsContainer.addEventListener("mouseenter", () => {
-      if (card.timeline) card.timeline.play();
+    cardsContainer.addEventListener("mousemove", (e) => {
+      let x = e.clientX - this.sizes.width * 0.5;
+      let closestId = 0;
+      let closest = 2000;
+
+      cardCenters.forEach((cX, i) => {
+        let d = Math.abs(cX - x);
+        if (d < closest) {
+          closestId = i;
+          closest = d;
+        }
+      });
+
+      snapTo = cardCenters[closestId];
     });
 
-    cardsContainer.addEventListener("mouseleave", () => {
-      if (card.timeline) card.timeline.reverse();
-    });
-
-    window.addEventListener("mousemove", (e) => {
-      let px = e.clientX - this.sizes.width * 0.5;
+    this.onTick(() => {
       if (card.mesh) {
-        card.mesh.position.x = px;
+        card.mesh.position.x += (snapTo - card.mesh.position.x) * 0.08;
       }
     });
 
