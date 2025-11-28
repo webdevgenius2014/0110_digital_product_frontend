@@ -561,6 +561,7 @@ export default class LiquidGlassMeshes extends Three {
     let cards = cardsContainer.querySelectorAll(".card-btn");
     let cardCenters = [];
     let snapTo = 0;
+    let closestId = 0;
 
     let card = {
       width: 0,
@@ -740,23 +741,30 @@ export default class LiquidGlassMeshes extends Three {
 
     cardsContainer.addEventListener("mousemove", (e) => {
       let x = e.clientX - this.sizes.width * 0.5;
-      let closestId = 0;
-      let closest = 2000;
+
+      let distance = 2000;
 
       cardCenters.forEach((cX, i) => {
         let d = Math.abs(cX - x);
-        if (d < closest) {
+        if (d < distance) {
           closestId = i;
-          closest = d;
+          distance = d;
         }
       });
 
+      let snapRange = card.width * 0.3;
+      let closestCenter = cardCenters[closestId];
+
+      snapTo = distance < snapRange ? closestCenter : x;
+    });
+
+    cardsContainer.addEventListener("mouseleave", () => {
       snapTo = cardCenters[closestId];
     });
 
     this.onTick(() => {
       if (card.mesh) {
-        card.mesh.position.x += (snapTo - card.mesh.position.x) * 0.08;
+        card.mesh.position.x += (snapTo - card.mesh.position.x) * 0.02;
       }
     });
 
