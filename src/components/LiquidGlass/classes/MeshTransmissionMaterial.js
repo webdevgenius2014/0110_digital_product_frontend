@@ -254,6 +254,8 @@ export class MeshTransmissionMaterial extends THREE.MeshPhysicalMaterial {
         transmission /= ${samples}.0;
         totalDiffuse = mix( totalDiffuse, transmission.rgb, material.transmission );\n`
       );
+
+      // console.log(shader.fragmentShader);
     };
 
     Object.keys(this.uniforms).forEach((name) =>

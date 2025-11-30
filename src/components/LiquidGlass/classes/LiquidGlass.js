@@ -31,10 +31,10 @@ const CAPSULE_PARAMS = {
   iridescence: 1,
   iridescenceIOR: 1,
   thickness: 80,
-  backsideThickness: 0,
   reflectivity: 0.15,
 
   // Transition Material
+  transmissionSampler: true,
   chromaticAberration: 0.02,
   anisotrophicBlur: 0.0,
   distortion: 0,
@@ -52,12 +52,12 @@ const CARD_PARAMS = {
   iridescence: 1,
   iridescenceIOR: 1.4,
   thickness: 100,
-  backsideThickness: 0,
   reflectivity: 0.64,
 
   // Transition Material
+  transmissionSampler: true,
   chromaticAberration: 0.32,
-  anisotrophicBlur: 0.04,
+  anisotrophicBlur: 0.0,
   distortion: 0,
   distortionScale: 0.0,
   temporalDistortion: 0,
@@ -73,10 +73,10 @@ const MOBILE_BAR_PARAMS = {
   iridescence: 1,
   iridescenceIOR: 1,
   thickness: 208,
-  backsideThickness: 0,
   reflectivity: 0.3,
 
   // Transition Material
+  transmissionSampler: true,
   chromaticAberration: 0.15,
   anisotrophicBlur: 0.0,
   distortion: 0,
@@ -143,7 +143,7 @@ export default class LiquidGlassMeshes extends Three {
 
   setPanel() {
     this.panel = new lil.GUI();
-    this.panel.close();
+    // this.panel.close();
   }
 
   addMobileTexturePlane() {
@@ -292,9 +292,9 @@ export default class LiquidGlassMeshes extends Three {
       iridescence: parameters.iridescence,
       iridescenceIOR: parameters.iridescenceIOR,
       thickness: parameters.thickness,
-      backsideThickness: parameters.backsideThickness,
       reflectivity: parameters.reflectivity,
 
+      transmissionSampler: parameters.transmissionSampler,
       chromaticAberration: parameters.chromaticAberration,
       anisotrophicBlur: parameters.anisotrophicBlur,
       anisotrophicBlur: parameters.anisotrophicBlur,
@@ -303,6 +303,7 @@ export default class LiquidGlassMeshes extends Three {
       temporalDistortion: parameters.temporalDistortion,
 
       transmission: 1,
+      side: THREE.DoubleSide,
 
       iridescenceThicknessRange: [0, 140],
     });
@@ -344,12 +345,12 @@ export default class LiquidGlassMeshes extends Three {
       material.thickness = value;
     });
 
-    // folder.add(parameters, "backsideThickness", 0, 300, 1).onChange((value) => {
-    //   material.backsideThickness = value;
-    // });
-
-    folder.add(parameters, "reflectivity", 0, 3, 0.01).onChange((value) => {
+    folder.add(parameters, "reflectivity", 0, 1, 0.01).onChange((value) => {
       material.reflectivity = value;
+    });
+
+    folder.add(parameters, "transmissionSampler").onChange((value) => {
+      material.transmissionSampler = value;
     });
 
     folder
@@ -384,6 +385,8 @@ export default class LiquidGlassMeshes extends Three {
   setMaterials() {
     this.capsuleMaterial = this.createMaterial("Capsule", CAPSULE_PARAMS);
     this.cardMaterial = this.createMaterial("Card", CARD_PARAMS);
+
+    // console.log(this.cardMaterial);
     this.mobileBarMaterial = this.createMaterial(
       "MobileBar",
       MOBILE_BAR_PARAMS,
@@ -574,13 +577,22 @@ export default class LiquidGlassMeshes extends Three {
       timeline: null,
     };
 
+    let geometryParams = {
+      offsetX: 64,
+      offsetY: 54,
+      normalTarget: 64,
+      height: 128,
+      yMultiplier: 6,
+    };
+
     let createGeometry = (w, h) => {
-      let borderRadius = 36;
+      let borderRadiusX = geometryParams.offsetX;
+      let borderRadiusY = geometryParams.offsetY;
 
       let halfW = w / 2;
       let halfH = h / 2;
-      let xCount = Math.floor(w / 8);
-      let yCount = Math.floor(h / 8);
+      let xCount = Math.floor(w / 4);
+      let yCount = Math.floor(h / 4);
 
       if (xCount % 2 != 0) xCount += 1;
       if (yCount % 2 != 0) yCount += 1;
@@ -592,7 +604,7 @@ export default class LiquidGlassMeshes extends Three {
       let positions = geometry.attributes.position;
       let normals = geometry.attributes.normal;
 
-      let normalTarget = new THREE.Vector3(0, 16, 0);
+      let normalTarget = new THREE.Vector3(0, geometryParams.normalTarget, 0);
 
       for (let i = 0; i < positions.count; i++) {
         let p = new THREE.Vector3(
@@ -605,32 +617,34 @@ export default class LiquidGlassMeshes extends Three {
         let x, z;
 
         if (p.x > 0.01) {
-          x = mapLinear(p.x, 0, halfW, halfW - borderRadius, halfW);
+          x = mapLinear(p.x, 0, halfW, halfW - borderRadiusX, halfW);
         } else if (p.x < 0.01) {
-          x = mapLinear(p.x, 0, -halfW, -halfW + borderRadius, -halfW);
+          x = mapLinear(p.x, 0, -halfW, -halfW + borderRadiusX, -halfW);
         } else {
           x = 0;
         }
 
         if (p.z > 0.01) {
-          z = mapLinear(p.z, 0, halfH, halfH - borderRadius, halfH);
+          z = mapLinear(p.z, 0, halfH, halfH - borderRadiusY, halfH);
         } else if (p.z < 0.01) {
-          z = mapLinear(p.z, 0, -halfH, -halfH + borderRadius, -halfH);
+          z = mapLinear(p.z, 0, -halfH, -halfH + borderRadiusY, -halfH);
         } else {
           z = 0;
         }
 
         // Updating vertices y position
-        let nx = inverseLerp(halfW - borderRadius, halfW, Math.abs(x));
-        let nz = inverseLerp(halfH - borderRadius, halfH, Math.abs(z));
+        let nx = inverseLerp(halfW - borderRadiusX, halfW, Math.abs(x));
+        let nz = inverseLerp(halfH - borderRadiusY, halfH, Math.abs(z));
 
         // let y = Math.pow(Math.max(nx, nz), 2) * borderRadius;
-        let snx = Math.pow(nx, 2);
-        let snz = Math.pow(nz, 2);
-        let h = 64;
+        let snx = Math.pow(nx, geometryParams.yMultiplier);
+        let snz = Math.pow(nz, geometryParams.yMultiplier);
+        let h = geometryParams.height;
 
-        let y = snz * h;
-        y += snx * h;
+        let y = snx * h;
+        y += snz * h;
+
+        // let y = Math.max(snx, snz) * h;
 
         positions.setXYZ(i, x, y, z);
 
@@ -653,6 +667,32 @@ export default class LiquidGlassMeshes extends Three {
       // geometry.rotateZ(0.3);
       return geometry;
     };
+
+    let folder = this.panel.addFolder("CardGeometry");
+    let updateGeometry = () => {
+      card.geometry = createGeometry(card.width, card.height);
+      card.mesh.geometry = card.geometry;
+    };
+
+    folder
+      .add(geometryParams, "offsetX", 1, 64, 0.1)
+      .onFinishChange(updateGeometry);
+
+    folder
+      .add(geometryParams, "offsetY", 1, 64, 0.1)
+      .onFinishChange(updateGeometry);
+
+    folder
+      .add(geometryParams, "normalTarget", -128, 128, 0.1)
+      .onFinishChange(updateGeometry);
+
+    folder
+      .add(geometryParams, "height", -256, 256, 0.1)
+      .onFinishChange(updateGeometry);
+
+    folder
+      .add(geometryParams, "yMultiplier", 1, 10, 0.05)
+      .onFinishChange(updateGeometry);
 
     let removeCardMesh = () => {
       if (card.mesh) {
@@ -708,7 +748,7 @@ export default class LiquidGlassMeshes extends Three {
           mesh.add(mask);
 
           mesh.position.x = cardCenters[0];
-          mesh.position.y = 10;
+          mesh.position.y = 320;
           mesh.position.z = card.centerY;
 
           mesh.renderOrder = 1;
