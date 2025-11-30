@@ -143,7 +143,7 @@ export default class LiquidGlassMeshes extends Three {
 
   setPanel() {
     this.panel = new lil.GUI();
-    // this.panel.close();
+    this.panel.close();
   }
 
   addMobileTexturePlane() {
@@ -704,6 +704,7 @@ export default class LiquidGlassMeshes extends Three {
 
     let createCardMesh = debounceWithHooks(
       () => {
+        cardCenters = [];
         cards.forEach((card) => {
           let rect = card.getBoundingClientRect();
           let x = rect.x + rect.width * 0.5 - this.sizes.width * 0.5;
