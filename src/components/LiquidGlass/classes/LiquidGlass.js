@@ -51,13 +51,13 @@ const CARD_PARAMS = {
   ior: 1.7,
   iridescence: 1,
   iridescenceIOR: 1.4,
-  thickness: 100,
-  reflectivity: 0.64,
+  thickness: 124,
+  reflectivity: 0.54,
 
   // Transition Material
   transmissionSampler: true,
-  chromaticAberration: 0.32,
-  anisotrophicBlur: 0.0,
+  chromaticAberration: 0.2,
+  anisotrophicBlur: 0.1,
   distortion: 0,
   distortionScale: 0.0,
   temporalDistortion: 0,
@@ -418,6 +418,7 @@ export default class LiquidGlassMeshes extends Three {
       position: new THREE.Vector2(),
       geometry: null,
       mesh: null,
+      glassMesh: null,
       timeline: null,
       offset: 64,
       rangeTop: 80,
@@ -489,6 +490,7 @@ export default class LiquidGlassMeshes extends Three {
           glassShape.rotation.x = -Math.PI * 0.5;
           glassShape.position.z = capsule.height * 0.25;
           mesh.add(glassShape);
+          capsule.glassMesh = glassShape;
 
           let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
           mesh.add(mask);
@@ -579,10 +581,10 @@ export default class LiquidGlassMeshes extends Three {
 
     let geometryParams = {
       offsetX: 64,
-      offsetY: 54,
+      offsetY: 46,
       normalTarget: 64,
-      height: 128,
-      yMultiplier: 6,
+      height: 142,
+      yMultiplier: 5.7,
     };
 
     let createGeometry = (w, h) => {
