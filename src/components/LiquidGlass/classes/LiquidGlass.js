@@ -270,6 +270,11 @@ export default class LiquidGlassMeshes extends Three {
           this.capsule.mesh.visible = true;
           this.references.rainbow.style.opacity = "0.8";
         }
+
+        if (this.card.mesh) {
+          this.card.mesh.visible = true;
+          this.card.mesh.scale.setScalar(1);
+        }
       });
     }, 300);
 
@@ -402,6 +407,9 @@ export default class LiquidGlassMeshes extends Three {
   setMaterials() {
     this.capsuleMaterial = this.createMaterial("Capsule", CAPSULE_PARAMS);
     this.cardMaterial = this.createMaterial("Card", CARD_PARAMS);
+
+    this.cardMaterial.transparent = true;
+    this.cardMaterial.opacity = 0;
 
     // console.log(this.cardMaterial);
     this.mobileBarMaterial = this.createMaterial(
@@ -637,6 +645,7 @@ export default class LiquidGlassMeshes extends Three {
       centerY: 0,
       geometry: null,
       mesh: null,
+      timeline: null,
     };
     this.card = card;
 
@@ -800,8 +809,13 @@ export default class LiquidGlassMeshes extends Three {
             this.scene.remove(card.mesh);
           }
 
+          card.opacity = 0;
+
           let mesh = new THREE.Mesh(geometry, this.cardMaterial);
+          mesh.scale.setScalar(0);
           mesh.visible = false;
+
+          // mesh.visible = false;
           // mesh.material.transparent = true;
           // mesh.material.opacity = 0;
           // mesh.visible = false;
@@ -810,6 +824,7 @@ export default class LiquidGlassMeshes extends Three {
           // let mesh = new THREE.Mesh(geometry, material);
 
           let mask = new THREE.Mesh(geometry, this.maskMaterial);
+          mask.scale.setScalar(0);
           mesh.add(mask);
 
           mesh.position.x = cardCenters[0];
@@ -819,6 +834,27 @@ export default class LiquidGlassMeshes extends Three {
           mesh.renderOrder = 1;
           this.scene.add(mesh);
           card.mesh = mesh;
+
+          if (card.timeline) {
+            card.timeline.clear();
+          }
+
+          let tl = gsap.timeline().pause();
+          tl.to(card, {
+            opacity: 1,
+            duration: 0.2,
+            ease: "powe2.in",
+            onUpdate: () => {
+              card.mesh.material.opacity = card.opacity;
+              if (card.opacity < 0.05) {
+                mask.scale.setScalar(0);
+              } else {
+                mask.scale.setScalar(1);
+              }
+            },
+          });
+
+          card.timeline = tl;
         },
       }
     );
@@ -827,7 +863,7 @@ export default class LiquidGlassMeshes extends Three {
 
     cardsContainer.addEventListener("mousemove", (e) => {
       if (card.mesh) {
-        card.mesh.visible = true;
+        card.timeline.play();
       }
 
       let x = e.clientX - this.sizes.width * 0.5;
@@ -853,7 +889,7 @@ export default class LiquidGlassMeshes extends Three {
       let x = e.clientX - this.sizes.width * 0.5;
       snapTo = cardCenters[closestId];
       if (card.mesh) {
-        card.mesh.visible = true;
+        card.timeline.play();
         card.mesh.position.x = x;
       }
     });
@@ -861,7 +897,7 @@ export default class LiquidGlassMeshes extends Three {
     cardsContainer.addEventListener("mouseleave", () => {
       snapTo = cardCenters[closestId];
       if (card.mesh) {
-        card.mesh.visible = false;
+        card.timeline.reverse();
       }
     });
 
