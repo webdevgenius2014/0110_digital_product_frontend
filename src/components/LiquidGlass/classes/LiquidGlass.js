@@ -632,9 +632,9 @@ export default class LiquidGlassMeshes extends Three {
 
     let createGeometry = () => {
       let geometry = new RoundedBoxGeometry(
-        card.width,
+        card.width + 8,
         card.height,
-        card.height,
+        card.height + 8,
         12,
         card.height * geometryParams.radius
       );
@@ -777,6 +777,7 @@ export default class LiquidGlassMeshes extends Three {
     cardsContainer.addEventListener("mouseenter", (e) => {
       let x = e.clientX - this.sizes.width * 0.5;
       snapTo = cardCenters[closestId];
+
       if (card.mesh) {
         card.timeline.play();
         card.mesh.position.x = x;
@@ -792,12 +793,17 @@ export default class LiquidGlassMeshes extends Three {
 
     this.onTick(() => {
       if (card.mesh) {
-        let easeFactor =
-          Math.abs(pointer - card.mesh.position.x) / this.sizes.width;
-        easeFactor *= 0.05;
+        // let easeFactor =
+        //   Math.abs(pointer - card.mesh.position.x) / this.sizes.width;
+        // easeFactor *= 0.05;
 
-        card.mesh.position.x +=
-          (snapTo - card.mesh.position.x) * (0.035 + easeFactor);
+        card.mesh.position.x += (snapTo - card.mesh.position.x) * 0.04;
+
+        card.mesh.position.x = clamp(
+          card.mesh.position.x,
+          cardCenters[0] - 20,
+          cardCenters[cardCenters.length - 1] + 20
+        );
       }
     });
 
