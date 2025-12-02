@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import CollaboratePopup from "./ColloaboRate";
 
 interface HeroSectionProps {

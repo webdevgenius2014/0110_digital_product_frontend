@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 
 interface WhatWeDoProps {
   setTriggerGlow: (value: boolean) => void; // NEW
