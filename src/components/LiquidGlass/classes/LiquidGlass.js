@@ -99,14 +99,13 @@ export default class LiquidGlassMeshes extends Three {
 
     this.setPanel();
 
-    this.addMobileTexturePlane();
-    this.addDesktopTexturePlane();
-
     this.setMaterials();
-
     this.addCapsuleMesh();
     this.addCardMesh();
     this.addMobileBarMesh();
+
+    this.addMobileTexturePlane();
+    this.addDesktopTexturePlane();
 
     // this.addPostprocessing(); // might be needed for color corrections
   }
@@ -264,7 +263,10 @@ export default class LiquidGlassMeshes extends Three {
         texture.needsUpdate = true;
         material.map = texture;
         material.needsUpdate = true;
-        material.color = new THREE.Color(1, 1, 1).multiplyScalar(1.2);
+        material.color = new THREE.Color(1, 1, 1).multiplyScalar(1.0);
+        if (this.capsule.mesh) {
+          this.capsule.mesh.visible = true;
+        }
       });
     }, 300);
 
@@ -427,6 +429,7 @@ export default class LiquidGlassMeshes extends Three {
       limitBottom: 0,
       scale: 0,
     };
+    this.capsule = capsule;
 
     let removeCapsuleMesh = () => {
       if (capsule.mesh) {
@@ -498,8 +501,9 @@ export default class LiquidGlassMeshes extends Three {
           mesh.position.set(capsule.position.x, 0, capsule.position.y);
           mesh.renderOrder = 1;
           mesh.position.y = capsule.borderRadius;
-          mesh.scale.setScalar(0);
-          capsule.scale = 0;
+          mesh.visible = false;
+          // mesh.scale.setScalar(0);
+          // capsule.scale = 0;
           this.scene.add(mesh);
           capsule.mesh = mesh;
 
@@ -507,15 +511,15 @@ export default class LiquidGlassMeshes extends Three {
             capsule.timeline.clear();
           }
 
-          let timeline = gsap.timeline();
-          timeline.to(capsule, {
-            scale: 1,
-            duration: 0.8,
-            ease: "back.out",
-            onUpdate: () => {
-              mesh.scale.setScalar(capsule.scale);
-            },
-          });
+          // let timeline = gsap.timeline();
+          // timeline.to(capsule, {
+          //   scale: 1,
+          //   duration: 0.8,
+          //   ease: "back.out",
+          //   onUpdate: () => {
+          //     mesh.scale.setScalar(capsule.scale);
+          //   },
+          // });
         },
       }
     );
@@ -528,7 +532,7 @@ export default class LiquidGlassMeshes extends Three {
     });
 
     this.onTick(() => {
-      if (!capsule.mesh || capsule.scale < 0.99) {
+      if (!capsule.mesh) {
         return;
       }
 
@@ -576,8 +580,8 @@ export default class LiquidGlassMeshes extends Three {
       centerY: 0,
       geometry: null,
       mesh: null,
-      timeline: null,
     };
+    this.card = card;
 
     let geometryParams = {
       offsetX: 64,
@@ -740,9 +744,10 @@ export default class LiquidGlassMeshes extends Three {
           }
 
           let mesh = new THREE.Mesh(geometry, this.cardMaterial);
-          mesh.material.transparent = true;
-          mesh.material.opacity = 0;
           mesh.visible = false;
+          // mesh.material.transparent = true;
+          // mesh.material.opacity = 0;
+          // mesh.visible = false;
           // mesh.material.side = THREE.DoubleSide;
           // mesh.scale.setScalar(0);
           // let mesh = new THREE.Mesh(geometry, material);
@@ -757,25 +762,6 @@ export default class LiquidGlassMeshes extends Three {
           mesh.renderOrder = 1;
           this.scene.add(mesh);
           card.mesh = mesh;
-
-          if (card.timeline) {
-            card.timeline.clear();
-          }
-
-          let timeline = gsap.timeline();
-          timeline.to(card, {
-            opacity: 1,
-            delay: 0.4,
-            duration: 1.6,
-            ease: "power4.out",
-            onStart: () => {
-              mesh.visible = true;
-            },
-            onUpdate: () => {
-              // mesh.scale.setScalar(card.scale);
-              mesh.material.opacity = card.opacity;
-            },
-          });
         },
       }
     );
@@ -783,6 +769,10 @@ export default class LiquidGlassMeshes extends Three {
     createCardMesh();
 
     cardsContainer.addEventListener("mousemove", (e) => {
+      if (card.mesh) {
+        card.mesh.visible = true;
+      }
+
       let x = e.clientX - this.sizes.width * 0.5;
 
       let distance = 2000;
@@ -801,8 +791,20 @@ export default class LiquidGlassMeshes extends Three {
       snapTo = distance < snapRange ? closestCenter : x;
     });
 
+    cardsContainer.addEventListener("mouseenter", (e) => {
+      let x = e.clientX - this.sizes.width * 0.5;
+      snapTo = cardCenters[closestId];
+      if (card.mesh) {
+        card.mesh.visible = true;
+        card.mesh.position.x = x;
+      }
+    });
+
     cardsContainer.addEventListener("mouseleave", () => {
       snapTo = cardCenters[closestId];
+      if (card.mesh) {
+        card.mesh.visible = false;
+      }
     });
 
     this.onTick(() => {
