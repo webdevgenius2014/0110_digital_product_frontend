@@ -48,15 +48,15 @@ const CARD_PARAMS = {
   metalness: 0.02,
   clearcoat: 0.1,
   clearcoatRoughness: 0.05,
-  ior: 1.7,
+  ior: 3.2,
   iridescence: 1,
   iridescenceIOR: 1.4,
-  thickness: 124,
-  reflectivity: 0.54,
+  thickness: 48,
+  reflectivity: 0.8554,
 
   // Transition Material
   transmissionSampler: true,
-  chromaticAberration: 0.2,
+  chromaticAberration: 1,
   anisotrophicBlur: 0.1,
   distortion: 0,
   distortionScale: 0.0,
@@ -650,121 +650,29 @@ export default class LiquidGlassMeshes extends Three {
     this.card = card;
 
     let geometryParams = {
-      offsetX: 64,
-      offsetY: 46,
-      normalTarget: 64,
-      height: 142,
-      yMultiplier: 5.7,
+      radius: 0.15,
+      scaleY: 1,
     };
 
-    let createGeometry = (w, h) => {
-      let borderRadiusX = geometryParams.offsetX;
-      let borderRadiusY = geometryParams.offsetY;
+    let createGeometry = () => {
+      let geometry = new RoundedBoxGeometry(
+        card.width,
+        card.height,
+        card.height,
+        12,
+        card.height * geometryParams.radius
+      );
 
-      let halfW = w / 2;
-      let halfH = h / 2;
-      let xCount = Math.floor(w / 4);
-      let yCount = Math.floor(h / 4);
-
-      if (xCount % 2 != 0) xCount += 1;
-      if (yCount % 2 != 0) yCount += 1;
-
-      let geometry = new THREE.PlaneGeometry(w, h, xCount, yCount);
-      geometry.rotateX(-Math.PI * 0.5);
-      geometry = geometry.toNonIndexed();
-
-      let positions = geometry.attributes.position;
-      let normals = geometry.attributes.normal;
-
-      let normalTarget = new THREE.Vector3(0, geometryParams.normalTarget, 0);
-
-      for (let i = 0; i < positions.count; i++) {
-        let p = new THREE.Vector3(
-          positions.getX(i),
-          positions.getY(i),
-          positions.getZ(i)
-        );
-
-        // Pushing vertices towards the edges
-        let x, z;
-
-        if (p.x > 0.01) {
-          x = mapLinear(p.x, 0, halfW, halfW - borderRadiusX, halfW);
-        } else if (p.x < 0.01) {
-          x = mapLinear(p.x, 0, -halfW, -halfW + borderRadiusX, -halfW);
-        } else {
-          x = 0;
-        }
-
-        if (p.z > 0.01) {
-          z = mapLinear(p.z, 0, halfH, halfH - borderRadiusY, halfH);
-        } else if (p.z < 0.01) {
-          z = mapLinear(p.z, 0, -halfH, -halfH + borderRadiusY, -halfH);
-        } else {
-          z = 0;
-        }
-
-        // Updating vertices y position
-        let nx = inverseLerp(halfW - borderRadiusX, halfW, Math.abs(x));
-        let nz = inverseLerp(halfH - borderRadiusY, halfH, Math.abs(z));
-
-        // let y = Math.pow(Math.max(nx, nz), 2) * borderRadius;
-        let snx = Math.pow(nx, geometryParams.yMultiplier);
-        let snz = Math.pow(nz, geometryParams.yMultiplier);
-        let h = geometryParams.height;
-
-        let y = snx * h;
-        y += snz * h;
-
-        // let y = Math.max(snx, snz) * h;
-
-        positions.setXYZ(i, x, y, z);
-
-        p.set(x, y, z);
-
-        let normal = new THREE.Vector3()
-          .subVectors(p, normalTarget)
-          .normalize();
-        let up = new THREE.Vector3(0, 1, 0)
-          .lerp(normal, snx)
-          .lerp(normal, snz)
-          .normalize();
-
-        normals.setXYZ(i, ...up.toArray());
-        // normals.setXYZ(i, ...up.toArray());
-      }
-
-      // geometry.rotateX(0.4);
-      // geometry.rotateY(0.2);
-      // geometry.rotateZ(0.3);
       return geometry;
     };
 
-    let folder = this.panel.addFolder("CardGeometry");
     let updateGeometry = () => {
-      card.geometry = createGeometry(card.width, card.height);
+      if (card.geometry) {
+        card.geometry.dispose();
+      }
+      card.geometry = createGeometry();
       card.mesh.geometry = card.geometry;
     };
-
-    folder
-      .add(geometryParams, "offsetX", 1, 64, 0.1)
-      .onFinishChange(updateGeometry);
-
-    folder
-      .add(geometryParams, "offsetY", 1, 64, 0.1)
-      .onFinishChange(updateGeometry);
-
-    folder
-      .add(geometryParams, "normalTarget", -128, 128, 0.1)
-      .onFinishChange(updateGeometry);
-
-    folder
-      .add(geometryParams, "height", -256, 256, 0.1)
-      .onFinishChange(updateGeometry);
-
-    folder
-      .add(geometryParams, "yMultiplier", 1, 10, 0.05)
-      .onFinishChange(updateGeometry);
 
     let removeCardMesh = () => {
       if (card.mesh) {
@@ -773,6 +681,19 @@ export default class LiquidGlassMeshes extends Three {
         card.mesh = null;
       }
     };
+
+    let folder = this.panel.addFolder("CardGeometry");
+    folder
+      .add(geometryParams, "radius", 0.01, 0.45, 0.01)
+      .onFinishChange((value) => {
+        updateGeometry();
+      });
+
+    folder.add(geometryParams, "scaleY", 0.05, 2, 0.01).onChange((value) => {
+      if (card.mesh) {
+        card.mesh.scale.y = value;
+      }
+    });
 
     let createCardMesh = debounceWithHooks(
       () => {
@@ -800,7 +721,7 @@ export default class LiquidGlassMeshes extends Three {
           }
 
           // let geometry = createCardGeometry(card.width, card.height, 32);
-          let geometry = createGeometry(card.width, card.height);
+          let geometry = createGeometry();
 
           let material = new THREE.MeshNormalMaterial({ wireframe: false });
 
@@ -814,14 +735,6 @@ export default class LiquidGlassMeshes extends Three {
           let mesh = new THREE.Mesh(geometry, this.cardMaterial);
           mesh.scale.setScalar(0);
           mesh.visible = false;
-
-          // mesh.visible = false;
-          // mesh.material.transparent = true;
-          // mesh.material.opacity = 0;
-          // mesh.visible = false;
-          // mesh.material.side = THREE.DoubleSide;
-          // mesh.scale.setScalar(0);
-          // let mesh = new THREE.Mesh(geometry, material);
 
           let mask = new THREE.Mesh(geometry, this.maskMaterial);
           mask.scale.setScalar(0);
@@ -842,8 +755,8 @@ export default class LiquidGlassMeshes extends Three {
           let tl = gsap.timeline().pause();
           tl.to(card, {
             opacity: 1,
-            duration: 0.2,
-            ease: "powe2.in",
+            duration: 0.01,
+            ease: "power2.out",
             onUpdate: () => {
               card.mesh.material.opacity = card.opacity;
               if (card.opacity < 0.05) {
