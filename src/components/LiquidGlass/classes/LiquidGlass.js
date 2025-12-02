@@ -420,7 +420,6 @@ export default class LiquidGlassMeshes extends Three {
       position: new THREE.Vector2(),
       geometry: null,
       mesh: null,
-      glassMesh: null,
       timeline: null,
       offset: 64,
       rangeTop: 80,
@@ -476,24 +475,20 @@ export default class LiquidGlassMeshes extends Three {
           );
 
           let mesh = new THREE.Mesh(capsule.geometry, this.capsuleMaterial);
-          let glassShapeGeometry = new THREE.PlaneGeometry(
-            capsule.width,
-            capsule.height * 0.5
+          // mesh.material.visible = false;
+          let cutoutGeometry = new THREE.PlaneGeometry(
+            capsule.width + 144,
+            capsule.height + 240
           );
-          let glassShapeMaterial = new THREE.MeshBasicMaterial({
-            map: this.textures.glass,
+          cutoutGeometry.rotateX(-Math.PI * 0.5);
+
+          let cutoutMaterial = new THREE.MeshBasicMaterial({
+            color: 0x0e0e0e,
             transparent: true,
-            depthTest: false,
-            opacity: 0.75,
           });
-          let glassShape = new THREE.Mesh(
-            glassShapeGeometry,
-            glassShapeMaterial
-          );
-          glassShape.rotation.x = -Math.PI * 0.5;
-          glassShape.position.z = capsule.height * 0.25;
-          mesh.add(glassShape);
-          capsule.glassMesh = glassShape;
+          let cutout = new THREE.Mesh(cutoutGeometry, cutoutMaterial);
+          // cutout.position.z = 32;
+          mesh.add(cutout);
 
           let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
           mesh.add(mask);
@@ -502,24 +497,8 @@ export default class LiquidGlassMeshes extends Three {
           mesh.renderOrder = 1;
           mesh.position.y = capsule.borderRadius;
           mesh.visible = false;
-          // mesh.scale.setScalar(0);
-          // capsule.scale = 0;
           this.scene.add(mesh);
           capsule.mesh = mesh;
-
-          if (capsule.timeline) {
-            capsule.timeline.clear();
-          }
-
-          // let timeline = gsap.timeline();
-          // timeline.to(capsule, {
-          //   scale: 1,
-          //   duration: 0.8,
-          //   ease: "back.out",
-          //   onUpdate: () => {
-          //     mesh.scale.setScalar(capsule.scale);
-          //   },
-          // });
         },
       }
     );

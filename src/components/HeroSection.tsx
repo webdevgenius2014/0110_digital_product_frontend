@@ -90,6 +90,11 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
           alt="0110 Logo"
           className="w-[370px] object-contain opacity-[0.3]"
         />
+
+        <img
+          src="Rainbow.jpg"
+          className="absolute top-[calc(100%+1rem)] w-full left-0 scale-x-125 h-24"
+        />
       </div>
 
       <CollaboratePopup
