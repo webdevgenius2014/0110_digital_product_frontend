@@ -47,10 +47,10 @@ export default class Three {
       this.sizes.width * 0.5,
       this.sizes.height * 0.5,
       -this.sizes.height * 0.5,
-      500,
-      13100
+      50000,
+      130100
     );
-    this.camera.position.y = 13000;
+    this.camera.position.y = 130000;
     this.camera.lookAt(0, 0, 0);
 
     if (DEBUG) {

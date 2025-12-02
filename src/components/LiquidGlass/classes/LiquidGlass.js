@@ -295,11 +295,11 @@ export default class LiquidGlassMeshes extends Three {
     glass.colorSpace = THREE.SRGBColorSpace;
     this.textures.glass = glass;
 
-    let rainbow = loader.load("Rainbow.jpg");
+    let rainbow = loader.load("Rainbow1.png");
     rainbow.colorSpace = THREE.SRGBColorSpace;
     this.textures.rainbow = rainbow;
 
-    let mask = loader.load("mask.png");
+    let mask = loader.load("bitmap.png");
     mask.flipY = true;
     this.textures.mask = mask;
   }
@@ -504,11 +504,11 @@ export default class LiquidGlassMeshes extends Three {
 
           let layer1Geometry = new THREE.PlaneGeometry(
             capsule.width,
-            capsule.height * 0.5
+            capsule.height * 0.5 + 32
           );
           layer1Geometry.rotateX(-Math.PI * 0.5);
           let layer1Material = new THREE.MeshBasicMaterial({
-            map: this.textures.glass,
+            map: this.textures.rainbow,
             alphaTest: 0.5,
             stencilWrite: true,
             stencilFunc: THREE.NotEqualStencilFunc,
@@ -525,9 +525,12 @@ export default class LiquidGlassMeshes extends Three {
 
           let layer2Geometry = new THREE.PlaneGeometry(
             capsule.width,
-            capsule.height * 0.5
+            capsule.height * 0.35,
+            16,
+            16
           );
           layer2Geometry.rotateX(-Math.PI * 0.5);
+          // this.textures.mask.minFilter = THREE.NearestFilter;
           let layer2Material = new THREE.MeshBasicMaterial({
             // color: 0xff0000,
             map: this.textures.mask,
@@ -539,10 +542,11 @@ export default class LiquidGlassMeshes extends Three {
             stencilFunc: THREE.AlwaysStencilFunc,
             stencilRef: 10,
             stencilZPass: THREE.ReplaceStencilOp,
+            // wireframe: true,
           });
           let layer2 = new THREE.Mesh(layer2Geometry, layer2Material);
-          layer2.position.set(0, -190, capsule.height * 0.25 - 96);
-          // layer2.scale.x = 1.1;
+          layer2.position.set(0, -190 + 1000, capsule.height * 0.25 - 8);
+          layer2.scale.x = 1.1;
           layer2.renderOrder = 2;
           mesh.add(layer2);
           capsule.layer2 = layer2;
@@ -550,7 +554,7 @@ export default class LiquidGlassMeshes extends Three {
           // mesh.material.visible = false;
           let cutoutGeometry = new THREE.PlaneGeometry(
             capsule.width + 144,
-            capsule.height + 240
+            capsule.height + 64
           );
           cutoutGeometry.rotateX(-Math.PI * 0.5);
 
@@ -559,7 +563,7 @@ export default class LiquidGlassMeshes extends Three {
             transparent: true,
           });
           let cutout = new THREE.Mesh(cutoutGeometry, cutoutMaterial);
-          // cutout.position.z = 32;
+          cutout.position.z = capsule.height * 0.5 - 32;
           mesh.add(cutout);
 
           let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
@@ -619,9 +623,14 @@ export default class LiquidGlassMeshes extends Three {
           capsule.limitBottom,
           capsule.mesh.position.z
         );
+      // console.log(p);
 
-      capsule.layer1.position.z = capsule.height * 0.25 - p * 24;
-      capsule.layer2.position.z = capsule.height * 0.25 - 96 + p * 48;
+      capsule.layer1.position.z = capsule.height * 0.25 + p * 12;
+      capsule.layer2.scale.z = 1 + p * 2;
+      capsule.layer2.position.z = capsule.height * 0.25 - 8 - p * 48;
+      // capsule.layer2.position.z = capsule.height * 0.25 - 4 - p * 32;
+
+      // capsule.layer2.position.z = capsule.height * 0.25 - 96 + p * 48;
       // console.log(d);
       // capsule.layer1.position.z += d * 0.1;
     });
