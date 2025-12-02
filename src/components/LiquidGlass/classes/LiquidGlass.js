@@ -571,6 +571,7 @@ export default class LiquidGlassMeshes extends Three {
     let cardCenters = [];
     let snapTo = 0;
     let closestId = 0;
+    let pointer = 0;
 
     let card = {
       width: 0,
@@ -774,6 +775,7 @@ export default class LiquidGlassMeshes extends Three {
       }
 
       let x = e.clientX - this.sizes.width * 0.5;
+      pointer = x;
 
       let distance = 2000;
 
@@ -785,7 +787,7 @@ export default class LiquidGlassMeshes extends Three {
         }
       });
 
-      let snapRange = card.width * 0.3;
+      let snapRange = card.width * 0.35;
       let closestCenter = cardCenters[closestId];
 
       snapTo = distance < snapRange ? closestCenter : x;
@@ -809,7 +811,12 @@ export default class LiquidGlassMeshes extends Three {
 
     this.onTick(() => {
       if (card.mesh) {
-        card.mesh.position.x += (snapTo - card.mesh.position.x) * 0.02;
+        let easeFactor =
+          Math.abs(pointer - card.mesh.position.x) / this.sizes.width;
+        easeFactor *= 0.05;
+
+        card.mesh.position.x +=
+          (snapTo - card.mesh.position.x) * (0.035 + easeFactor);
       }
     });
 
