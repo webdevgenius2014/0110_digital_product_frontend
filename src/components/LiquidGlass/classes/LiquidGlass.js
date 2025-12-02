@@ -138,6 +138,8 @@ export default class LiquidGlassMeshes extends Three {
     this.references.logo = document.getElementById("hero-section-logo");
     this.references.cards = document.getElementById("what-we-do-cards");
     this.references.mobileBar = document.getElementById("mobile-bar");
+
+    this.references.rainbow = document.getElementById("hero-section-rainbow");
   }
 
   setPanel() {
@@ -266,11 +268,16 @@ export default class LiquidGlassMeshes extends Three {
         material.color = new THREE.Color(1, 1, 1).multiplyScalar(1.0);
         if (this.capsule.mesh) {
           this.capsule.mesh.visible = true;
+          this.references.rainbow.style.opacity = "0.8";
         }
       });
     }, 300);
 
     updateTexture();
+
+    setTimeout(() => {
+      updateTexture();
+    }, 300);
     window.addEventListener("resize", updateTexture);
     window.addEventListener("scroll", updateTexture);
   }
@@ -282,6 +289,14 @@ export default class LiquidGlassMeshes extends Three {
     let glass = loader.load("Glass-shape.png");
     glass.colorSpace = THREE.SRGBColorSpace;
     this.textures.glass = glass;
+
+    let rainbow = loader.load("Rainbow.jpg");
+    rainbow.colorSpace = THREE.SRGBColorSpace;
+    this.textures.rainbow = rainbow;
+
+    let mask = loader.load("mask.png");
+    mask.flipY = true;
+    this.textures.mask = mask;
   }
 
   createMaterial(name, parameters, samples = 16) {
@@ -427,6 +442,8 @@ export default class LiquidGlassMeshes extends Three {
       limitTop: 0,
       limitBottom: 0,
       scale: 0,
+      layer1: null,
+      layer2: null,
     };
     this.capsule = capsule;
 
@@ -475,6 +492,53 @@ export default class LiquidGlassMeshes extends Three {
           );
 
           let mesh = new THREE.Mesh(capsule.geometry, this.capsuleMaterial);
+          mesh.renderOrder = 1;
+
+          let layer1Geometry = new THREE.PlaneGeometry(
+            capsule.width,
+            capsule.height * 0.5
+          );
+          layer1Geometry.rotateX(-Math.PI * 0.5);
+          let layer1Material = new THREE.MeshBasicMaterial({
+            map: this.textures.glass,
+            alphaTest: 0.5,
+            stencilWrite: true,
+            stencilFunc: THREE.NotEqualStencilFunc,
+            stencilRef: 10,
+            stencilFail: THREE.KeepStencilOp,
+            stencilZFail: THREE.KeepStencilOp,
+            stencilZPass: THREE.KeepStencilOp,
+          });
+          let layer1 = new THREE.Mesh(layer1Geometry, layer1Material);
+          layer1.position.set(0, -200, capsule.height * 0.25);
+          mesh.add(layer1);
+          layer1.renderOrder = 3;
+          capsule.layer1 = layer1;
+
+          let layer2Geometry = new THREE.PlaneGeometry(
+            capsule.width,
+            capsule.height * 0.5
+          );
+          layer2Geometry.rotateX(-Math.PI * 0.5);
+          let layer2Material = new THREE.MeshBasicMaterial({
+            // color: 0xff0000,
+            map: this.textures.mask,
+            alphaTest: 0.5,
+            depthTest: false,
+            depthWrite: false,
+            colorWrite: false,
+            stencilWrite: true,
+            stencilFunc: THREE.AlwaysStencilFunc,
+            stencilRef: 10,
+            stencilZPass: THREE.ReplaceStencilOp,
+          });
+          let layer2 = new THREE.Mesh(layer2Geometry, layer2Material);
+          layer2.position.set(0, -190, capsule.height * 0.25 - 96);
+          // layer2.scale.x = 1.1;
+          layer2.renderOrder = 2;
+          mesh.add(layer2);
+          capsule.layer2 = layer2;
+
           // mesh.material.visible = false;
           let cutoutGeometry = new THREE.PlaneGeometry(
             capsule.width + 144,
@@ -493,7 +557,7 @@ export default class LiquidGlassMeshes extends Three {
           let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
           mesh.add(mask);
 
-          mesh.position.set(capsule.position.x, 0, capsule.position.y);
+          mesh.position.set(capsule.position.x, 500, capsule.position.y);
           mesh.renderOrder = 1;
           mesh.position.y = capsule.borderRadius;
           mesh.visible = false;
@@ -538,7 +602,20 @@ export default class LiquidGlassMeshes extends Three {
 
       // capsule.mesh.position.z = targetY; // Instant update
 
-      capsule.mesh.position.z -= (capsule.mesh.position.z - targetY) * 0.01;
+      capsule.mesh.position.z -= (capsule.mesh.position.z - targetY) * 0.03;
+
+      let p =
+        1 -
+        inverseLerp(
+          capsule.limitTop,
+          capsule.limitBottom,
+          capsule.mesh.position.z
+        );
+
+      capsule.layer1.position.z = capsule.height * 0.25 - p * 24;
+      capsule.layer2.position.z = capsule.height * 0.25 - 96 + p * 48;
+      // console.log(d);
+      // capsule.layer1.position.z += d * 0.1;
     });
 
     window.addEventListener("resize", createCapsuleMesh);

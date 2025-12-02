@@ -92,8 +92,9 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
         />
 
         <img
+          id="hero-section-rainbow"
           src="Rainbow.jpg"
-          className="absolute top-[calc(100%+1rem)] w-full left-0 scale-x-125 h-24"
+          className="absolute top-[calc(100%+1rem)] w-full left-0 scale-x-125 h-24 opacity-0 hidden"
         />
       </div>
 
