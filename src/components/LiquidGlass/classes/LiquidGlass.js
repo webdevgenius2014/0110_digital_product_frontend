@@ -150,6 +150,21 @@ export default class LiquidGlassMeshes extends Three {
   setPanel() {
     this.panel = new lil.GUI();
     this.panel.close();
+
+    let params = {
+      toneMapping: this.renderer.toneMapping,
+      toneMappingExposure: this.renderer.toneMappingExposure,
+    };
+
+    let folder = this.panel.addFolder("Renderer");
+
+    folder.add(params, "toneMapping", 0, 6, 1).onFinishChange((value) => {
+      this.renderer.toneMapping = value;
+    });
+
+    folder.add(params, "toneMappingExposure", 0, 6, 0.01).onChange((value) => {
+      this.renderer.toneMappingExposure = value;
+    });
   }
 
   addMobileTexturePlane() {
@@ -208,7 +223,7 @@ export default class LiquidGlassMeshes extends Three {
           texture.dispose();
         }
         texture = new THREE.CanvasTexture(canvas);
-        texture.colorSpace = THREE.SRGBColorSpace;
+        // texture.colorSpace = THREE.SRGBColorSpace;
         texture.needsUpdate = true;
         material.uniforms.uTexture.value = texture;
         material.uniforms.uTextureHeight.value = canvas.height;
@@ -266,7 +281,7 @@ export default class LiquidGlassMeshes extends Three {
           texture.dispose();
         }
         texture = new THREE.CanvasTexture(canvas);
-        texture.colorSpace = THREE.SRGBColorSpace;
+        // texture.colorSpace = THREE.SRGBColorSpace;
         texture.needsUpdate = true;
         material.map = texture;
         material.needsUpdate = true;
@@ -299,11 +314,11 @@ export default class LiquidGlassMeshes extends Three {
 
     this.textures = {};
     let glass = loader.load("Glass-shape.png");
-    glass.colorSpace = THREE.SRGBColorSpace;
+    // glass.colorSpace = THREE.SRGBColorSpace;
     this.textures.glass = glass;
 
     let rainbow = loader.load("RainbowPng.png");
-    rainbow.colorSpace = THREE.SRGBColorSpace;
+    // rainbow.colorSpace = THREE.SRGBColorSpace;
     this.textures.rainbow = rainbow;
 
     let mask1 = loader.load("PillMask1.png");
@@ -520,7 +535,7 @@ export default class LiquidGlassMeshes extends Three {
           );
 
           let mesh = new THREE.Mesh(capsule.geometry, this.capsuleMaterial);
-          mesh.renderOrder = 1;
+          mesh.renderOrder = 0;
 
           let layerGeometry = new THREE.PlaneGeometry(
             capsule.width,
@@ -538,14 +553,34 @@ export default class LiquidGlassMeshes extends Three {
               uNoise: new THREE.Uniform(this.textures.noise),
               uProgress: new THREE.Uniform(),
             },
-            depthTest: false,
-            transparent: true,
+            depthWrite: true,
+            depthTest: true,
+            // transparent: true,
+            // toneMapped: false,
+            // blending: THREE.NormalBlending,
           });
           let layer = new THREE.Mesh(layerGeometry, layerMaterial);
-          layer.position.set(0, 600, capsule.height * 0.25);
+          layer.renderOrder = 1;
+
+          layer.position.set(0, -200, capsule.height * 0.25 - 8);
           capsule.layer = layer;
 
           mesh.add(layer);
+
+          let cutoutGeometry = new THREE.PlaneGeometry(
+            capsule.width + 64,
+            capsule.height * 0.5 + 16
+          );
+          cutoutGeometry.rotateX(-Math.PI * 0.5);
+          let cutoutMaterial = new THREE.MeshBasicMaterial({
+            color: new THREE.Color().setScalar(14 / 255),
+            // depthTest: false,
+            transparent: true,
+            toneMapped: false,
+          });
+          let cutout = new THREE.Mesh(cutoutGeometry, cutoutMaterial);
+          cutout.position.set(0, -100, capsule.height * 0.25);
+          mesh.add(cutout);
 
           let mask = new THREE.Mesh(capsule.geometry, this.maskMaterial);
           mesh.add(mask);
