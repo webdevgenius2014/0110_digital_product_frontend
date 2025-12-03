@@ -138,6 +138,9 @@ export default class LiquidGlassMeshes extends Three {
     this.references = {};
 
     this.references.logo = document.getElementById("hero-section-logo");
+    this.references.logoOverlay = document.getElementById(
+      "hero-section-logo-overlay"
+    );
     this.references.cards = document.getElementById("what-we-do-cards");
     this.references.mobileBar = document.getElementById("mobile-bar");
 
@@ -277,6 +280,8 @@ export default class LiquidGlassMeshes extends Three {
           this.card.mesh.visible = true;
           this.card.mesh.scale.setScalar(1);
         }
+
+        this.references.logoOverlay.style.display = "none";
       });
     }, 300);
 

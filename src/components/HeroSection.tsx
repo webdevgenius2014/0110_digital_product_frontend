@@ -91,6 +91,12 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
           className="w-[370px] object-contain opacity-[0.3]"
         />
 
+        <div
+          id="hero-section-logo-overlay"
+          className="absolute inset-0 bg-[#0e0e0e]"
+          data-html2canvas-ignore
+        ></div>
+
         <img
           id="hero-section-rainbow"
           src="Rainbow.jpg"
