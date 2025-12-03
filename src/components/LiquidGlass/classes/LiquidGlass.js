@@ -50,16 +50,16 @@ const CARD_PARAMS = {
   metalness: 0.02,
   clearcoat: 0.1,
   clearcoatRoughness: 0.05,
-  ior: 3.2,
+  ior: 2.7,
   iridescence: 1,
   iridescenceIOR: 1.4,
-  thickness: 48,
-  reflectivity: 0.8554,
+  thickness: 68,
+  reflectivity: 0.84,
 
   // Transition Material
   transmissionSampler: true,
-  chromaticAberration: 1,
-  anisotrophicBlur: 0.1,
+  chromaticAberration: 0.6,
+  anisotrophicBlur: 0.18,
   distortion: 0,
   distortionScale: 0.0,
   temporalDistortion: 0,
@@ -667,7 +667,7 @@ export default class LiquidGlassMeshes extends Three {
 
     let geometryParams = {
       radius: 0.15,
-      scaleY: 1,
+      scaleY: 1.2,
     };
 
     let createGeometry = () => {
