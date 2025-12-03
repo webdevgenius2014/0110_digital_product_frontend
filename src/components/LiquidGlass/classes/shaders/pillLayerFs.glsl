@@ -22,11 +22,12 @@ void main() {
   alpha  *= smoothstep(0.8, 0.1, mask2);
   
   vec2 mask3Uv = vUv;
+  mask3Uv.y += 0.15;
   float uv3X = 0.01;
   float p3 = uProgress;
   mask3Uv.x = mix(uv3X * p3, 1.0 - uv3X * p3, mask3Uv.x);
-  mask3Uv.y *= 1.0 - (1.0 - uProgress) * 0.4;
-  mask3Uv.y += (1.0 - uProgress) * 0.2;
+  mask3Uv.y *= 1.0 - (p3) * 0.6;
+  mask3Uv.y += (p3) * 0.2;
   float mask3 = texture2D(uMask3, mask3Uv).r;
   // alpha  *= smoothstep(0.8, 0.1, mask3);
   alpha  *= 1.0 - mask3;
@@ -35,8 +36,6 @@ void main() {
   noiseUv.x *= 3.0;
   vec3 noise = texture2D(uNoise, noiseUv * 20.0).rgb;
   color += (noise - 0.5) * 0.05;
-
-
 
   gl_FragColor = vec4(color, alpha);
   #include <tonemapping_fragment>
