@@ -245,7 +245,7 @@
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -383,7 +383,7 @@
 .mobileNav {
   position: fixed;
   bottom: 0;
-  backdrop-filter: blur(2px);
+  /* backdrop-filter: blur(2px); */
 }
 
 @media screen and (min-width:601px) and (max-width:1023px) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import CollaboratePopup from "./ColloaboRate";
 
 interface HeroSectionProps {
@@ -8,38 +8,14 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ triggerGlow }: HeroSectionProps) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    setIsHovering(true);
-
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const limit = 100;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const moveX = Math.max(-limit, Math.min((x - centerX) / 2, limit));
-    const moveY = Math.max(-limit, Math.min((y - centerY) / 2, limit));
-    setPosition({ x: moveX, y: moveY });
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-    setPosition({ x: 0, y: 0 });
-  };
-
   const handleClick = () => {
-
     setTimeout(() => {
       setShowPopup(true);
     }, 0);
   };
-
 
   return (
     <section className="max-w-[1383px] CustmWidth heroSec w-full pt-20 pb-8 px-4 lg:px-[30px] xl:px-[60px] flex items-center mx-auto justify-between sm:py-10">
@@ -48,8 +24,8 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
           Simple, efficient digital solutions for sport brands.
         </h1>
         <p className="BodyLarge custmP font-dm-Regular font-medium max-w-[387px] md:mb-6">
-          We design and build digital products for sport. From race platforms to watch faces, our work helps athletes
-          perform with clarity and focus.
+          We design and build digital products for sport. From race platforms to
+          watch faces, our work helps athletes perform with clarity and focus.
         </p>
 
         <div className="rounded-sm hidden sm:inline-block hide-tab w-full overflow-hidden mb-6 xl:mb-10">
@@ -61,14 +37,14 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
             <div
               className={`
     absolute inset-0 opacity-0 transition-all duration-100 ease-[cubic-bezier(0.22,1,0.36,1)] blur-[2px]
-    ${triggerGlow
-                  ? 'opacity-[0.3]!'
-                  : 'group-focus:opacity-[0.2]! group-focus:scale-100 group-active:opacity-[0.2]! group-active:scale-100'}
+    ${
+      triggerGlow
+        ? "opacity-[0.3]!"
+        : "group-focus:opacity-[0.2]! group-focus:scale-100 group-active:opacity-[0.2]! group-active:scale-100"
+    }
   `}
               style={{
-                animation: triggerGlow
-                  ? ""
-                  : "none",
+                animation: triggerGlow ? "" : "none",
                 background: `linear-gradient(90deg,
       #8D2629 0%,
       #F9E072 8%,
@@ -92,7 +68,8 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
       0px 8px 24px rgba(17,17,26,0.05),
       0px 16px 56px rgba(17,17,26,0.05)
     `,
-                filter: "brightness(1.1) contrast(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.2))",
+                filter:
+                  "brightness(1.1) contrast(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.2))",
                 mixBlendMode: "screen",
               }}
             />
@@ -100,74 +77,37 @@ export default function HeroSection({ triggerGlow }: HeroSectionProps) {
               Request the deck
             </span>
           </button>
-
         </div>
       </div>
 
       <div
         ref={containerRef}
         className="relative hidden sm:block deskMn hide-tab"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
       >
-        <img src="./Logo.svg" alt="0110 Logo" className="w-[370px] object-contain opacity-[0.3]" />
+        <img
+          id="hero-section-logo"
+          src="./Logo.svg"
+          alt="0110 Logo"
+          className="w-[370px] object-contain opacity-[0.3]"
+        />
 
         <div
-          className={`absolute w-[400px] left-[-15px] h-[190px] overflow-hidden rounded-[95px]
-            bg-[#212121]/10 border border-white/20 shadow-md
-            transition-all duration-300 ease-out`}
-          style={{
-            opacity: 1,
-            transform: isHovering
-              ? `translate(${position.x}px, ${position.y}px)`
-              : "translateY(70px)",
-            bottom: 0,
-            boxShadow: `
-              0 0 2px 1px rgba(255,255,255,0.05) inset,
-              0 0 10px 4px rgba(255,255,255,0.08) inset,
-              0px 4px 16px rgba(17,17,26,0.05),
-              0px 8px 24px rgba(17,17,26,0.05),
-              0px 16px 56px rgba(17,17,26,0.05)
-            `,
-            backdropFilter: "url(#filter) blur(2px) brightness(1.2)",
-            WebkitBackdropFilter: "url(#filter) blur(2px) brightness(1.2)",
-            mixBlendMode: "screen",
-          }}
-        >
-          <img src="./Glass-shape.png" alt="" className="absolute bottom-0 pointer-events-none select-none" />
-        </div>
+          id="hero-section-logo-overlay"
+          className="absolute inset-0 bg-[#0e0e0e]"
+          data-html2canvas-ignore
+        ></div>
+
+        <img
+          id="hero-section-rainbow"
+          src="Rainbow.jpg"
+          className="absolute top-[calc(100%+1rem)] w-full left-0 scale-x-125 h-24 opacity-0 hidden"
+        />
       </div>
 
-      {/* <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style={{ position: "absolute" }}>
-        <defs>
-          <filter id="filter" colorInterpolationFilters="sRGB">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.00 0.022"
-              numOctaves="2"
-              seed="1"
-              stitchTiles="stitch"
-              result="map"
-            />
-
-            <feDisplacementMap in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G" result="dispRed" />
-
-            <feColorMatrix in="dispRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
-
-            <feDisplacementMap in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G" result="dispGreen" />
-            <feColorMatrix in="dispGreen" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
-
-            <feDisplacementMap in="SourceGraphic" in2="map" scale="25" xChannelSelector="R" yChannelSelector="G" result="dispBlue" />
-            <feColorMatrix in="dispBlue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
-
-            <feBlend in="red" in2="green" mode="screen" result="rg" />
-            <feBlend in="rg" in2="blue" mode="screen" result="output" />
-            <feGaussianBlur in="output" stdDeviation="0.7" />
-          </filter>
-        </defs>
-      </svg> */}
-
-      <CollaboratePopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
+      <CollaboratePopup
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+      />
     </section>
   );
 }
